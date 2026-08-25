@@ -54,7 +54,7 @@
     font-family:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
     font-weight:300;
     -webkit-font-smoothing:antialiased;
-    overflow:hidden;
+    overflow-x:hidden;
   }
 
   /* ---------- the scene ---------- */
@@ -200,7 +200,7 @@
 
   /* ---------- corner readouts ---------- */
   .hud{
-    position:fixed; z-index:3; bottom:clamp(16px,2.6vh,28px);
+    position:absolute; z-index:3; bottom:clamp(16px,2.6vh,28px);
     font-size:10px; font-weight:300;
     letter-spacing:.2em; text-transform:uppercase;
     color:rgba(154,160,170,.42);
@@ -224,6 +224,185 @@
   @media (prefers-reduced-motion:reduce){
     #scene,.mark,.line,.hud,.cta{animation:none;opacity:1;filter:none;transform:none}
   }
+
+  /* ---------- scroll cue ----------
+     The huds became absolute (not fixed) when the page gained a second screen:
+     the Getty credit belongs to the bust, so it has to scroll away with it. */
+  .hud-c{left:0;right:0;text-align:center;pointer-events:none}
+  .hud-c b{display:block;font-weight:300;margin:0 0 8px}
+  .hud-c i{
+    display:block;width:1px;height:14px;margin:0 auto;
+    background:linear-gradient(180deg,rgba(154,160,170,.78),rgba(154,160,170,0));
+    animation:cue 2400ms ease-in-out infinite;
+  }
+  @keyframes cue{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(5px);opacity:1}}
+
+  /* ---------- second screen ----------
+     Near-solid in the middle so type reads, translucent at both seams so the
+     character field bleeds through and the two screens stay one surface. */
+  .how{
+    position:relative; z-index:2;
+    padding:clamp(90px,13vh,170px) clamp(20px,6vw,80px) clamp(96px,14vh,180px);
+    background:linear-gradient(180deg,
+      rgba(5,5,6,.62) 0%, rgba(5,5,6,.97) 16%,
+      rgba(5,5,6,.97) 84%, rgba(5,5,6,.72) 100%);
+  }
+  .how-in{
+    max-width:1140px; margin:0 auto;
+    display:grid; grid-template-columns:minmax(0,25rem) minmax(0,1fr);
+    gap:clamp(44px,6vw,92px); align-items:start;
+  }
+
+  .rev{opacity:0;transform:translateY(12px);transition:opacity 700ms var(--ease-out),transform 700ms var(--ease-out)}
+  .how.in .rev{opacity:1;transform:none}
+  .how.in .rev:nth-child(2){transition-delay:70ms}
+  .how.in .col-r .rev{transition-delay:140ms}
+
+  .tag{
+    margin:0 0 clamp(20px,3vh,30px);
+    font-size:clamp(9px,.72vw,11px); font-weight:400;
+    letter-spacing:.4em; text-transform:uppercase; color:var(--ink-faint);
+  }
+  .tag i{font-style:normal;opacity:.45;padding:0 .55em}
+
+  /* Sentence case here against the hero's tracked caps: the first screen is a
+     monument, the second one talks. */
+  .how h2{
+    margin:0; max-width:20ch;
+    font-weight:200; font-size:clamp(1.3rem,2.5vw,2rem);
+    line-height:1.3; letter-spacing:.005em; color:#F4F6F9; text-wrap:balance;
+  }
+  .how p.say-it{
+    margin:clamp(20px,2.8vh,28px) 0 0; max-width:40ch;
+    font-size:clamp(12.5px,1.02vw,14.5px); line-height:1.7; color:var(--ink-dim);
+  }
+  .how p.say-it b{color:#E9ECF1;font-weight:400}
+
+  /* A real sequence, so it is numbered. The rail is the terminal's own idiom. */
+  .steps{
+    list-style:none; counter-reset:s;
+    margin:clamp(30px,4vh,44px) 0 0; padding:0 0 0 24px;
+    border-left:1px solid rgba(154,160,170,.16);
+  }
+  .steps li{position:relative;padding:0 0 20px}
+  .steps li:last-child{padding-bottom:0}
+  .steps li::before{
+    content:""; position:absolute; left:-28px; top:6px;
+    width:5px; height:5px; background:rgba(154,160,170,.5);
+  }
+  .steps b{
+    display:block; font-weight:400; font-size:10px;
+    letter-spacing:.24em; text-transform:uppercase; color:#D6DAE0;
+  }
+  .steps span{
+    display:block; margin-top:7px; max-width:36ch;
+    font-size:12px; line-height:1.62; color:var(--ink-faint);
+  }
+
+  /* ---------- terminal ----------
+     Rules top and bottom, no box: a region of the field, not a card. */
+  .term{
+    background-color:rgba(233,236,241,.022);
+    background-image:radial-gradient(rgba(154,160,170,.13) .5px, transparent .5px);
+    background-size:4px 4px;
+    border-top:1px solid rgba(154,160,170,.22);
+    border-bottom:1px solid rgba(154,160,170,.22);
+  }
+  .term-bar{
+    display:flex; justify-content:space-between; gap:16px;
+    padding:11px clamp(16px,2vw,22px);
+    border-bottom:1px solid rgba(154,160,170,.12);
+    font-size:9.5px; letter-spacing:.26em; text-transform:uppercase;
+    color:rgba(154,160,170,.5);
+  }
+  .term-bar span:last-child{opacity:.62}
+  .term-body{padding:clamp(20px,2.6vw,28px) clamp(16px,2vw,22px)}
+
+  .ln{
+    display:grid; grid-template-columns:7.2em minmax(0,1fr); gap:0 14px;
+    margin:0 0 15px; font-size:12.5px; line-height:1.62; color:var(--ink-dim);
+  }
+  .ln:last-child{margin-bottom:0}
+  .ln[hidden]{display:none}
+  .who{
+    font-size:9.5px; letter-spacing:.22em; text-transform:uppercase;
+    color:rgba(154,160,170,.44); padding-top:3px;
+  }
+  .ask .say{color:#F4F6F9}
+  .caret{
+    display:inline-block; width:.5em; height:1.02em; vertical-align:-.16em;
+    margin-left:.1em; background:rgba(244,246,249,.8);
+    animation:blink 980ms steps(1) infinite;
+  }
+  .caret.off{display:none}
+  @keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+
+  [data-step]{opacity:0;transform:translateY(6px);transition:opacity 460ms var(--ease-out),transform 460ms var(--ease-out)}
+  [data-step].on{opacity:1;transform:none}
+
+  .prop{
+    margin:22px 0 0; padding:16px 0 0 clamp(14px,1.6vw,20px);
+    border-left:1px solid rgba(154,160,170,.28);
+  }
+  .prop-h{
+    margin:0 0 14px; font-size:9.5px; letter-spacing:.26em;
+    text-transform:uppercase; color:rgba(154,160,170,.62);
+  }
+  .prop-h b{color:#E9ECF1;font-weight:400;letter-spacing:.14em;text-transform:none}
+  .prop dl{margin:0}
+  .prop dl>div{
+    display:grid; grid-template-columns:5.6em minmax(0,1fr); gap:0 14px;
+    padding:5px 0; font-size:12.5px; line-height:1.58;
+  }
+  .prop dt{
+    font-size:9.5px; letter-spacing:.2em; text-transform:uppercase;
+    color:rgba(154,160,170,.42); padding-top:3px;
+  }
+  .prop dd{margin:0;color:var(--ink-dim);font-variant-numeric:tabular-nums}
+  .prop dd b{color:#F4F6F9;font-weight:400}
+
+  .gate{display:flex;flex-wrap:wrap;align-items:center;gap:14px 18px;margin:22px 0 0}
+  .approve{padding:12px 24px;font-size:10px}
+  .gate-n{
+    margin:0; max-width:24ch; font-size:11px; line-height:1.55;
+    color:rgba(154,160,170,.52);
+    transition:opacity 200ms ease,filter 200ms ease;
+  }
+  .gate.busy .gate-n{opacity:0;filter:blur(2px)}
+
+  /* Nothing on the page is coloured, so full white is the accent, and it is
+     spent once: on the write actually landing. */
+  .done{margin-top:20px;color:#FFFFFF}
+  .done .who{color:rgba(244,246,249,.7)}
+  .done b{color:#FFFFFF;font-weight:400}
+  .again{
+    display:inline-block; margin-top:16px; font-size:10px; letter-spacing:.2em;
+    text-transform:uppercase; color:rgba(154,160,170,.42);
+    background:none; border:0; padding:0; font-family:inherit; cursor:pointer;
+    opacity:0; transition:opacity 300ms ease,color 200ms ease;
+  }
+  .again.on{opacity:1}
+  .again:focus-visible{outline:1px solid rgba(233,236,241,.7);outline-offset:4px}
+  @media (hover:hover) and (pointer:fine){ .again:hover{color:rgba(233,236,241,.8)} }
+
+  @media (max-width:900px){
+    .how-in{grid-template-columns:minmax(0,1fr);gap:clamp(40px,7vh,60px)}
+    .how.in .col-r .rev{transition-delay:140ms}
+  }
+  @media (max-width:560px){
+    .ln{grid-template-columns:minmax(0,1fr);gap:4px}
+    .who{padding-top:0}
+    .prop dl>div{grid-template-columns:4.6em minmax(0,1fr)}
+    .gate{flex-direction:column;align-items:flex-start;gap:12px}
+    .gate-n{max-width:none}
+    .term-bar{letter-spacing:.18em}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    .rev,[data-step]{opacity:1!important;transform:none!important;transition:none!important}
+    .hud-c i,.caret{animation:none}
+    .caret{display:none}
+  }
 </style>
 </head>
 <body>
@@ -231,7 +410,9 @@
 <canvas id="scene" aria-hidden="true"></canvas>
 <div class="veil" aria-hidden="true"></div>
 
-<main class="hero">
+<main>
+
+<section class="hero">
   <p class="eyebrow">Chain abstraction<i>/</i>Perps<i>/</i>AI</p>
 
   <h1 class="mark"><span>Phosphor</span></h1>
@@ -242,10 +423,62 @@
     <button class="btn dl" id="dl" type="button"><span><i class="a">Download</i><i class="b" aria-hidden="true">Coming soon</i></span></button>
     <a class="btn" href="https://github.com/karimbabasf/phosphor" rel="noopener"><svg class="gh" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg><span>GitHub</span></a>
   </div>
-</main>
 
-<div class="hud hud-l" id="readout">Render</div>
-<div class="hud hud-r">Germanicus, Getty 2021.66 &middot; <a href="https://commons.wikimedia.org/wiki/File:Bust_of_Germanicus,_front_-_Getty_Museum_(2021.66).jpg" rel="noopener">CC0</a></div>
+  <div class="hud hud-l" id="readout">Render</div>
+  <div class="hud hud-c" aria-hidden="true"><b>Scroll</b><i></i></div>
+  <div class="hud hud-r">Germanicus, Getty 2021.66 &middot; <a href="https://commons.wikimedia.org/wiki/File:Bust_of_Germanicus,_front_-_Getty_Museum_(2021.66).jpg" rel="noopener">CC0</a></div>
+</section>
+
+<section class="how" id="how">
+  <div class="how-in">
+
+    <div class="col-l">
+      <p class="tag rev">The interface<i>/</i>you already have it</p>
+      <h2 class="rev">You already pay for the interface.</h2>
+      <p class="say-it rev">Phosphor is an MCP server. It plugs into <b>Claude Code</b> or <b>Codex</b>, the agent you already subscribe to, and hands it 52 tools for wallets, markets, routes and yield. You ask for what you want in plain English. There is no new app to learn and no seat to buy.</p>
+      <ol class="steps rev">
+        <li><b>Simulate</b><span>The write runs against live state before you ever see it.</span></li>
+        <li><b>Check</b><span>The policy you set decides, not the agent.</span></li>
+        <li><b>Release</b><span>A click in the app window, on a surface the agent cannot open.</span></li>
+      </ol>
+    </div>
+
+    <div class="col-r">
+      <div class="term rev" id="term">
+        <div class="term-bar"><span>Phosphor</span><span>Sample session</span></div>
+        <div class="term-body">
+
+          <p class="ln ask"><span class="who">You</span><span><span class="say" id="ask"></span><i class="caret" id="caret"></i></span></p>
+
+          <p class="ln" data-step="1"><span class="who">Phosphor</span><span>Policy read. Daily budget $500, three venues checked.</span></p>
+          <p class="ln" data-step="2"><span class="who"></span><span>Route simulated against live state.</span></p>
+
+          <div class="prop" data-step="3">
+            <p class="prop-h">Proposal <b>#4a1c</b></p>
+            <dl>
+              <div><dt>Swap</dt><dd><b>18.42 SOL</b> to <b>3,214.90 USDC</b></dd></div>
+              <div><dt>Route</dt><dd>Jupiter, two hops, slippage 0.08%</dd></div>
+              <div><dt>Then</dt><dd>Deposit into <b>Kamino USDC</b>, 4.91% APY</dd></div>
+              <div><dt>Cost</dt><dd>$0.41 network fee</dd></div>
+              <div><dt>Policy</dt><dd>Inside your budget. Simulation clean.</dd></div>
+            </dl>
+            <div class="gate" id="gate">
+              <button class="btn approve" id="approve" type="button"><span>Approve</span></button>
+              <p class="gate-n" id="gaten">The agent cannot press this. You can.</p>
+            </div>
+          </div>
+
+          <p class="ln done" id="done" hidden><span class="who">Phosphor</span><span>Executed <b>#4a1c</b>. Signature 5Kq7&hellip;9mT2, 1.9s.</span></p>
+          <button class="again" id="again" type="button">Run it again</button>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</main>
 
 <script>
 /* There is no build to download yet, so the button says so instead of pointing
@@ -1004,6 +1237,7 @@
   const LIGHT_MS = 120;
   const STILL_T = 4200;                 // one settled light angle, for reduced motion
   let raf = 0, kLight = -1, kCell = -1, kTape = -1, kS0 = -1, kS1 = -1;
+  let ready = false, heroIn = true;   // buffers built, and is the bust on screen
 
   function frame(t) {
     const l = (t / LIGHT_MS) | 0, c = (t / CELL_MS) | 0;
@@ -1024,7 +1258,9 @@
 
   function start() {
     layout();
+    ready = true;
     if (still) { still1(STILL_T); return; }
+    if (!heroIn) return;
     kLight = kCell = kTape = kS0 = kS1 = -1;
     cancelAnimationFrame(raf);
     raf = requestAnimationFrame(loop);
@@ -1040,13 +1276,105 @@
     }, 140);
   });
   document.addEventListener('visibilitychange', () => {
-    if (still) return;
+    if (still || !ready) return;
     if (document.hidden) cancelAnimationFrame(raf);
     else { kLight = kCell = kTape = kS0 = kS1 = -1; raf = requestAnimationFrame(loop); }
   });
 
+  // The page gained a second screen. Thirty frames a second of a bust nobody is
+  // looking at is pure heat, so the loop parks when the hero leaves the viewport.
+  const hero = document.querySelector('.hero');
+  if (hero && !still && 'IntersectionObserver' in window) {
+    new IntersectionObserver(es => {
+      heroIn = es[0].isIntersecting;
+      if (!ready) return;   // fonts.ready has not run layout() yet, so the buffers are still null
+      if (heroIn) { kLight = kCell = kTape = kS0 = kS1 = -1; cancelAnimationFrame(raf); raf = requestAnimationFrame(loop); }
+      else cancelAnimationFrame(raf);
+    }, { threshold: 0 }).observe(hero);
+  }
+
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(start); else start();
 })();
+
+/* ---------- second screen ----------
+   One scroll-triggered sequence, once. The typing is not decoration here: the
+   product IS a prompt, so the medium is the message. Everything after the
+   Approve button is driven by a real click, because that is the whole point. */
+(() => {
+  const how = document.getElementById('how');
+  if (!how) return;
+  const still = matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+  const ask   = document.getElementById('ask');
+  const caret = document.getElementById('caret');
+  const steps = [...document.querySelectorAll('[data-step]')];
+  const btn   = document.getElementById('approve');
+  const gate  = document.getElementById('gate');
+  const gaten = document.getElementById('gaten');
+  const done  = document.getElementById('done');
+  const again = document.getElementById('again');
+
+  const LINE = 'Move 40% of my SOL somewhere it earns.';
+  let timers = [], played = false;
+  const at = (ms, fn) => timers.push(setTimeout(fn, ms));
+  const stop = () => { timers.forEach(clearTimeout); timers = []; };
+
+  function play() {
+    stop();
+    ask.textContent = '';
+    caret.classList.remove('off');
+    steps.forEach(s => s.classList.remove('on'));
+
+    if (still) {
+      ask.textContent = LINE;
+      caret.classList.add('off');
+      steps.forEach(s => s.classList.add('on'));
+      return;
+    }
+    let i = 0;
+    (function type() {
+      ask.textContent = LINE.slice(0, ++i);
+      if (i < LINE.length) return at(26, type);
+      at(340, () => steps[0].classList.add('on'));
+      at(860, () => steps[1].classList.add('on'));
+      at(1320, () => { steps[2].classList.add('on'); caret.classList.add('off'); });
+    })();
+  }
+
+  function reset() {
+    done.hidden = true;
+    again.classList.remove('on');
+    gate.classList.remove('busy');
+    btn.disabled = false;
+    btn.querySelector('span').textContent = 'Approve';
+    play();
+  }
+
+  btn.addEventListener('click', () => {
+    if (btn.disabled) return;
+    btn.disabled = true;
+    gate.classList.add('busy');
+    at(190, () => {
+      btn.querySelector('span').textContent = 'Approved';
+      gaten.textContent = 'Released by you.';
+      gate.classList.remove('busy');
+      done.hidden = false;
+    });
+    at(900, () => again.classList.add('on'));
+  });
+
+  again.addEventListener('click', reset);
+
+  new IntersectionObserver((es, o) => {
+    es.forEach(e => {
+      if (!e.isIntersecting) return;
+      how.classList.add('in');
+      if (!played) { played = true; at(still ? 0 : 420, play); }
+      o.disconnect();
+    });
+  }, { threshold: .22 }).observe(how);
+})();
+
 </script>
 </body>
 </html>
