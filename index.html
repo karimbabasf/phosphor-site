@@ -173,7 +173,10 @@
      ink correction above centres either of them. */
   .dl span{position:relative}
   .dl i{font-style:normal;transition:opacity 190ms ease,filter 190ms ease}
-  .dl .b{position:absolute;left:50%;top:0;transform:translateX(-50%);white-space:nowrap;opacity:0;filter:blur(2px)}
+  /* Coming soon is a status, not an action, so it sits quieter than Download.
+     It also has to clear the corner ticks inside the same button width. */
+  .dl .b{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);white-space:nowrap;
+         font-size:9.5px;letter-spacing:.14em;opacity:0;filter:blur(2px)}
   .dl.swap .a{opacity:0;filter:blur(2px)}
   .dl.swap .b{opacity:1;filter:blur(0)}
   .btn .gh{width:14px;height:14px;flex:none;fill:#FFFFFF;opacity:.92;transition:opacity 200ms ease}
