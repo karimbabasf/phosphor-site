@@ -3,8 +3,8 @@
 The landing page for Phosphor, at https://phosphor.karimbabasf.com
 
 Static files, no build step. `index.html` carries its own CSS and JavaScript, `mark.svg` is
-the MP cube mark, `fonts/` holds Sora (Regular and SemiBold), the brand face, and Geist for the
-window mock, and `vendor/anime.esm.min.js` is anime.js 4.5.0 (MIT), vendored from the npm
+the MP cube mark, `fonts/` holds Sora (Regular and SemiBold), the brand face, Manrope for everything under the hero,
+and Geist for the window mock, and `vendor/anime.esm.min.js` is anime.js 4.5.0 (MIT), vendored from the npm
 tarball, which drives the sheet's lift from the scroll position.
 
 ## Run it

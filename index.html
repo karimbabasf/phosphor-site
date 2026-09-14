@@ -23,10 +23,12 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/Sora-SemiBold.ttf" as="font" type="font/ttf" crossorigin>
 <link rel="preload" href="/fonts/Sora-Regular.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="preload" href="/fonts/Manrope-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="modulepreload" href="/vendor/anime.esm.min.js">
 <style>
   @font-face { font-family: "Sora"; font-weight: 400; font-display: block; src: url("/fonts/Sora-Regular.ttf") format("truetype"); }
   @font-face { font-family: "Sora"; font-weight: 600; font-display: block; src: url("/fonts/Sora-SemiBold.ttf") format("truetype"); }
+  @font-face { font-family: "Manrope"; font-weight: 200 800; font-display: swap; src: url("/fonts/Manrope-Variable.woff2") format("woff2"); }
   @font-face { font-family: "Geist"; font-weight: 100 900; font-display: swap; src: url("/fonts/Geist-Variable.woff2") format("woff2"); }
   @font-face { font-family: "Geist Mono"; font-weight: 100 900; font-display: swap; src: url("/fonts/GeistMono-Variable.woff2") format("woff2"); }
 
@@ -175,31 +177,35 @@
     background: var(--ink);
     color: #ECEEF1;
     border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
-    padding: 88px 24px 96px;
+    padding: 84px 24px 96px;
   }
 
   .wrap { max-width: 1160px; margin: 0 auto; }
 
-  .head {
-    margin-bottom: 28px;
-    text-align: center;
-    font: 500 clamp(24px, 3vw, 38px)/1.1 "Geist Mono", ui-monospace, monospace;
-    letter-spacing: -0.02em;
-  }
+  /* Below the hero the copy is Manrope: Sora's softer sibling, so the page reads as
+     one family without repeating the wordmark's weight. The bar stays in Sora. */
 
-  .steps h2, .cta h2 {
-    font-weight: 600;
+  .head, .steps, .cta, footer { font-family: "Manrope", "Sora", sans-serif; }
+
+  .head, .steps h2, .cta h2 {
+    font-weight: 700;
     font-size: clamp(28px, 4.2vw, 50px);
     line-height: 1.08;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.03em;
   }
+
+  .head { margin-bottom: 24px; text-align: center; }
 
   .steps p, .cta p {
     margin-top: 20px;
     font-size: 17px;
+    font-weight: 500;
     line-height: 1.55;
     max-width: 62ch;
   }
+
+  .cta a, .cta button { font-family: "Manrope", "Sora", sans-serif; }
+  .cta button { font-weight: 700; }
 
   /* The window in Trade mode, drawn from the app's own tokens */
 
@@ -325,7 +331,7 @@
   .steps ol { list-style: none; margin: 56px 0 0; padding: 0; display: grid; gap: 32px; grid-template-columns: repeat(3, 1fr); counter-reset: step; }
   .steps li { padding-top: 20px; border-top: 1px solid #363739; counter-increment: step; }
   .steps li::before { content: counter(step); display: block; font: 500 13px/1 "Geist Mono", monospace; color: var(--green); margin-bottom: 18px; }
-  .steps h3 { font-weight: 600; font-size: 20px; line-height: 1.2; }
+  .steps h3 { font-weight: 700; font-size: 20px; line-height: 1.2; letter-spacing: -0.01em; }
   .steps li p { margin-top: 12px; font-size: 15px; line-height: 1.55; }
 
   /* Closing */
@@ -346,15 +352,15 @@
     .nav { padding: 24px 32px; }
     .sections { display: flex; }
     .links { gap: 10px; }
-    .sheet { padding: 104px 32px 120px; }
+    .sheet { padding: 100px 32px 120px; }
   }
 
   /* The title and the window fit one screen under the bar: the window is 704px
-     tall at rest and sits 174px under the sheet's top edge, so on a short screen
+     tall at rest and sits 178px under the sheet's top edge, so on a short screen
      it is zoomed down by the ratio of the room left to that height. The
      tan(atan2()) pair is how CSS divides one length by another. */
   @media (min-width: 861px) {
-    .app { zoom: min(1, tan(atan2(100svh - 214px, 704px))); }
+    .app { zoom: min(1, tan(atan2(100svh - 218px, 704px))); }
   }
 
   @media (max-width: 860px) {
@@ -550,14 +556,15 @@
   if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
     const scrolled = () => onScroll({ target: '.lift', enter: 'bottom top', leave: 'top top', sync: true });
     animate('.lift', { scale: { from: 0.88, to: 1 }, ease: 'linear', autoplay: scrolled() });
-    // The corners round off while the sheet is a card and square up as it docks,
-    // so nothing green shows through them once it sits at the top.
+    // The corners stay round while the sheet is a card and square up only over
+    // the last fifth of the lift, as it docks, so nothing green shows through them
+    // once it sits at the top.
     const sheet = document.querySelector('.sheet');
     const radius = parseFloat(getComputedStyle(sheet).borderTopLeftRadius);
     animate(sheet, {
       borderTopLeftRadius: { from: radius, to: 0 },
       borderTopRightRadius: { from: radius, to: 0 },
-      ease: 'linear',
+      ease: (t) => Math.max(0, (t - 0.8) / 0.2),
       autoplay: scrolled(),
     });
   }
