@@ -190,7 +190,7 @@
   /* What moves on load or on entering view starts hidden, but only once the
      script is known to be running (the js class on html) and motion is welcome. */
   @media (prefers-reduced-motion: no-preference) {
-    .js .wordmark, .js .sub, .js .nav, .js .field, .js .steps li, .js .cta .wrap > * { opacity: 0; }
+    .js .wordmark, .js .sub, .js .nav, .js .field, .js .live, .js .steps li, .js .cta .wrap > * { opacity: 0; }
   }
 
   .sub {
@@ -211,11 +211,13 @@
   .after { position: relative; z-index: 1; }
   .lift { transform-origin: 50% 0; }
 
+  /* The sheet's top padding clears the fixed bar (88px tall from 720px up) with
+     room to spare, so nothing sits in the bar's veil. */
   .sheet {
     background: var(--ink);
     color: #ECEEF1;
     border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
-    padding: 84px 24px 96px;
+    padding: 104px 24px 72px;
   }
 
   .wrap { max-width: 1160px; margin: 0 auto; }
@@ -223,21 +225,40 @@
   /* One face for the whole page: Sora, the wordmark's own. The window mock is the
      one exception, it is a picture of the app and keeps the app's Geist. */
 
-  .head, .steps h2, .cta h2 {
+  /* Section heads on the dark surfaces: a short title and one sentence. From
+     861px up they share a row, the sentence on the title's baseline in the right
+     half, so the head is a line of reading rather than a second display title
+     under the wordmark. The window and the steps carry the weight. */
+  .head { display: grid; gap: 12px; margin-bottom: 36px; }
+
+  .head h2 {
     font-weight: 600;
-    font-size: clamp(28px, 4.2vw, 50px);
+    font-size: clamp(26px, 2.6vw, 36px);
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+  }
+
+  .head p {
+    font-size: 17px;
+    line-height: 1.5;
+    color: #9BA1AB;
+    max-width: 52ch;
+    text-wrap: pretty;
+  }
+
+  .cta h2 {
+    font-weight: 600;
+    font-size: clamp(32px, 4vw, 52px);
     line-height: 1.1;
     letter-spacing: -0.015em;
   }
 
-  .head { margin-bottom: 24px; text-align: center; }
-
-  .steps p, .cta p {
-    margin-top: 20px;
-    font-size: 17px;
-    font-weight: 400;
-    line-height: 1.55;
-    max-width: 62ch;
+  .cta p {
+    margin: 20px auto 0;
+    font-size: 18px;
+    line-height: 1.5;
+    max-width: 54ch;
+    text-wrap: pretty;
   }
 
   .cta button { font-weight: 600; }
@@ -360,24 +381,24 @@
   .none { color: var(--text-3); }
 
 
-  /* Steps */
+  /* Steps: the same ink as the sheet, so the two dark surfaces read as one
+     sheet with a rule across it, not two slabs a shade apart. */
 
-  .steps { background: #151619; color: #ECEEF1; padding: 96px 24px; }
-  .steps p { color: #9BA1AB; }
-  .steps ol { list-style: none; margin: 56px 0 0; padding: 0; display: grid; gap: 32px; grid-template-columns: repeat(3, 1fr); counter-reset: step; }
+  .steps { background: var(--ink); color: #ECEEF1; padding: 0 24px 88px; }
+  .steps .wrap { border-top: 1px solid #262729; padding-top: 72px; }
+  .steps ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 32px; grid-template-columns: repeat(3, 1fr); counter-reset: step; }
   .steps li { padding-top: 20px; border-top: 1px solid #363739; counter-increment: step; }
   .steps li::before { content: counter(step); display: block; font: 600 13px/1 "Sora", sans-serif; color: var(--green); margin-bottom: 18px; }
-  .steps h3 { font-weight: 600; font-size: 20px; line-height: 1.2; letter-spacing: -0.01em; }
-  .steps li p { margin-top: 12px; font-size: 15px; line-height: 1.55; }
+  .steps h3 { font-weight: 600; font-size: 19px; line-height: 1.25; letter-spacing: -0.01em; }
+  .steps li p { margin-top: 12px; font-size: 15px; line-height: 1.55; color: #9BA1AB; }
 
   /* Closing */
 
   .cta { background: var(--green); color: var(--ink); padding: 112px 24px; }
   .cta .wrap { max-width: 880px; text-align: center; }
-  .cta p { margin-left: auto; margin-right: auto; }
   .cta-acts { display: flex; justify-content: center; gap: 10px; margin-top: 36px; }
 
-  footer { background: var(--ink); color: #9BA1AB; padding: 28px 24px; font-size: 13px; }
+  footer { background: var(--ink); color: #9BA1AB; padding: 32px 24px; font-size: 13px; }
   footer .wrap { display: flex; align-items: center; gap: 18px; }
   footer .mark img { width: 17px; height: 20px; }
   footer a { color: inherit; text-decoration: none; text-underline-offset: 4px; }
@@ -388,25 +409,34 @@
     .nav { padding: 24px 32px; }
     .sections { display: flex; }
     .links { gap: 10px; }
-    .sheet { padding: 100px 32px 120px; }
+    .sheet { padding: 128px 32px 96px; }
+    .steps { padding: 0 32px 112px; }
+    .steps .wrap { padding-top: 96px; }
+    .cta { padding: 136px 32px; }
   }
 
-  /* The title and the window fit one screen under the bar: the window is 704px
-     tall at rest and sits 178px under the sheet's top edge, so on a short screen
-     it is zoomed down by the ratio of the room left to that height. The
-     tan(atan2()) pair is how CSS divides one length by another. */
   @media (min-width: 861px) {
-    .app { zoom: min(1, tan(atan2(100svh - 218px, 704px))); }
+    .head { grid-template-columns: 1fr 1fr; align-items: baseline; gap: 40px; margin-bottom: 40px; }
+  }
+
+  /* On a wide screen the head and the window fit one screen under the bar: the
+     window is 704px tall at rest and sits 236px under the sheet's top edge with
+     96px below it, so on a short screen it is zoomed down by the ratio of the
+     room left to that height, and never below 0.72, where the text in the
+     picture stops being readable. The tan(atan2()) pair is how CSS divides one
+     length by another. Narrower than 1100px the window keeps its size and the
+     page scrolls. */
+  @media (min-width: 1100px) {
+    .app { zoom: clamp(0.72, tan(atan2(100svh - 332px, 704px)), 1); }
   }
 
   @media (max-width: 860px) {
     :root { --radius-sheet: 28px; }
-    .head { margin-bottom: 28px; }
     .app-body { grid-template-columns: 1fr; height: auto; }
     .conv { display: none; }
     .chart-col { border-right: 0; border-bottom: 1px solid var(--line); }
     .chart-host { height: 340px; }
-    .seg.small span:nth-child(n+6) { display: none; }
+    .seg.small span:nth-child(-n+4) { display: none; }
     .app-bar .danger { display: none; }
     .steps ol { grid-template-columns: 1fr; gap: 24px; }
   }
@@ -432,7 +462,7 @@
     <svg viewBox="0 0 58.05 64.75" aria-hidden="true"><path fill="currentColor" d="M28.25 0.05c-0.45 0.05-1.4 0.2-1.9 0.35c-1.4 0.4-2.25 0.75-4.1 1.85c-0.35 0.2-1 0.55-1.35 0.75c-0.35 0.2-0.85 0.5-1 0.6c-0.55 0.3-4.2 2.35-5.15 2.9c-0.45 0.25-1.35 0.75-2 1.15c-0.65 0.35-1.6 0.9-2.05 1.15c-0.5 0.3-1.4 0.8-1.95 1.15c-0.6 0.3-1.8 1-2.7 1.5c-1.8 1.05-2.4 1.45-3.2 2.25c-1.45 1.5-2.3 3.05-2.7 5.15l-0.1 0.7l-0.05 14.25c0 7.8 0 14.4 0.05 14.6l0.05 0.35l0.4 0.3c0.25 0.1 0.7 0.4 1.1 0.6c1.9 1.1 2.95 1.75 3.1 1.85c0.15 0.1 1.45 0.8 2 1.1c0.15 0.1 0.3 0.15 0.35 0.15l0.15-0.05l0-14.3l0.05-14.3l0.1-0.6c0.5-2.05 1.3-3.6 2.65-4.95c1-1.05 1.8-1.6 3.65-2.65c0.05 0 0.35-0.2 0.7-0.4c0.3-0.15 1.1-0.65 1.75-1c0.65-0.4 1.4-0.8 1.65-0.95c0.45-0.25 0.55-0.35 3-1.75c1.25-0.75 2.75-1.65 3.45-2c0.15-0.1 0.5-0.3 0.75-0.45c0.2-0.15 0.7-0.45 1.05-0.65c0.35-0.15 0.85-0.45 1.15-0.65c0.25-0.15 0.6-0.35 0.8-0.45c0.15-0.1 0.6-0.35 1.05-0.6c0.4-0.25 0.85-0.5 1-0.6c0.2-0.05 6.6-3.75 6.7-3.85c0.05 0-0.15-0.15-0.45-0.3c-0.25-0.15-0.65-0.4-0.9-0.55c-1.15-0.75-2.45-1.25-3.95-1.55c-0.6-0.1-0.85-0.1-1.8-0.1c-0.65-0.05-1.25-0.05-1.35 0zM36 6c-1.8 1.1-3.4 2-3.5 2.05c-0.1 0.1-1.6 0.95-3.35 2c-1.7 1-3.45 2-3.8 2.2c-1.4 0.85-1.95 1.2-2.05 1.2c0 0-0.25 0.15-0.5 0.3c-0.45 0.25-1.3 0.75-2.45 1.45c-0.25 0.15-0.6 0.35-0.7 0.4c-0.1 0.1-0.8 0.45-1.45 0.85c-0.65 0.4-1.5 0.9-1.85 1.1c-0.4 0.2-0.95 0.55-1.3 0.75c-0.8 0.45-1.15 0.65-1.7 1.15c-0.9 0.7-1.7 1.55-2.2 2.35c-0.6 0.9-1.1 2.15-1.2 3.05c-0.05 0.25-0.05 6.4-0.05 14.95l0 14.55l0.15 0.15c0.05 0.1 0.75 0.5 1.55 0.95c0.75 0.45 1.6 0.95 1.85 1.05c2.3 1.4 3.1 1.8 3.2 1.85c0.1 0 0.15 0 0.2-0.05c0-0.05 0.05-6.75 0.05-15.1l0.05-15l0.15-0.6c0.5-1.7 1.15-2.75 2.35-3.95c0.9-0.85 1.25-1.1 3.65-2.45c0.15-0.15 0.45-0.3 0.55-0.35c0.1-0.1 0.6-0.35 1.1-0.65c1.9-1.1 7.9-4.7 11.05-6.65c2.5-1.5 3.15-1.9 3.3-1.9c0.1 0 6.3-3.65 6.6-3.9c0 0-1.35-0.8-2.9-1.7c-0.75-0.4-1.65-0.95-2-1.15c-0.4-0.25-0.9-0.55-1.1-0.65l-0.35-0.2l-3.35 1.95zM46.75 10.2c-2.25 1.35-7.45 4.45-9.6 5.7c-2.2 1.35-5.7 3.4-7.05 4.25c-0.6 0.35-1.8 1.05-2.65 1.55c-0.85 0.5-2.1 1.25-2.7 1.6c-1.3 0.8-1.8 1.1-2.35 1.65c-1.6 1.5-2.5 3.15-2.8 5.25c-0.1 0.6-0.1 1.35-0.1 15.15c0 13.7 0 14.55 0.05 14.65c0.05 0.05 0.45 0.35 0.9 0.6c0.85 0.45 1.05 0.6 1.85 1.05c0.25 0.15 0.7 0.45 1.05 0.6c0.35 0.2 0.85 0.5 1.15 0.65c0.25 0.2 0.75 0.5 1.1 0.7c0.35 0.15 0.85 0.45 1.1 0.6c0.25 0.15 0.5 0.3 0.55 0.3c0.05 0 0.1-0.05 0.15-0.1c0.05-0.05 0.05-4.75 0.05-14.8l0-14.7l0.15-0.65c0.35-1.7 1.2-3.15 2.7-4.45c0.75-0.7 1.3-1.05 2.4-1.7c0.25-0.15 0.75-0.4 1.05-0.6c0.75-0.45 2.8-1.6 3.25-1.85c0.15-0.1 0.6-0.4 1-0.6c0.35-0.2 0.85-0.5 1.15-0.65c0.25-0.2 0.85-0.55 1.3-0.8c0.45-0.25 1.1-0.65 1.45-0.85c0.35-0.2 0.8-0.45 1-0.6c0.15-0.1 0.6-0.35 0.95-0.55c0.85-0.5 2.25-1.3 3-1.75c0.35-0.2 1-0.6 1.5-0.9c0.5-0.3 1-0.55 1.1-0.65c0.1-0.05 0.6-0.35 1.1-0.65c0.5-0.3 1.05-0.6 1.25-0.7c0.15-0.15 0.6-0.4 0.95-0.6c0.35-0.2 0.9-0.55 1.3-0.75c0.35-0.2 0.95-0.6 1.4-0.8c0.4-0.25 0.8-0.5 0.85-0.6c0.1-0.1 0.1-0.1 0.05-0.2c-0.05-0.05-0.45-0.3-0.85-0.55c-0.45-0.25-1.1-0.65-1.55-0.9c-0.45-0.25-1.05-0.6-1.35-0.8c-1.1-0.65-1.55-0.9-2.8-1.6c-0.7-0.45-1.3-0.8-1.35-0.85c-0.1-0.05-0.3 0.05-1.7 0.9zM56.8 17.05c-0.9 0.5-1.05 0.6-2.15 1.25c-0.35 0.2-0.9 0.55-1.2 0.7c-0.35 0.2-0.85 0.5-1.1 0.65c-0.3 0.2-0.8 0.5-1.15 0.7c-0.4 0.2-1 0.6-1.4 0.8c-0.45 0.25-1.1 0.65-1.45 0.9c-0.4 0.2-0.95 0.5-1.2 0.65c-0.4 0.25-1.9 1.1-3.1 1.85c-0.25 0.15-1.05 0.6-1.85 1.05c-0.8 0.5-1.6 0.95-1.75 1.05c-0.2 0.15-0.8 0.5-1.3 0.75c-0.5 0.3-1.1 0.65-1.25 0.75c-0.2 0.15-0.65 0.4-1 0.6c-0.35 0.2-0.9 0.55-1.2 0.75c-0.35 0.15-0.95 0.55-1.35 0.8c-1 0.55-1.35 0.85-2 1.45c-1.05 1.1-1.7 2.45-2.05 4.3l-0.1 0.55l0 14.05l0.05 14l0.1 0.05c0.1 0 0.35-0.1 1.6-0.85c1.75-1.05 3.1-1.85 3.35-2c0.15-0.1 0.45-0.25 0.65-0.35c0.15-0.15 0.8-0.5 1.35-0.85c0.6-0.35 1.1-0.65 1.15-0.75c0.1-0.1 0.1-0.25 0.1-3.65c0-2.7 0-3.55 0.05-3.65c0.1-0.15 0.25-0.25 2.2-1.35c0.75-0.4 2.4-1.35 3.7-2.1c1.3-0.7 2.85-1.6 3.5-1.95c0.6-0.35 1.3-0.75 1.55-0.9c0.2-0.15 0.7-0.4 1.1-0.65c3-1.7 3.55-2.05 4.3-2.65c0.65-0.6 1.45-1.5 1.85-2.2c0.6-1 0.85-1.7 1.05-2.8l0.15-0.6l0-10.45l0-10.45l-0.15 0c-0.15 0-0.4 0.15-1.05 0.55zM51.4 30.55c0.05 1.6 0.05 3.6-0.05 4.05c-0.15 1-0.75 1.95-1.65 2.6c-0.4 0.3-1 0.65-4.05 2.4c-0.35 0.2-1 0.6-1.45 0.85c-0.45 0.25-1.15 0.65-1.6 0.9c-0.45 0.25-1.35 0.8-1.95 1.15c-1.9 1.1-2.05 1.15-2.1 1.15c-0.15-0.05-0.15-0.3-0.15-1.9c0-1.35 0-1.55 0.1-1.9c0.05-0.2 0.1-0.4 0.1-0.45c0-0.15 0.25-0.85 0.45-1.25c0.3-0.6 0.7-1.15 1.15-1.65c0.6-0.55 0.95-0.8 2.05-1.45c2.3-1.3 7.4-4.3 8.45-5c0.25-0.2 0.4-0.25 0.55-0.25l0.15 0l0 0.75z"/></svg>
   </a>
   <nav class="sections" aria-label="Sections">
-    <a href="#dashboard">Dashboard</a>
+    <a href="#dashboard">The app</a>
     <a href="#how">How it works</a>
     <a href="#agent">Your agent</a>
   </nav>
@@ -454,7 +484,10 @@
     <div class="lift">
   <section class="sheet dark" id="dashboard">
     <div class="wrap">
-      <h2 class="head">The Dashboard</h2>
+      <div class="head">
+        <h2>Inside the app</h2>
+        <p>Your agent, the market and your money in one window. Nothing moves without your click.</p>
+      </div>
 
       <div class="app" aria-label="The Phosphor window in Trade mode">
         <div class="app-bar">
@@ -528,8 +561,10 @@
 
     <section class="steps dark" id="how">
     <div class="wrap">
-      <h2>How a trade happens</h2>
-      <p>Three parties, one line of English, and one click that only you can make.</p>
+      <div class="head">
+        <h2>How a trade happens</h2>
+        <p>Three parties, one line of English, and one click that only you can make.</p>
+      </div>
       <ol>
         <li>
           <h3>The agent proposes</h3>
@@ -780,15 +815,20 @@
   const maxV = Math.max(...candles.map(k => k.v));
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
+  let chartW = 0;
   function draw() {
     const W = host.clientWidth, H = host.clientHeight;
     if (!W || !H) return;
     const axis = 62, top = 30, volH = Math.round(H * 0.16), timeH = 22;
-    const chartW = W - axis, priceH = H - top - volH - timeH;
+    const priceH = H - top - volH - timeH;
+    chartW = W - axis;
     const y = (v) => top + (hi - v) / (hi - lo) * priceH;
     const step = chartW / candles.length;
-    // until the window has arrived, the bars wait flat on their baselines
-    const bar = grown ? ' data-bar' : ' data-bar style="transform: scaleY(0)"';
+    // until the visitor is looking, the bars wait flat on their baselines, the
+    // last-price line has no length and its tag is clear; each bar carries its
+    // candle's index so the wick, the body and the volume of one day move together
+    const bar = (i) => grown ? ` data-bar="${i}"` : ` data-bar="${i}" style="transform: scaleY(0)"`;
+    const hidden = grown ? '' : ' style="opacity: 0"';
     let out = '';
     // grid and price axis
     for (let v = lo; v <= hi; v += gridStep) {
@@ -801,18 +841,22 @@
       const x = i * step + step / 2;
       const up = k.c >= k.o;
       const col = up ? '#3FFF6C' : '#FF5A6E';
-      out += `<line x1="${x}" x2="${x}" y1="${y(k.h)}" y2="${y(k.l)}" stroke="${col}"${bar}/>`;
+      out += `<line x1="${x}" x2="${x}" y1="${y(k.h)}" y2="${y(k.l)}" stroke="${col}"${bar(i)}/>`;
       const t = y(Math.max(k.o, k.c)), b = y(Math.min(k.o, k.c));
-      out += `<rect x="${x - step * 0.28}" y="${t}" width="${step * 0.56}" height="${Math.max(1, b - t)}" fill="${col}"${bar}/>`;
+      out += `<rect x="${x - step * 0.28}" y="${t}" width="${step * 0.56}" height="${Math.max(1, b - t)}" fill="${col}"${bar(i)}/>`;
     });
     // the last price on the axis
-    out += `<line x1="0" x2="${chartW}" y1="${y(last.c)}" y2="${y(last.c)}" stroke="#FF5A6E" stroke-dasharray="2 3" opacity="0.7"/>`;
+    out += `<line data-line x1="0" x2="${grown ? chartW : 0}" y1="${y(last.c)}" y2="${y(last.c)}" stroke="#FF5A6E" stroke-dasharray="2 3" opacity="0.7"/>`;
+    out += `<g data-tag${hidden}>`;
     out += `<rect x="${chartW}" y="${y(last.c) - 9}" width="${axis}" height="18" fill="#FF5A6E"/>`;
     out += `<text x="${chartW + 8}" y="${y(last.c) + 4}" fill="#0E0F13" font-size="11" font-weight="600" font-family="${mono}">${fmt(last.c)}</text>`;
+    out += `</g>`;
     // legend
     const dayCol = last.c >= last.o ? '#3FFF6C' : '#FF5A6E';
     const pct = ((last.c / last.o - 1) * 100).toFixed(2);
-    out += `<text x="8" y="18" font-size="11" font-family="${mono}"><tspan fill="#3FFF6C">BTC-USD</tspan><tspan fill="#9BA1AB"> 1d </tspan><tspan fill="#9BA1AB">O </tspan><tspan fill="${dayCol}">${fmt(last.o)}</tspan><tspan fill="#9BA1AB"> H </tspan><tspan fill="${dayCol}">${fmt(last.h)}</tspan><tspan fill="#9BA1AB"> L </tspan><tspan fill="${dayCol}">${fmt(last.l)}</tspan><tspan fill="#9BA1AB"> C </tspan><tspan fill="${dayCol}">${fmt(last.c)} ${pct >= 0 ? '+' : ''}${pct}%</tspan></text>`;
+    // on a phone the chart is too narrow for the symbol and the day's figures both
+    const symbol = chartW < 420 ? '' : `<tspan fill="#3FFF6C">BTC-USD</tspan><tspan fill="#9BA1AB"> 1d </tspan>`;
+    out += `<text x="8" y="18" font-size="11" font-family="${mono}">${symbol}<tspan fill="#9BA1AB">O </tspan><tspan fill="${dayCol}">${fmt(last.o)}</tspan><tspan fill="#9BA1AB"> H </tspan><tspan fill="${dayCol}">${fmt(last.h)}</tspan><tspan fill="#9BA1AB"> L </tspan><tspan fill="${dayCol}">${fmt(last.l)}</tspan><tspan fill="#9BA1AB"> C </tspan><tspan fill="${dayCol}">${fmt(last.c)} ${pct >= 0 ? '+' : ''}${pct}%</tspan></text>`;
     // volume
     const vTop = top + priceH + 4;
     out += `<line x1="0" x2="${W}" y1="${vTop - 2}" y2="${vTop - 2}" stroke="#262729"/>`;
@@ -820,7 +864,7 @@
     candles.forEach((k, i) => {
       const x = i * step + step / 2;
       const hgt = k.v / maxV * (volH - 18);
-      out += `<rect x="${x - step * 0.28}" y="${vTop + volH - 4 - hgt}" width="${step * 0.56}" height="${hgt}" fill="${k.c >= k.o ? '#3FFF6C' : '#FF5A6E'}" opacity="0.8"${bar}/>`;
+      out += `<rect x="${x - step * 0.28}" y="${vTop + volH - 4 - hgt}" width="${step * 0.56}" height="${hgt}" fill="${k.c >= k.o ? '#3FFF6C' : '#FF5A6E'}" opacity="0.8"${bar(i)}/>`;
     });
     // time axis
     candles.forEach((k, i) => {
@@ -831,15 +875,25 @@
     svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
     svg.innerHTML = out;
   }
-  // The chart draws itself as the window arrives: candles and volume grow from
-  // their baselines, left to right, once.
+  // The chart draws itself once, in front of the visitor: the candles and their
+  // volume grow from the baseline in a sweep from left to right, the last-price
+  // line runs along under the sweep, and the tag and the live dot land with the
+  // last candle. It starts as the sheet docks (its top edge within a tenth of the
+  // screen from the bar), not when the window first peeks in: by then the eye is
+  // on the chart and the sheet has stopped moving. About two seconds in all.
   let grown = !live;
   draw();
   new ResizeObserver(draw).observe(host);
-  if (live) Motion.inView('.app', () => {
+  const reveal = () => {
     grown = true;
-    Motion.animate(svg.querySelectorAll('[data-bar]'), { transform: ['scaleY(0)', 'scaleY(1)'] }, { duration: 0.5, delay: Motion.stagger(0.006), ease: out });
-  }, { amount: 0.35 });
+    const per = 0.012, sweep = per * candles.length;
+    const bars = svg.querySelectorAll('[data-bar]');
+    Motion.animate(bars, { transform: ['scaleY(0)', 'scaleY(1)'] }, { duration: 0.65, delay: (i) => +bars[i].dataset.bar * per, ease: out });
+    Motion.animate(svg.querySelector('[data-line]'), { x2: [0, chartW] }, { duration: sweep, ease: 'linear' });
+    Motion.animate(svg.querySelector('[data-tag]'), { opacity: [0, 1], transform: ['translateX(10px)', 'translateX(0px)'] }, { duration: 0.4, delay: sweep - 0.1, ease: out });
+    Motion.animate('.live', { opacity: [0, 1] }, { duration: 0.4, delay: sweep - 0.1 });
+  };
+  if (live) ScrollTrigger.create({ trigger: '.lift', start: 'top 10%', once: true, onEnter: reveal });
 </script>
 
 </body>

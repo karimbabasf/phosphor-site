@@ -26,7 +26,8 @@ There is no test suite. Check these by hand before pushing:
 - on load the letters of the wordmark rise into view, the field comes up behind them, then the line under the wordmark and the bar follow
 - the mark shows in the nav with its cuts in green, not white, and `mark-green.svg` shows on the dark surfaces
 - the dark sheet comes up small and grows to full width as it reaches the top; the hero never moves; scrolling is plain, nothing snaps
-- the window mock shows Trade mode: real BTC daily candles from Hyperliquid (a snapshot baked into the page, refetch to refresh), the rail, and the empty conversation column; the candles and volume grow in left to right the first time the window comes into view
+- the window mock shows Trade mode: real BTC daily candles from Hyperliquid (a snapshot baked into the page, refetch to refresh), the rail, and the empty conversation column; as the sheet docks under the bar the candles and volume grow in left to right over about two seconds, the last-price line runs along under them, and the price tag and the live dot land with the last candle
+- the two dark sections share one ink and one head pattern: a short title left, one sentence on its baseline right; on a screen 1100px or wider the head and the window fit under the bar in one screen, the window zoomed down to fit but never below 0.72
 - the window mock is a still picture: nothing inside it reacts to a click
 - the three steps and the closing call fade up as they enter view
 - Download crossfades to "Coming soon" on click, the pill widens to fit, and it comes back after about two seconds
