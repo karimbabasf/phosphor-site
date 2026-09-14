@@ -188,30 +188,21 @@
 
   .wrap { max-width: 1160px; margin: 0 auto; }
 
-  .head {
-    display: grid;
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-    gap: 24px 56px;
-    align-items: end;
-    margin-bottom: 40px;
-  }
+  .head { margin-bottom: 36px; }
 
-  .head h2, .steps h2, .cta h2 {
+  .head, .steps h2, .cta h2 {
     font-weight: 600;
     font-size: clamp(28px, 4.2vw, 50px);
     line-height: 1.08;
     letter-spacing: -0.01em;
   }
 
-  .head p, .steps p, .cta p {
+  .steps p, .cta p {
+    margin-top: 20px;
     font-size: 17px;
     line-height: 1.55;
     max-width: 62ch;
   }
-
-  .steps p, .cta p { margin-top: 20px; }
-
-  .head p { color: #9BA1AB; padding-bottom: 6px; }
 
   /* The window in Basic mode, drawn from the app's own tokens */
 
@@ -380,8 +371,7 @@
 
   @media (max-width: 860px) {
     :root { --radius-sheet: 28px; }
-    .head { grid-template-columns: 1fr; margin-bottom: 32px; }
-    .head p { padding-bottom: 0; }
+    .head { margin-bottom: 28px; }
     .app-body { grid-template-columns: 1fr; }
     .conv { order: 2; border-right: 0; border-top: 1px solid var(--line); }
     .transcript, .composer { display: none; }
@@ -427,10 +417,7 @@
 
   <section class="sheet dark">
     <div class="wrap">
-      <div class="head">
-        <h2>The Basic screen</h2>
-        <p>Phosphor is a desktop app with no AI inside. Claude Code or Codex connects over MCP and drives it. Basic is the mode for someone who has never held a wallet: one number, one sentence about what is happening to it, and one yes or no that only you can give.</p>
-      </div>
+      <h2 class="head">The dashboard</h2>
 
       <div class="app" aria-label="The Phosphor window in Basic mode">
         <div class="app-bar">
