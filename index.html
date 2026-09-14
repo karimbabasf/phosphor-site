@@ -43,10 +43,11 @@
 
   * { box-sizing: border-box; }
   html, body { margin: 0; }
-  html { scroll-behavior: smooth; scroll-snap-type: y mandatory; }
+  html { scroll-behavior: smooth; scroll-snap-type: y proximity; }
 
-  /* Snap points are one pixel markers at the top of each section, kept outside the
-     lifted wrapper: Chrome measures a snap area after its transform and re-snaps
+  /* Sections pull the page to their top edge when a scroll ends near one, and
+     leave it alone otherwise. Snap points are one pixel markers at the top of each
+     section, kept outside the lifted wrapper: Chrome measures a snap area after its transform and re-snaps
      whenever that box moves, which fought the lift for the scroll position. */
   .snap { height: 1px; margin-bottom: -1px; scroll-snap-align: start; pointer-events: none; }
 
