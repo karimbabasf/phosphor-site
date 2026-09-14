@@ -16,7 +16,9 @@ Then open http://localhost:4300. Serving matters: the font and icon paths are ab
 There is no test suite. Check these by hand before pushing:
 
 - the wordmark renders in Sora, not a fallback (compare with the banner in ~/Developer/artifacts/brand/phosphor/)
-- the mark shows in the nav with its cuts in green, not white
+- the mark shows in the nav with its cuts in green, not white, and `mark-green.svg` shows on the dark surfaces
+- the dark sheet slides up over the hero with rounded corners; the hero stays put
+- Approve on the trade screen swaps to "Approved" and the card fades; Close and Cancel ask "Sure?" first
 - Download says "Coming soon" on click and goes back after about two seconds
 - the browser console is clean
 

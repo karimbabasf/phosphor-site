@@ -24,33 +24,26 @@
 <link rel="preload" href="/fonts/Sora-SemiBold.ttf" as="font" type="font/ttf" crossorigin>
 <link rel="preload" href="/fonts/Sora-Regular.ttf" as="font" type="font/ttf" crossorigin>
 <style>
-  @font-face {
-    font-family: "Sora";
-    font-weight: 400;
-    font-display: block;
-    src: url("/fonts/Sora-Regular.ttf") format("truetype");
-  }
-  @font-face {
-    font-family: "Sora";
-    font-weight: 600;
-    font-display: block;
-    src: url("/fonts/Sora-SemiBold.ttf") format("truetype");
-  }
+  @font-face { font-family: "Sora"; font-weight: 400; font-display: block; src: url("/fonts/Sora-Regular.ttf") format("truetype"); }
+  @font-face { font-family: "Sora"; font-weight: 600; font-display: block; src: url("/fonts/Sora-SemiBold.ttf") format("truetype"); }
+  @font-face { font-family: "Geist"; font-weight: 100 900; font-display: swap; src: url("/fonts/Geist-Variable.woff2") format("woff2"); }
+  @font-face { font-family: "Geist Mono"; font-weight: 100 900; font-display: swap; src: url("/fonts/GeistMono-Variable.woff2") format("woff2"); }
 
   :root {
     --green: #3FFF6C;
     --ink: #0E0F13;
     --ink-soft: #2A2C33;
     --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --radius-sheet: 40px;
     color-scheme: light;
   }
 
   * { box-sizing: border-box; }
-
   html, body { margin: 0; }
+  html { scroll-behavior: smooth; }
 
   body {
-    background: var(--green);
+    background: var(--ink);
     color: var(--ink);
     font-family: "Sora", "Manrope", "Helvetica Neue", sans-serif;
     font-optical-sizing: auto;
@@ -58,14 +51,24 @@
   }
 
   ::selection { background: var(--ink); color: var(--green); }
+  .dark ::selection { background: var(--green); color: var(--ink); }
 
-  :focus-visible {
-    outline: 2px solid var(--ink);
-    outline-offset: 4px;
-    border-radius: 2px;
+  :focus-visible { outline: 2px solid currentColor; outline-offset: 4px; border-radius: 2px; }
+
+  h1, h2, h3, p { margin: 0; }
+
+  /* Hero: pinned while the rest of the page slides over it */
+
+  .hero {
+    position: sticky;
+    top: 0;
+    z-index: 0;
+    height: 100svh;
+    display: grid;
+    place-items: center;
+    padding: 96px 24px;
+    background: var(--green);
   }
-
-  /* Nav */
 
   .nav {
     position: absolute;
@@ -76,25 +79,15 @@
     padding: 20px 24px;
   }
 
-  .mark {
-    display: block;
-    line-height: 0;
-  }
+  .mark { display: block; line-height: 0; }
+  .mark img { display: block; width: 25px; height: 30px; }
 
-  .mark img {
-    display: block;
-    width: 25px;
-    height: 30px;
-  }
-
-  .links {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
+  .links { display: flex; align-items: center; gap: 6px; }
 
   .links a,
-  .links button {
+  .links button,
+  .cta a,
+  .cta button {
     font: 400 15px/1 "Sora", sans-serif;
     color: var(--ink);
     text-decoration: none;
@@ -106,13 +99,13 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  .links a {
+  .links a, .cta a {
     text-underline-offset: 5px;
     text-decoration-color: transparent;
     transition: text-decoration-color 150ms ease;
   }
 
-  .links button {
+  .links button, .cta button {
     font-weight: 600;
     background: var(--ink);
     color: var(--green);
@@ -121,24 +114,14 @@
     transition: transform 160ms var(--ease-out), background-color 150ms ease;
   }
 
-  .links button:active { transform: scale(0.97); }
+  .links button:active, .cta button:active { transform: scale(0.97); }
 
   @media (hover: hover) and (pointer: fine) {
-    .links a:hover { text-decoration-line: underline; text-decoration-color: var(--ink); }
-    .links button:hover { background: var(--ink-soft); }
-  }
-
-  /* Hero */
-
-  .hero {
-    min-height: 100svh;
-    display: grid;
-    place-items: center;
-    padding: 96px 24px;
+    .links a:hover, .cta a:hover { text-decoration-line: underline; text-decoration-color: var(--ink); }
+    .links button:hover, .cta button:hover { background: var(--ink-soft); }
   }
 
   .wordmark {
-    margin: 0;
     font-weight: 600;
     font-size: min(12.4vw, 27vh);
     line-height: 1;
@@ -147,40 +130,451 @@
     white-space: nowrap;
   }
 
+  /* Everything after the hero rides above it */
+
+  .after { position: relative; z-index: 1; }
+
+  .sheet {
+    background: var(--ink);
+    color: #ECEEF1;
+    border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+    padding: 72px 24px 96px;
+  }
+
+  .wrap { max-width: 1160px; margin: 0 auto; }
+
+  .lede { max-width: 760px; margin-bottom: 48px; }
+
+  .lede h2, .steps h2, .cta h2 {
+    font-weight: 600;
+    font-size: clamp(28px, 4.2vw, 50px);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+  }
+
+  .lede p, .steps p, .cta p {
+    margin-top: 20px;
+    font-size: 17px;
+    line-height: 1.55;
+    max-width: 62ch;
+  }
+
+  .sheet .lede p { color: #9BA1AB; }
+
+  /* The trade screen, drawn from the app's own tokens */
+
+  .app {
+    --bg-0: #0E0F13;
+    --bg-1: #151619;
+    --bg-2: #1B1D20;
+    --line: #262729;
+    --line-strong: #363739;
+    --text: #ECEEF1;
+    --text-2: #9BA1AB;
+    --text-3: #5E656F;
+    --up: #3FFF6C;
+    --down: #FF5A6E;
+    --warn: #F5B942;
+    --agent: #B79CFF;
+    --ink-wash: rgba(63, 255, 108, 0.08);
+    --ink-edge: rgba(63, 255, 108, 0.16);
+    font: 400 13px/1.35 "Geist", "Sora", sans-serif;
+    color: var(--text);
+    background: var(--bg-0);
+    border: 1px solid var(--line-strong);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+  }
+
+  .mono { font-family: "Geist Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+
+  .app-bar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    height: 44px;
+    padding: 0 14px;
+    background: var(--bg-1);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .app-bar img { width: 15px; height: 18px; }
+
+  .seg { display: flex; gap: 2px; padding: 2px; border-radius: 8px; background: var(--bg-0); border: 1px solid var(--line); }
+  .seg span { padding: 4px 9px; border-radius: 6px; color: var(--text-2); font-weight: 500; }
+  .seg span[data-on] { background: var(--bg-2); color: var(--text); }
+
+  .agent { margin-left: auto; display: flex; align-items: center; gap: 8px; color: var(--text-2); }
+  .agent i { width: 7px; height: 7px; border-radius: 50%; background: var(--agent); box-shadow: 0 0 0 3px rgba(183, 156, 255, 0.18); }
+
+  .app-body { display: grid; grid-template-columns: 1fr 300px; }
+
+  .app-chart { position: relative; background: var(--bg-0); border-right: 1px solid var(--line); }
+  .app-chart svg { display: block; width: 100%; height: auto; }
+
+  .app-rail { display: flex; flex-direction: column; background: var(--bg-1); }
+
+  .zone { padding: 14px 16px; border-bottom: 1px solid var(--line); }
+  .zone:last-child { border-bottom: 0; flex: 1; }
+  .zone h3 { font-size: 11px; font-weight: 500; letter-spacing: 0.02em; color: var(--text-3); margin-bottom: 10px; }
+
+  .status { display: grid; grid-template-columns: 1fr auto; row-gap: 10px; align-items: end; }
+  .status .coin { font-size: 15px; font-weight: 600; }
+  .status .px { font-size: 22px; font-weight: 500; letter-spacing: -0.01em; }
+  .status .px small { font-size: 12px; color: var(--up); margin-left: 6px; font-weight: 500; }
+  .facts { display: flex; gap: 18px; grid-column: 1 / -1; color: var(--text-2); }
+  .facts b { display: block; font-weight: 400; color: var(--text-3); font-size: 11px; margin-bottom: 2px; }
+  .facts span { color: var(--text); }
+
+  .row { padding: 10px 0; border-top: 1px solid var(--line); }
+  .row:first-of-type { border-top: 0; padding-top: 0; }
+  .row-head { display: flex; justify-content: space-between; font-weight: 500; }
+  .row-line { color: var(--text-2); margin-top: 4px; }
+  .up { color: var(--up); }
+  .down { color: var(--down); }
+  .dots { margin: 8px 0 0; padding: 0; list-style: none; color: var(--text-2); }
+  .dots li { display: flex; align-items: center; gap: 8px; padding: 2px 0; }
+  .dots i { width: 7px; height: 7px; border-radius: 50%; border: 1.5px solid var(--text-3); }
+  .dots i[data-held] { background: var(--up); border-color: var(--up); }
+  .row-foot { margin-top: 8px; }
+
+  .app button {
+    font: 500 12px/1 "Geist", sans-serif;
+    color: var(--text);
+    background: var(--bg-2);
+    border: 1px solid var(--line-strong);
+    border-radius: 7px;
+    padding: 7px 11px;
+    cursor: pointer;
+    transition: transform 160ms var(--ease-out), background-color 150ms ease;
+  }
+  .app button:active { transform: scale(0.97); }
+  .app button.primary { background: var(--up); color: var(--bg-0); border-color: transparent; font-weight: 600; }
+  @media (hover: hover) and (pointer: fine) {
+    .app button:hover { background: var(--line); }
+    .app button.primary:hover { background: #63FF87; }
+  }
+
+  .done-list { margin: 0; padding: 0; list-style: none; color: var(--text-2); }
+  .done-list li { display: flex; justify-content: space-between; padding: 5px 0; }
+  .done-list li span:first-child { color: var(--text); }
+
+  /* The decision: the one thing on the screen the agent cannot press */
+
+  .gate {
+    position: absolute;
+    left: 16px;
+    bottom: 16px;
+    width: min(380px, calc(100% - 32px));
+    padding: 14px 16px;
+    background: rgba(21, 22, 25, 0.96);
+    border: 1px solid var(--ink-edge);
+    border-radius: 12px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+    transition: opacity 200ms ease;
+  }
+  .gate[data-state="gone"] { opacity: 0; pointer-events: none; }
+  .gate-who { display: flex; align-items: center; gap: 8px; color: var(--agent); font-weight: 500; font-size: 12px; }
+  .gate-who i { width: 7px; height: 7px; border-radius: 50%; background: var(--agent); }
+  .gate-line { margin-top: 8px; font-size: 14px; font-weight: 500; line-height: 1.4; }
+  .gate-checks { margin: 10px 0 0; padding: 0; list-style: none; color: var(--text-2); font-size: 12px; }
+  .gate-checks li { display: flex; gap: 8px; padding: 2px 0; }
+  .gate-checks li::before { content: "✓"; color: var(--up); font-weight: 600; }
+  .gate-acts { display: flex; gap: 8px; margin-top: 12px; }
+  .gate-result { display: none; margin-top: 10px; font-weight: 500; }
+  .gate[data-state="approved"] .gate-acts, .gate[data-state="declined"] .gate-acts,
+  .gate[data-state="approved"] .gate-checks, .gate[data-state="declined"] .gate-checks { display: none; }
+  .gate[data-state="approved"] .gate-result, .gate[data-state="declined"] .gate-result { display: block; }
+
+  .caption { margin-top: 18px; color: #5E656F; font-size: 14px; }
+
+  /* Steps */
+
+  .steps { background: #151619; color: #ECEEF1; padding: 96px 24px; }
+  .steps p { color: #9BA1AB; }
+  .steps ol { list-style: none; margin: 56px 0 0; padding: 0; display: grid; gap: 32px; grid-template-columns: repeat(3, 1fr); counter-reset: step; }
+  .steps li { padding-top: 20px; border-top: 1px solid #363739; counter-increment: step; }
+  .steps li::before { content: counter(step); display: block; font: 500 13px/1 "Geist Mono", monospace; color: var(--green); margin-bottom: 18px; }
+  .steps h3 { font-weight: 600; font-size: 20px; line-height: 1.2; }
+  .steps li p { margin-top: 12px; font-size: 15px; line-height: 1.55; }
+
+  /* Closing */
+
+  .cta { background: var(--green); color: var(--ink); padding: 112px 24px; }
+  .cta .wrap { max-width: 880px; text-align: center; }
+  .cta p { margin-left: auto; margin-right: auto; }
+  .cta-acts { display: flex; justify-content: center; gap: 10px; margin-top: 36px; }
+
+  footer { background: var(--ink); color: #9BA1AB; padding: 28px 24px; font-size: 13px; }
+  footer .wrap { display: flex; align-items: center; gap: 18px; }
+  footer .mark img { width: 17px; height: 20px; }
+  footer a { color: inherit; text-decoration: none; text-underline-offset: 4px; }
+  footer a:hover { text-decoration: underline; }
+  footer .spacer { flex: 1; }
+
   @media (min-width: 720px) {
     .nav { padding: 24px 32px; }
     .links { gap: 10px; }
+    .sheet { padding: 96px 32px 120px; }
+  }
+
+  @media (max-width: 860px) {
+    :root { --radius-sheet: 28px; }
+    .app-body { grid-template-columns: 1fr; }
+    .app-chart { border-right: 0; border-bottom: 1px solid var(--line); }
+    .gate { position: static; width: auto; margin: 12px; }
+    .steps ol { grid-template-columns: 1fr; gap: 24px; }
+    .seg span:nth-child(n+4) { display: none; }
+    .app-bar { gap: 10px; }
+    .app-bar .seg:nth-of-type(2) { display: none; }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .links a, .links button { transition: none; }
+    html { scroll-behavior: auto; }
+    .links a, .links button, .cta a, .cta button, .app button, .gate { transition: none; }
   }
 </style>
 </head>
 <body>
 
-<header class="nav">
-  <a class="mark" href="/" aria-label="Phosphor">
-    <img src="/mark.svg" alt="" width="25" height="30">
-  </a>
-  <nav class="links" aria-label="Site">
-    <a href="https://github.com/karimbabasf/phosphor">GitHub</a>
-    <button type="button" id="download">Download</button>
-  </nav>
+<header class="hero">
+  <div class="nav">
+    <a class="mark" href="/" aria-label="Phosphor">
+      <img src="/mark.svg" alt="" width="25" height="30">
+    </a>
+    <nav class="links" aria-label="Site">
+      <a href="https://github.com/karimbabasf/phosphor">GitHub</a>
+      <button type="button" class="download">Download</button>
+    </nav>
+  </div>
+  <h1 class="wordmark">Phosphor</h1>
 </header>
 
-<main class="hero">
-  <h1 class="wordmark">Phosphor</h1>
-</main>
+<div class="after">
+
+  <section class="sheet dark">
+    <div class="wrap">
+      <div class="lede">
+        <h2>DeFi for everyone, driven by the agent you already pay for.</h2>
+        <p>Phosphor is a desktop app with no AI inside. Claude Code or Codex connects over MCP and drives it. Every trade is simulated, checked against your policy, and released only by your click.</p>
+      </div>
+
+      <div class="app" aria-label="The Phosphor trade screen">
+        <div class="app-bar">
+          <img src="/mark-green.svg" alt="" width="15" height="18">
+          <div class="seg" aria-label="Market and timeframe">
+            <span data-on>SOL</span><span>ETH</span><span>BTC</span>
+          </div>
+          <div class="seg">
+            <span>5m</span><span data-on>15m</span><span>1h</span><span>4h</span><span>1d</span>
+          </div>
+          <div class="agent"><i></i>Claude Code</div>
+        </div>
+
+        <div class="app-body">
+          <div class="app-chart">
+            <svg id="chart" viewBox="0 0 820 620" role="img" aria-label="SOL perpetual, 15 minute candles, with the entry, stop and target drawn on the chart"></svg>
+
+            <div class="gate" id="gate" data-state="open">
+              <div class="gate-who"><i></i>Claude Code proposes</div>
+              <div class="gate-line">Long SOL $150 at 2x, market, stop 203.40, target 231.00</div>
+              <ul class="gate-checks">
+                <li>Simulated on Hyperliquid, fills at 214.62</li>
+                <li>Within policy, 1.9% of collateral at risk</li>
+              </ul>
+              <div class="gate-acts">
+                <button type="button" class="primary" data-act="approve">Approve</button>
+                <button type="button" data-act="decline">Decline</button>
+              </div>
+              <div class="gate-result" id="gate-result"></div>
+            </div>
+          </div>
+
+          <div class="app-rail">
+            <section class="zone status">
+              <div class="coin">SOL-PERP</div>
+              <div class="px mono">214.62<small>+2.4%</small></div>
+              <div class="facts mono">
+                <div><b>Free</b><span>$1,204.10</span></div>
+                <div><b>At risk</b><span>$31.50</span></div>
+                <div><b>Funding</b><span>0.011%</span></div>
+              </div>
+            </section>
+
+            <section class="zone">
+              <h3>Open</h3>
+              <div class="row">
+                <div class="row-head"><span>Long SOL</span><span class="mono up">+$4.00</span></div>
+                <div class="row-line mono">0.70 SOL · entry 208.90 · stop 5.2% away · target 7.6% away</div>
+                <div class="row-foot"><button type="button" data-confirm="Sure?">Close</button></div>
+              </div>
+            </section>
+
+            <section class="zone">
+              <h3>Waiting</h3>
+              <div class="row">
+                <div class="row-head"><span>Long ETH $200 at 3x</span></div>
+                <div class="row-line">market, stop 3,180, target 3,420</div>
+                <ul class="dots">
+                  <li><i data-held></i>ETH above 3,240</li>
+                  <li><i></i>Funding under 0.02%</li>
+                </ul>
+                <div class="row-foot"><button type="button" data-confirm="Sure?">Cancel</button></div>
+              </div>
+            </section>
+
+            <section class="zone">
+              <h3>Done</h3>
+              <ul class="done-list mono">
+                <li><span>Hit target · Long SOL</span><span class="up">+$18.20</span></li>
+                <li><span>Closed · Short ETH</span><span class="down">-$4.10</span></li>
+                <li><span>Cancelled · Long BTC</span><span>--</span></li>
+              </ul>
+            </section>
+          </div>
+        </div>
+      </div>
+
+      <p class="caption">The trade screen. Approve is a button in the app window, and no agent tool opens onto it.</p>
+    </div>
+  </section>
+
+  <section class="steps dark">
+    <div class="wrap">
+      <h2>How a trade happens</h2>
+      <p>Three parties, one line of English, and one click that only you can make.</p>
+      <ol>
+        <li>
+          <h3>The agent proposes</h3>
+          <p>It reads the chart through Phosphor's tools and writes one line you can check against the screen: Long SOL $150 at 2x, market, stop 203.40, target 231.00.</p>
+        </li>
+        <li>
+          <h3>Phosphor checks</h3>
+          <p>The order is simulated on the venue and measured against your policy: size, the multiple, and how much collateral can be at risk in a day. A proposal outside the policy never reaches you.</p>
+        </li>
+        <li>
+          <h3>You release</h3>
+          <p>The proposal lands in the window. Approve is a button in the app, on a surface the agent cannot reach. Nothing moves until you click it.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="wrap">
+      <h2>Bring your own agent.</h2>
+      <p>Works with Claude Code and Codex. Spot on NEAR Intents, perps on Hyperliquid. Open source under the MIT license.</p>
+      <div class="cta-acts">
+        <button type="button" class="download">Download</button>
+        <a href="https://github.com/karimbabasf/phosphor">Read the code</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <a class="mark" href="/" aria-label="Phosphor"><img src="/mark-green.svg" alt="" width="17" height="20"></a>
+      <span>Phosphor</span>
+      <span class="spacer"></span>
+      <a href="https://github.com/karimbabasf/phosphor">GitHub</a>
+      <a href="https://github.com/karimbabasf/phosphor/blob/main/LICENSE">MIT license</a>
+    </div>
+  </footer>
+
+</div>
 
 <script>
   // No build exists yet, so Download reports a status instead of pointing at an empty release.
-  const dl = document.getElementById('download');
-  let timer;
-  dl.addEventListener('click', () => {
-    dl.textContent = 'Coming soon';
-    clearTimeout(timer);
-    timer = setTimeout(() => { dl.textContent = 'Download'; }, 2200);
+  document.querySelectorAll('.download').forEach((dl) => {
+    let timer;
+    dl.addEventListener('click', () => {
+      dl.textContent = 'Coming soon';
+      clearTimeout(timer);
+      timer = setTimeout(() => { dl.textContent = 'Download'; }, 2200);
+    });
+  });
+
+  // The chart: sixty 15 minute candles from a seeded walk, so the picture is the same on every load.
+  (function drawChart() {
+    const svg = document.getElementById('chart');
+    const W = 820, H = 620, padR = 64, padT = 18, padB = 18;
+    let seed = 20260914;
+    const rnd = () => { seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296; };
+    const candles = [];
+    let px = 204.2;
+    for (let i = 0; i < 60; i++) {
+      const drift = i > 36 ? 0.35 : 0.05;
+      const o = px;
+      const c = o + (rnd() - 0.47) * 2.6 + drift;
+      const h = Math.max(o, c) + rnd() * 1.4;
+      const l = Math.min(o, c) - rnd() * 1.4;
+      candles.push({ o, c, h, l });
+      px = c;
+    }
+    const last = candles[candles.length - 1];
+    last.c = 214.62;
+    const entry = 208.90, stop = 203.40, target = 231.00;
+    const lo = Math.min(stop - 2, ...candles.map(k => k.l));
+    const hi = Math.max(target + 2, ...candles.map(k => k.h));
+    const y = v => padT + (hi - v) / (hi - lo) * (H - padT - padB);
+    const step = (W - padR) / candles.length;
+    let out = '';
+    // grid
+    for (let g = 0; g < 6; g++) {
+      const v = lo + (hi - lo) * g / 5;
+      out += `<line x1="0" x2="${W - padR}" y1="${y(v)}" y2="${y(v)}" stroke="#1B1D20" stroke-width="1"/>`;
+      out += `<text x="${W - padR + 10}" y="${y(v) + 4}" fill="#5E656F" font-size="11" font-family="Geist Mono, monospace">${v.toFixed(0)}</text>`;
+    }
+    // candles
+    candles.forEach((k, i) => {
+      const x = i * step + step / 2;
+      const up = k.c >= k.o;
+      const col = up ? '#3FFF6C' : '#FF5A6E';
+      const top = y(Math.max(k.o, k.c)), bot = y(Math.min(k.o, k.c));
+      out += `<line x1="${x}" x2="${x}" y1="${y(k.h)}" y2="${y(k.l)}" stroke="${col}" stroke-width="1"/>`;
+      out += `<rect x="${x - step * 0.3}" y="${top}" width="${step * 0.6}" height="${Math.max(1, bot - top)}" fill="${up ? col : '#0E0F13'}" stroke="${col}" stroke-width="1"/>`;
+    });
+    // overlays: entry, stop, target, last price
+    const line = (v, col, dash, label) => {
+      out += `<line x1="0" x2="${W - padR}" y1="${y(v)}" y2="${y(v)}" stroke="${col}" stroke-width="1" ${dash ? 'stroke-dasharray="4 4"' : ''} opacity="0.9"/>`;
+      out += `<rect x="${W - padR}" y="${y(v) - 9}" width="${padR}" height="18" fill="${col}"/>`;
+      out += `<text x="${W - padR + 6}" y="${y(v) + 4}" fill="#0E0F13" font-size="11" font-weight="600" font-family="Geist Mono, monospace">${label}</text>`;
+    };
+    line(target, '#3FFF6C', true, target.toFixed(2));
+    line(entry, '#ECEEF1', false, entry.toFixed(2));
+    line(stop, '#FF5A6E', true, stop.toFixed(2));
+    line(last.c, '#B79CFF', false, last.c.toFixed(2));
+    svg.innerHTML = out;
+  })();
+
+  // The gate: a visitor can press Approve. The agent has no tool that can.
+  const gate = document.getElementById('gate');
+  const result = document.getElementById('gate-result');
+  gate.addEventListener('click', (e) => {
+    const b = e.target.closest('button[data-act]');
+    if (!b) return;
+    const approved = b.dataset.act === 'approve';
+    result.textContent = approved ? 'Approved. Filled 0.70 SOL at 214.62.' : 'Declined. Nothing moved.';
+    result.className = 'gate-result ' + (approved ? 'up' : '');
+    gate.dataset.state = approved ? 'approved' : 'declined';
+    setTimeout(() => { gate.dataset.state = 'gone'; }, 2400);
+  });
+
+  // Close and Cancel confirm inline, as in the app: the button becomes "Sure?" for four seconds.
+  document.querySelectorAll('.app button[data-confirm]').forEach((b) => {
+    const label = b.textContent;
+    let timer;
+    b.addEventListener('click', () => {
+      if (b.textContent === label) {
+        b.textContent = b.dataset.confirm;
+        timer = setTimeout(() => { b.textContent = label; }, 4000);
+      } else {
+        clearTimeout(timer);
+        b.textContent = label === 'Close' ? 'Closing' : 'Cancelling';
+        b.disabled = true;
+      }
+    });
   });
 </script>
 
