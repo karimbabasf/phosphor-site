@@ -7,9 +7,9 @@
 <meta name="description" content="DeFi for everyone. The AI agent you already pay for drives your wallet. Every write is simulated, checked against your policy, and released only by your click.">
 <link rel="canonical" href="https://phosphor.karimbabasf.com/">
 <meta name="theme-color" content="#3FFF6C">
-<link rel="icon" href="/favicon.ico?v=2" sizes="32x32">
-<link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
+<link rel="icon" href="/favicon.ico?v=3" sizes="32x32">
+<link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=3">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Phosphor">
 <meta property="og:url" content="https://phosphor.karimbabasf.com/">
@@ -167,12 +167,12 @@
     background: var(--ink);
     color: #ECEEF1;
     border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
-    padding: 72px 24px 96px;
+    padding: 56px 24px 96px;
   }
 
   .wrap { max-width: 1160px; margin: 0 auto; }
 
-  .head { margin-bottom: 36px; }
+  .head { margin-bottom: 28px; }
 
   .head, .steps h2, .cta h2 {
     font-weight: 600;
@@ -237,63 +237,39 @@
   .pill { display: inline-flex; align-items: center; gap: 8px; height: 28px; padding: 0 12px; border-radius: 999px; background: var(--bg-1); border: 1px solid var(--line); color: var(--text-2); font-weight: 500; }
   .pill i { width: 6px; height: 6px; border-radius: 50%; background: var(--text-3); }
 
-  .app button {
-    font: 500 13px/1 "Geist", sans-serif;
+  /* Drawn buttons: the picture of the window, nothing in it is pressable */
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    font-weight: 500;
     color: var(--text);
     background: var(--bg-2);
     border: 1px solid var(--line-strong);
     border-radius: 10px;
     min-height: 32px;
     padding: 0 14px;
-    cursor: pointer;
-    transition: transform 160ms var(--ease-out), background-color 150ms ease;
+    white-space: nowrap;
   }
-  .app button:active { transform: scale(0.97); }
-  .app button.danger { background: transparent; color: var(--down); border-color: rgba(255, 90, 110, 0.4); }
-  .app button.primary { background: var(--up); color: var(--bg-0); border-color: transparent; font-weight: 600; }
-  @media (hover: hover) and (pointer: fine) {
-    .app button:hover { background: var(--line); }
-    .app button.danger:hover { background: rgba(255, 90, 110, 0.1); }
-    .app button.primary:hover { background: #63FF87; }
-  }
+  .btn.danger { background: transparent; color: var(--down); border-color: rgba(255, 90, 110, 0.4); }
+  .btn.primary { background: var(--up); color: var(--bg-0); border-color: transparent; }
+  .btn.ghost { background: transparent; border-color: var(--line); }
 
   .app-body { display: grid; grid-template-columns: 380px 1fr; }
 
-  /* The conversation column: the transcript, the one amber card, the composer */
+  /* The conversation column, with nobody at the wheel yet */
 
   .conv { display: flex; flex-direction: column; min-width: 0; border-right: 1px solid var(--line); }
 
-  .transcript { flex: 1 1 auto; display: flex; flex-direction: column; gap: 18px; padding: 20px 20px 12px; font-size: 14px; line-height: 1.5; }
-  .turn b { display: flex; align-items: center; gap: 7px; margin-bottom: 5px; font-size: 12px; font-weight: 500; color: var(--text-3); }
-  .turn[data-who="agent"] b { color: var(--agent); }
-  .turn[data-who="agent"] b::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--agent); }
-  .turn[data-who="you"] p { color: var(--text-2); }
+  .empty { flex: 1 1 auto; display: grid; place-items: center; padding: 24px 12px; text-align: center; }
+  .empty-inner { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .seat { width: 32px; height: 36px; color: var(--text-3); }
+  .seat svg { display: block; width: 100%; height: 100%; }
+  .empty h3 { font-size: 20px; font-weight: 500; letter-spacing: -0.015em; line-height: 1.3; }
+  .empty p { max-width: 40ch; font-size: 12px; line-height: 1.45; color: var(--text-2); }
+  .empty-acts { display: flex; gap: 8px; margin-top: 8px; }
 
-  .dock {
-    margin: 0 12px 8px;
-    padding: 16px;
-    border-radius: 14px;
-    border: 1px solid rgba(245, 185, 66, 0.55);
-    background: #22201C;
-    box-shadow: inset 0 1px 0 rgba(245, 185, 66, 0.45);
-    transition: opacity 200ms ease, border-color 200ms ease, background-color 200ms ease;
-  }
-  .dock[data-state="done"] { border-color: var(--ink-edge); background: var(--bg-1); box-shadow: inset 0 1px 0 var(--ink-edge); }
-  .dock[data-state="refused"] { border-color: var(--line); background: var(--bg-1); box-shadow: none; }
-  .dock[data-state="gone"] { opacity: 0; pointer-events: none; }
-  .dock-who { font-size: 12px; font-weight: 500; color: var(--warn); }
-  .dock[data-state="done"] .dock-who { color: var(--up); }
-  .dock[data-state="refused"] .dock-who { color: var(--text-3); }
-  .dock-line { margin-top: 8px; font-size: 14px; font-weight: 500; line-height: 1.4; }
-  .dock-meta { margin-top: 8px; font-size: 12px; line-height: 1.5; color: var(--text-2); }
-  .dock-acts { display: flex; gap: 8px; margin-top: 14px; }
-  .dock-acts button { flex: 1 1 0; }
-  .dock-result { display: none; margin-top: 10px; font-weight: 500; }
-  .dock[data-state="done"] .dock-acts, .dock[data-state="refused"] .dock-acts,
-  .dock[data-state="done"] .dock-meta, .dock[data-state="refused"] .dock-meta { display: none; }
-  .dock[data-state="done"] .dock-result, .dock[data-state="refused"] .dock-result { display: block; }
-
-  .composer { margin: 0 12px 12px; height: 40px; display: flex; align-items: center; padding: 0 14px; border-radius: 12px; border: 1px solid var(--line-strong); background: var(--bg-1); color: var(--text-3); }
+  .composer { margin: 12px; height: 40px; display: flex; align-items: center; padding: 0 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg-2); color: var(--text-3); font-size: 14px; }
 
   /* The world: one 640 column for a person who has never held a wallet */
 
@@ -321,7 +297,7 @@
   .fold p { margin-top: 4px; font-size: 12px; color: var(--text-2); }
   .fold i { width: 8px; height: 8px; border-right: 1.5px solid var(--text-3); border-bottom: 1.5px solid var(--text-3); transform: rotate(-45deg); }
 
-  .caption { margin-top: 18px; color: #5E656F; font-size: 14px; }
+  .caption { margin-top: 14px; color: #5E656F; font-size: 14px; }
 
   /* Steps */
 
@@ -350,16 +326,22 @@
   @media (min-width: 720px) {
     .nav { padding: 24px 32px; }
     .links { gap: 10px; }
-    .sheet { padding: 96px 32px 120px; }
+    .sheet { padding: 64px 32px 120px; }
+  }
+
+  /* The title, the window and its caption fit one screen: the window is 704px tall
+     at rest and sits 146px under the sheet's top edge, so on a short screen it is
+     zoomed down by the ratio of the room left to that height. The tan(atan2())
+     pair is how CSS divides one length by another. */
+  @media (min-width: 861px) {
+    .app { zoom: min(1, tan(atan2(100svh - 226px, 704px))); }
   }
 
   @media (max-width: 860px) {
     :root { --radius-sheet: 28px; }
     .head { margin-bottom: 28px; }
     .app-body { grid-template-columns: 1fr; }
-    .conv { order: 2; border-right: 0; border-top: 1px solid var(--line); }
-    .transcript, .composer { display: none; }
-    .dock { margin: 12px; }
+    .conv { display: none; }
     .world { padding: 24px 16px 16px; }
     .app-bar .danger { display: none; }
     .steps ol { grid-template-columns: 1fr; gap: 24px; }
@@ -375,7 +357,7 @@
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .after { animation: none; }
-    .links a, .links button, .cta a, .cta button, .app button, .dock { transition: none; }
+    .links a, .links button, .cta a, .cta button { transition: none; }
   }
 </style>
 </head>
@@ -411,30 +393,23 @@
           </div>
           <div class="app-right">
             <span class="pill"><i></i>Unlocked</span>
-            <button type="button" class="danger">Freeze everything</button>
+            <span class="btn danger">Freeze everything</span>
           </div>
         </div>
 
         <div class="app-body">
           <div class="conv">
-            <div class="transcript">
-              <div class="turn" data-who="you"><b>You</b><p>how are we looking</p></div>
-              <div class="turn" data-who="agent"><b>Claude Code</b><p>Up on the day across all four. $50,826.28 in total, nothing at risk right now.</p></div>
-              <div class="turn" data-who="you"><b>You</b><p>put 150 on sol if it holds 210</p></div>
-              <div class="turn" data-who="agent"><b>Claude Code</b><p>It held 210 through the last two candles. I have proposed a long, $150 at 2x, stop at 203.40, target at 231.00. It needs your yes.</p></div>
-            </div>
-
-            <div class="dock" id="dock" data-state="open">
-              <div class="dock-who">Claude Code asks</div>
-              <div class="dock-line">Long SOL $150 at 2x, market, stop 203.40, target 231.00</div>
-              <div class="dock-meta">Simulated on Hyperliquid, fills at 214.62. Above your $100 line, so it needs your yes.</div>
-              <div class="dock-acts">
-                <button type="button" data-act="no">No</button>
-                <button type="button" class="primary" data-act="yes">Yes</button>
+            <div class="empty">
+              <div class="empty-inner">
+                <span class="seat" aria-hidden="true"><svg viewBox="0 0 58.05 64.75"><path fill="currentColor" d="M28.25 0.05c-0.45 0.05-1.4 0.2-1.9 0.35c-1.4 0.4-2.25 0.75-4.1 1.85c-0.35 0.2-1 0.55-1.35 0.75c-0.35 0.2-0.85 0.5-1 0.6c-0.55 0.3-4.2 2.35-5.15 2.9c-0.45 0.25-1.35 0.75-2 1.15c-0.65 0.35-1.6 0.9-2.05 1.15c-0.5 0.3-1.4 0.8-1.95 1.15c-0.6 0.3-1.8 1-2.7 1.5c-1.8 1.05-2.4 1.45-3.2 2.25c-1.45 1.5-2.3 3.05-2.7 5.15l-0.1 0.7l-0.05 14.25c0 7.8 0 14.4 0.05 14.6l0.05 0.35l0.4 0.3c0.25 0.1 0.7 0.4 1.1 0.6c1.9 1.1 2.95 1.75 3.1 1.85c0.15 0.1 1.45 0.8 2 1.1c0.15 0.1 0.3 0.15 0.35 0.15l0.15-0.05l0-14.3l0.05-14.3l0.1-0.6c0.5-2.05 1.3-3.6 2.65-4.95c1-1.05 1.8-1.6 3.65-2.65c0.05 0 0.35-0.2 0.7-0.4c0.3-0.15 1.1-0.65 1.75-1c0.65-0.4 1.4-0.8 1.65-0.95c0.45-0.25 0.55-0.35 3-1.75c1.25-0.75 2.75-1.65 3.45-2c0.15-0.1 0.5-0.3 0.75-0.45c0.2-0.15 0.7-0.45 1.05-0.65c0.35-0.15 0.85-0.45 1.15-0.65c0.25-0.15 0.6-0.35 0.8-0.45c0.15-0.1 0.6-0.35 1.05-0.6c0.4-0.25 0.85-0.5 1-0.6c0.2-0.05 6.6-3.75 6.7-3.85c0.05 0-0.15-0.15-0.45-0.3c-0.25-0.15-0.65-0.4-0.9-0.55c-1.15-0.75-2.45-1.25-3.95-1.55c-0.6-0.1-0.85-0.1-1.8-0.1c-0.65-0.05-1.25-0.05-1.35 0zM36 6c-1.8 1.1-3.4 2-3.5 2.05c-0.1 0.1-1.6 0.95-3.35 2c-1.7 1-3.45 2-3.8 2.2c-1.4 0.85-1.95 1.2-2.05 1.2c0 0-0.25 0.15-0.5 0.3c-0.45 0.25-1.3 0.75-2.45 1.45c-0.25 0.15-0.6 0.35-0.7 0.4c-0.1 0.1-0.8 0.45-1.45 0.85c-0.65 0.4-1.5 0.9-1.85 1.1c-0.4 0.2-0.95 0.55-1.3 0.75c-0.8 0.45-1.15 0.65-1.7 1.15c-0.9 0.7-1.7 1.55-2.2 2.35c-0.6 0.9-1.1 2.15-1.2 3.05c-0.05 0.25-0.05 6.4-0.05 14.95l0 14.55l0.15 0.15c0.05 0.1 0.75 0.5 1.55 0.95c0.75 0.45 1.6 0.95 1.85 1.05c2.3 1.4 3.1 1.8 3.2 1.85c0.1 0 0.15 0 0.2-0.05c0-0.05 0.05-6.75 0.05-15.1l0.05-15l0.15-0.6c0.5-1.7 1.15-2.75 2.35-3.95c0.9-0.85 1.25-1.1 3.65-2.45c0.15-0.15 0.45-0.3 0.55-0.35c0.1-0.1 0.6-0.35 1.1-0.65c1.9-1.1 7.9-4.7 11.05-6.65c2.5-1.5 3.15-1.9 3.3-1.9c0.1 0 6.3-3.65 6.6-3.9c0 0-1.35-0.8-2.9-1.7c-0.75-0.4-1.65-0.95-2-1.15c-0.4-0.25-0.9-0.55-1.1-0.65l-0.35-0.2l-3.35 1.95zM46.75 10.2c-2.25 1.35-7.45 4.45-9.6 5.7c-2.2 1.35-5.7 3.4-7.05 4.25c-0.6 0.35-1.8 1.05-2.65 1.55c-0.85 0.5-2.1 1.25-2.7 1.6c-1.3 0.8-1.8 1.1-2.35 1.65c-1.6 1.5-2.5 3.15-2.8 5.25c-0.1 0.6-0.1 1.35-0.1 15.15c0 13.7 0 14.55 0.05 14.65c0.05 0.05 0.45 0.35 0.9 0.6c0.85 0.45 1.05 0.6 1.85 1.05c0.25 0.15 0.7 0.45 1.05 0.6c0.35 0.2 0.85 0.5 1.15 0.65c0.25 0.2 0.75 0.5 1.1 0.7c0.35 0.15 0.85 0.45 1.1 0.6c0.25 0.15 0.5 0.3 0.55 0.3c0.05 0 0.1-0.05 0.15-0.1c0.05-0.05 0.05-4.75 0.05-14.8l0-14.7l0.15-0.65c0.35-1.7 1.2-3.15 2.7-4.45c0.75-0.7 1.3-1.05 2.4-1.7c0.25-0.15 0.75-0.4 1.05-0.6c0.75-0.45 2.8-1.6 3.25-1.85c0.15-0.1 0.6-0.4 1-0.6c0.35-0.2 0.85-0.5 1.15-0.65c0.25-0.2 0.85-0.55 1.3-0.8c0.45-0.25 1.1-0.65 1.45-0.85c0.35-0.2 0.8-0.45 1-0.6c0.15-0.1 0.6-0.35 0.95-0.55c0.85-0.5 2.25-1.3 3-1.75c0.35-0.2 1-0.6 1.5-0.9c0.5-0.3 1-0.55 1.1-0.65c0.1-0.05 0.6-0.35 1.1-0.65c0.5-0.3 1.05-0.6 1.25-0.7c0.15-0.15 0.6-0.4 0.95-0.6c0.35-0.2 0.9-0.55 1.3-0.75c0.35-0.2 0.95-0.6 1.4-0.8c0.4-0.25 0.8-0.5 0.85-0.6c0.1-0.1 0.1-0.1 0.05-0.2c-0.05-0.05-0.45-0.3-0.85-0.55c-0.45-0.25-1.1-0.65-1.55-0.9c-0.45-0.25-1.05-0.6-1.35-0.8c-1.1-0.65-1.55-0.9-2.8-1.6c-0.7-0.45-1.3-0.8-1.35-0.85c-0.1-0.05-0.3 0.05-1.7 0.9zM56.8 17.05c-0.9 0.5-1.05 0.6-2.15 1.25c-0.35 0.2-0.9 0.55-1.2 0.7c-0.35 0.2-0.85 0.5-1.1 0.65c-0.3 0.2-0.8 0.5-1.15 0.7c-0.4 0.2-1 0.6-1.4 0.8c-0.45 0.25-1.1 0.65-1.45 0.9c-0.4 0.2-0.95 0.5-1.2 0.65c-0.4 0.25-1.9 1.1-3.1 1.85c-0.25 0.15-1.05 0.6-1.85 1.05c-0.8 0.5-1.6 0.95-1.75 1.05c-0.2 0.15-0.8 0.5-1.3 0.75c-0.5 0.3-1.1 0.65-1.25 0.75c-0.2 0.15-0.65 0.4-1 0.6c-0.35 0.2-0.9 0.55-1.2 0.75c-0.35 0.15-0.95 0.55-1.35 0.8c-1 0.55-1.35 0.85-2 1.45c-1.05 1.1-1.7 2.45-2.05 4.3l-0.1 0.55l0 14.05l0.05 14l0.1 0.05c0.1 0 0.35-0.1 1.6-0.85c1.75-1.05 3.1-1.85 3.35-2c0.15-0.1 0.45-0.25 0.65-0.35c0.15-0.15 0.8-0.5 1.35-0.85c0.6-0.35 1.1-0.65 1.15-0.75c0.1-0.1 0.1-0.25 0.1-3.65c0-2.7 0-3.55 0.05-3.65c0.1-0.15 0.25-0.25 2.2-1.35c0.75-0.4 2.4-1.35 3.7-2.1c1.3-0.7 2.85-1.6 3.5-1.95c0.6-0.35 1.3-0.75 1.55-0.9c0.2-0.15 0.7-0.4 1.1-0.65c3-1.7 3.55-2.05 4.3-2.65c0.65-0.6 1.45-1.5 1.85-2.2c0.6-1 0.85-1.7 1.05-2.8l0.15-0.6l0-10.45l0-10.45l-0.15 0c-0.15 0-0.4 0.15-1.05 0.55zM51.4 30.55c0.05 1.6 0.05 3.6-0.05 4.05c-0.15 1-0.75 1.95-1.65 2.6c-0.4 0.3-1 0.65-4.05 2.4c-0.35 0.2-1 0.6-1.45 0.85c-0.45 0.25-1.15 0.65-1.6 0.9c-0.45 0.25-1.35 0.8-1.95 1.15c-1.9 1.1-2.05 1.15-2.1 1.15c-0.15-0.05-0.15-0.3-0.15-1.9c0-1.35 0-1.55 0.1-1.9c0.05-0.2 0.1-0.4 0.1-0.45c0-0.15 0.25-0.85 0.45-1.25c0.3-0.6 0.7-1.15 1.15-1.65c0.6-0.55 0.95-0.8 2.05-1.45c2.3-1.3 7.4-4.3 8.45-5c0.25-0.2 0.4-0.25 0.55-0.25l0.15 0l0 0.75z"/></svg></span>
+                <h3>Nobody is at the wheel.</h3>
+                <p>Start your assistant, or connect one you already use.</p>
+                <div class="empty-acts">
+                  <span class="btn primary">Start your assistant</span>
+                  <span class="btn ghost">Connect your own</span>
+                </div>
               </div>
-              <div class="dock-result" id="dock-result"></div>
             </div>
-
             <div class="composer">Tell your assistant what to do.</div>
           </div>
 
@@ -442,7 +417,7 @@
             <div class="basic">
               <div>
                 <div class="balance">$50,826.28</div>
-                <p class="state" id="state">Waiting for you.</p>
+                <p class="state">Nothing is connected to it right now.</p>
               </div>
 
               <p class="strip">Asks you above $100. Refuses above $5,000 at once and $25,000 a day.</p>
@@ -485,7 +460,7 @@
         </div>
       </div>
 
-      <p class="caption">The window in Basic mode, with fixture money. Yes is a button only you can press: no agent tool opens onto it.</p>
+      <p class="caption">The window in Basic mode, with fixture money.</p>
     </div>
   </section>
 
@@ -542,21 +517,6 @@
       clearTimeout(timer);
       timer = setTimeout(() => { dl.textContent = 'Download'; }, 2200);
     });
-  });
-
-  // The ask: a visitor can press Yes. The agent has no tool that can.
-  const dock = document.getElementById('dock');
-  const result = document.getElementById('dock-result');
-  const state = document.getElementById('state');
-  dock.addEventListener('click', (e) => {
-    const b = e.target.closest('button[data-act]');
-    if (!b) return;
-    const yes = b.dataset.act === 'yes';
-    dock.querySelector('.dock-who').textContent = yes ? 'Done' : 'Refused';
-    result.textContent = yes ? 'Filled 0.70 SOL at 214.62.' : 'Nothing moved.';
-    dock.dataset.state = yes ? 'done' : 'refused';
-    state.textContent = 'Your assistant is reading it.';
-    setTimeout(() => { dock.dataset.state = 'gone'; }, 2400);
   });
 </script>
 
