@@ -3,7 +3,9 @@
 The landing page for Phosphor, at https://phosphor.karimbabasf.com
 
 Static files, no build step. `index.html` carries its own CSS and JavaScript, `mark.svg` is
-the MP cube mark, and `fonts/` holds Sora (Regular and SemiBold), the brand face.
+the MP cube mark, `fonts/` holds Sora (Regular and SemiBold), the brand face, and Geist for the
+window mock, and `vendor/anime.esm.min.js` is anime.js 4.5.0 (MIT), vendored from the npm
+tarball, which drives the sheet's lift from the scroll position.
 
 ## Run it
 
@@ -17,7 +19,9 @@ There is no test suite. Check these by hand before pushing:
 
 - the wordmark renders in Sora, not a fallback (compare with the banner in ~/Developer/artifacts/brand/phosphor/)
 - the mark shows in the nav with its cuts in green, not white, and `mark-green.svg` shows on the dark surfaces
-- the dark sheet comes up small and grows to full width as it reaches the top; the hero never moves (Chrome, Brave, Safari 26; Firefox shows it sliding up at full width)
+- the dark sheet comes up small and grows to full width as it reaches the top; the hero never moves
+- the page snaps to the top of each section, and the three links in the nav land on them exactly
+- the window mock shows Trade mode: chart, plan levels, rail, and the empty conversation column
 - the window mock is a still picture: nothing inside it reacts to a click
 - Download says "Coming soon" on click and goes back after about two seconds
 - the browser console is clean
