@@ -21,7 +21,7 @@ There is no test suite. Check these by hand before pushing:
 - the mark shows in the nav with its cuts in green, not white, and `mark-green.svg` shows on the dark surfaces
 - the dark sheet comes up small and grows to full width as it reaches the top; the hero never moves
 - the page snaps to the top of each section, and the three links in the nav land on them exactly
-- the window mock shows Trade mode: chart, plan levels, rail, and the empty conversation column
+- the window mock shows Trade mode: a bare candle chart, the rail, and the empty conversation column
 - the window mock is a still picture: nothing inside it reacts to a click
 - Download says "Coming soon" on click and goes back after about two seconds
 - the browser console is clean

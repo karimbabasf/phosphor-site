@@ -170,9 +170,14 @@
 
   .wrap { max-width: 1160px; margin: 0 auto; }
 
-  .head { margin-bottom: 28px; }
+  .head {
+    margin-bottom: 28px;
+    text-align: center;
+    font: 500 clamp(24px, 3vw, 38px)/1.1 "Geist Mono", ui-monospace, monospace;
+    letter-spacing: -0.02em;
+  }
 
-  .head, .steps h2, .cta h2 {
+  .steps h2, .cta h2 {
     font-weight: 600;
     font-size: clamp(28px, 4.2vw, 50px);
     line-height: 1.08;
@@ -278,19 +283,19 @@
 
   .chart-col { display: flex; flex-direction: column; min-width: 0; border-right: 1px solid var(--line); }
   .chart-bar { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-bottom: 1px solid var(--line); }
-  .btn.small, .seg.small span, .field { font: 400 12px/1 "Geist Mono", ui-monospace, monospace; }
+  .chart-bar .btn:last-child { margin-left: auto; }
+  .btn.small, .seg.small span { font: 400 12px/1 "Geist Mono", ui-monospace, monospace; }
   .btn.small { min-height: 28px; padding: 0 10px; gap: 7px; }
   .seg.small span { padding: 5px 7px; font-weight: 400; }
   .seg.small span[data-on] { font-weight: 500; }
   .caret { width: 6px; height: 6px; border-right: 1.5px solid var(--text-3); border-bottom: 1.5px solid var(--text-3); transform: translateY(-2px) rotate(45deg); }
-  .field { flex: 1 1 auto; min-width: 0; height: 28px; display: flex; align-items: center; padding: 0 10px; border-radius: 8px; background: var(--bg-1); border: 1px solid var(--line); color: var(--text-3); }
   .chart-status { display: flex; justify-content: flex-end; gap: 18px; padding: 7px 12px; font: 400 12px/1 "Geist Mono", ui-monospace, monospace; color: var(--text-2); }
   .live { display: flex; align-items: center; gap: 6px; color: var(--up); }
   .live i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
   .chart-host { position: relative; flex: 1 1 auto; min-height: 0; }
   .chart-host svg { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
 
-  /* The rail: status, Open, Waiting, Done */
+  /* The rail: status, Open, Done */
 
   .rail { display: flex; flex-direction: column; min-width: 0; }
   .zone { padding: 14px 16px; border-bottom: 1px solid var(--line); }
@@ -301,12 +306,7 @@
   .fact { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; }
   .fact span:first-child { color: var(--text-2); }
   .none { color: var(--text-3); }
-  .plan { font-size: 14px; line-height: 1.4; }
-  .cond { display: flex; align-items: center; gap: 8px; margin-top: 8px; color: var(--text-2); }
-  .cond i { flex: 0 0 auto; width: 7px; height: 7px; border-radius: 50%; border: 1.5px solid var(--text-3); }
-  .cond + .none { margin-top: 6px; }
 
-  .caption { margin-top: 14px; color: #5E656F; font-size: 14px; }
 
   /* Steps */
 
@@ -339,12 +339,12 @@
     .sheet { padding: 64px 32px 120px; }
   }
 
-  /* The title, the window and its caption fit one screen: the window is 704px tall
-     at rest and sits 146px under the sheet's top edge, so on a short screen it is
-     zoomed down by the ratio of the room left to that height. The tan(atan2())
-     pair is how CSS divides one length by another. */
+  /* The title and the window fit one screen: the window is 704px tall at rest and
+     sits 134px under the sheet's top edge, so on a short screen it is zoomed down
+     by the ratio of the room left to that height. The tan(atan2()) pair is how CSS
+     divides one length by another. */
   @media (min-width: 861px) {
-    .app { zoom: min(1, tan(atan2(100svh - 226px, 704px))); }
+    .app { zoom: min(1, tan(atan2(100svh - 174px, 704px))); }
   }
 
   @media (max-width: 860px) {
@@ -354,7 +354,7 @@
     .conv { display: none; }
     .chart-col { border-right: 0; border-bottom: 1px solid var(--line); }
     .chart-host { height: 340px; }
-    .seg.small span:nth-child(n+6), .field { display: none; }
+    .seg.small span:nth-child(n+6) { display: none; }
     .app-bar .danger { display: none; }
     .steps ol { grid-template-columns: 1fr; gap: 24px; }
   }
@@ -368,6 +368,7 @@
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .lift { transform: none !important; }
+    .sheet { border-radius: 0; }
     .links a, .links button, .cta a, .cta button { transition: none; }
   }
 </style>
@@ -402,7 +403,7 @@
   <div class="lift">
   <section class="sheet dark" id="dashboard">
     <div class="wrap">
-      <h2 class="head">The dashboard</h2>
+      <h2 class="head">The Dashboard</h2>
 
       <div class="app" aria-label="The Phosphor window in Trade mode">
         <div class="app-bar">
@@ -443,12 +444,11 @@
               <div class="seg small" aria-label="Timeframe">
                 <span>1m</span><span>5m</span><span data-on>15m</span><span>30m</span><span>1h</span><span>4h</span><span>8h</span><span>1d</span>
               </div>
-              <span class="field">Indicators</span>
               <span class="btn ghost small">Layers<i class="caret"></i></span>
             </div>
-            <div class="chart-status"><span class="live"><i></i>live</span><span>Clear 4</span></div>
+            <div class="chart-status"><span class="live"><i></i>live</span></div>
             <div class="chart-host">
-              <svg id="chart" role="img" aria-label="BTC, 15 minute candles, with the plan's entry, stop and target and the agent's levels drawn on the chart"></svg>
+              <svg id="chart" role="img" aria-label="BTC, 15 minute candles, with the last price on the axis"></svg>
             </div>
           </div>
 
@@ -464,12 +464,6 @@
               <p class="none">Nothing open.</p>
             </section>
             <section class="zone">
-              <h3>Waiting</h3>
-              <p class="plan">Long BTC $200 at 3x, limit 77,104.8, stop 76,950.6, target 77,425.9</p>
-              <p class="cond"><i></i>a 15m bar closes above 77,259.2</p>
-              <p class="none">idea, not armed</p>
-            </section>
-            <section class="zone">
               <h3>Done</h3>
               <p class="none">Nothing yet.</p>
             </section>
@@ -477,7 +471,6 @@
         </div>
       </div>
 
-      <p class="caption">The window in Trade mode, with fixture money.</p>
     </div>
   </section>
   </div>
@@ -545,15 +538,23 @@
   // travels from the bottom of the screen to the top. Progress is the scroll
   // position, nothing else, so it sits still whenever the finger does.
   if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    animate('.lift', {
-      scale: { from: 0.88, to: 1 },
+    const scrolled = () => onScroll({ target: '.lift', enter: 'bottom top', leave: 'top top', sync: true });
+    animate('.lift', { scale: { from: 0.88, to: 1 }, ease: 'linear', autoplay: scrolled() });
+    // The corners round off while the sheet is a card and square up as it docks,
+    // so nothing green shows through them once it sits at the top.
+    const sheet = document.querySelector('.sheet');
+    const radius = parseFloat(getComputedStyle(sheet).borderTopLeftRadius);
+    animate(sheet, {
+      borderTopLeftRadius: { from: radius, to: 0 },
+      borderTopRightRadius: { from: radius, to: 0 },
       ease: 'linear',
-      autoplay: onScroll({ target: '.lift', enter: 'bottom top', leave: 'top top', sync: true }),
+      autoplay: scrolled(),
     });
   }
 
   // The chart: ninety 15 minute candles from a seeded walk shaped like the day in
   // the app's own screenshot, drawn at the size of its box so nothing stretches.
+  // Only the candles, the axis, the last price and the volume: nothing is drawn on it.
   const host = document.querySelector('.chart-host');
   const svg = document.getElementById('chart');
   const mono = 'Geist Mono, ui-monospace, monospace';
@@ -574,7 +575,6 @@
     prev = c;
   }
   const last = candles[candles.length - 1];
-  const target = 77426, entry = 77105, stop = 76951, supply = 77396, support = 77119, demandLo = 77270, demandHi = 77300;
   const lo = 76900, hi = 77470;
 
   function draw() {
@@ -590,18 +590,6 @@
       out += `<line x1="0" x2="${chartW}" y1="${y(v)}" y2="${y(v)}" stroke="#1B1D20"/>`;
       out += `<text x="${chartW + 8}" y="${y(v) + 4}" fill="#5E656F" font-size="11" font-family="${mono}">${fmt(v)}</text>`;
     }
-    // the plan's two zones: reward above the entry, risk below it
-    out += `<rect x="0" y="${y(target)}" width="${chartW}" height="${y(entry) - y(target)}" fill="#3FFF6C" opacity="0.06"/>`;
-    out += `<rect x="0" y="${y(entry)}" width="${chartW}" height="${y(stop) - y(entry)}" fill="#FF5A6E" opacity="0.06"/>`;
-    // the agent's levels
-    out += `<rect x="0" y="${y(demandHi)}" width="${chartW}" height="${y(demandLo) - y(demandHi)}" fill="#3FFF6C" opacity="0.16"/>`;
-    out += `<text x="${chartW - 8}" y="${y(demandHi) + 12}" text-anchor="end" fill="#3FFF6C" font-size="11" font-family="${mono}">[agent] demand</text>`;
-    out += `<line x1="0" x2="${chartW}" y1="${y(supply)}" y2="${y(supply)}" stroke="#B79CFF" stroke-dasharray="2 3" opacity="0.8"/>`;
-    out += `<text x="8" y="${y(supply) - 5}" fill="#B79CFF" font-size="11" font-family="${mono}">[agent] supply ${fmt(supply)}</text>`;
-    out += `<line x1="0" x2="${chartW}" y1="${y(support)}" y2="${y(support)}" stroke="#B79CFF" stroke-dasharray="2 3" opacity="0.8"/>`;
-    out += `<text x="8" y="${y(support) - 5}" fill="#B79CFF" font-size="11" font-family="${mono}">[agent] support ${fmt(support)}</text>`;
-    out += `<line x1="${step}" x2="${chartW}" y1="${y(lo + 10)}" y2="${y(hi - 50)}" stroke="#3FFF6C" stroke-dasharray="2 4" opacity="0.7"/>`;
-    out += `<text x="${chartW - 8}" y="${y(hi - 50) + 22}" text-anchor="end" fill="#3FFF6C" font-size="11" font-family="${mono}">[agent] trend</text>`;
     // candles
     candles.forEach((k, i) => {
       const x = i * step + step / 2;
@@ -611,16 +599,7 @@
       const t = y(Math.max(k.o, k.c)), b = y(Math.min(k.o, k.c));
       out += `<rect x="${x - step * 0.3}" y="${t}" width="${step * 0.6}" height="${Math.max(1, b - t)}" fill="${col}"/>`;
     });
-    // the plan: target, entry, stop, and the last price on the axis
-    const level = (v, col, dash, label, box) => {
-      out += `<line x1="0" x2="${chartW}" y1="${y(v)}" y2="${y(v)}" stroke="${col}" ${dash ? `stroke-dasharray="${dash}"` : ''} opacity="0.9"/>`;
-      // the plan's own label hangs under its line, so the agent's level above stays readable
-      if (box) out += `<rect x="6" y="${y(v) + 4}" width="${label.length * 6.8 + 10}" height="16" fill="#0E0F13" stroke="#F5B942" rx="2"/>`;
-      out += `<text x="${box ? 11 : 8}" y="${box ? y(v) + 16 : y(v) - 6}" fill="${col}" font-size="11" font-family="${mono}">${label}</text>`;
-    };
-    level(target, '#3FFF6C', '6 4', `Target  ${fmt(target)}`);
-    level(entry, '#B79CFF', null, `Plan long  ${fmt(entry)}`, true);
-    level(stop, '#FF5A6E', '6 4', `Stop  ${fmt(stop)}`);
+    // the last price on the axis
     out += `<line x1="0" x2="${chartW}" y1="${y(last.c)}" y2="${y(last.c)}" stroke="#FF5A6E" stroke-dasharray="2 3" opacity="0.7"/>`;
     out += `<rect x="${chartW}" y="${y(last.c) - 9}" width="${axis}" height="18" fill="#FF5A6E"/>`;
     out += `<text x="${chartW + 8}" y="${y(last.c) + 4}" fill="#0E0F13" font-size="11" font-weight="600" font-family="${mono}">${fmt(last.c)}</text>`;
