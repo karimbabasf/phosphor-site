@@ -17,7 +17,7 @@ There is no test suite. Check these by hand before pushing:
 
 - the wordmark renders in Sora, not a fallback (compare with the banner in ~/Developer/artifacts/brand/phosphor/)
 - the mark shows in the nav with its cuts in green, not white, and `mark-green.svg` shows on the dark surfaces
-- the hero shrinks and dims as the dark sheet slides over it (Chrome, Brave, Safari 26; Firefox shows the sheet over a still hero)
+- the dark sheet comes up small and grows to full width as it reaches the top; the hero never moves (Chrome, Brave, Safari 26; Firefox shows it sliding up at full width)
 - Yes on the amber card swaps it to "Done" and the card fades; No says "Nothing moved"
 - Download says "Coming soon" on click and goes back after about two seconds
 - the browser console is clean

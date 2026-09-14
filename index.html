@@ -141,49 +141,33 @@
     text-wrap: balance;
   }
 
-  /* The sheet rises from under the bottom edge and the hero falls back behind it,
-     the way a sheet is presented on a phone. Scroll drives it, so it runs on the
-     compositor with no lag behind the finger. Firefox skips this block and shows
-     the sheet sliding over a still hero. */
-
-  @supports (animation-timeline: scroll()) {
-    .hero {
-      animation: recede linear both;
-      animation-timeline: scroll(root);
-      animation-range: 0 100svh;
-    }
-    .hero::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      background: #000;
-      opacity: 0;
-      pointer-events: none;
-      animation: dim linear both;
-      animation-timeline: scroll(root);
-      animation-range: 0 100svh;
-    }
-  }
-
-  @keyframes recede {
-    to { transform: scale(0.92); border-radius: var(--radius-sheet); }
-  }
-
-  @keyframes dim {
-    to { opacity: 0.55; }
-  }
-
-  /* Everything after the hero rides above it */
+  /* Everything after the hero rides above it. The sheet comes up from under the
+     bottom edge small and far, and grows to full width as it arrives, so it reads
+     as coming toward you while the hero stays exactly where it is. Scroll drives
+     it, so it runs on the compositor with no lag behind the finger. Firefox skips
+     the block and shows the sheet sliding up at full width. */
 
   .after { position: relative; z-index: 1; }
+
+  @supports (animation-timeline: scroll()) {
+    .after {
+      animation: lift linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100svh;
+      transform-origin: 50% 0;
+    }
+  }
+
+  @keyframes lift {
+    from { transform: scale(0.88); }
+    to { transform: none; }
+  }
 
   .sheet {
     background: var(--ink);
     color: #ECEEF1;
     border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
     padding: 72px 24px 96px;
-    box-shadow: 0 -24px 64px rgba(0, 0, 0, 0.45);
   }
 
   .wrap { max-width: 1160px; margin: 0 auto; }
@@ -390,7 +374,7 @@
 
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
-    .hero { animation: none; }
+    .after { animation: none; }
     .links a, .links button, .cta a, .cta button, .app button, .dock { transition: none; }
   }
 </style>
