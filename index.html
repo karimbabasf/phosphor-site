@@ -227,14 +227,14 @@
      at the sheet and ends a little past it settles back on the docked sheet.
      Not CSS scroll snap: a proximity snap point pulls every mouse-wheel notch
      within a third of a screen back to itself, so a notch-by-notch scroll could
-     never leave the sheet. Only where the sheet fits the screen (the same range
-     as the one-screen fit below, 1100px wide and 840px tall or more): a held
-     sheet taller than the screen would hide its own bottom, and read as a jam. */
+     never leave the sheet. Only while the sheet fits the screen: the script sets
+     .hold on the wrapper when it does, since a held sheet taller than the screen
+     would hide its own bottom and read as a jam. */
   :root { --dwell: 40svh; }
   .dwell { display: none; }
-  @media (min-width: 1100px) and (min-height: 840px) {
-    .sheet { position: sticky; top: 0; }
-    .dwell { display: block; height: var(--dwell); }
+  @media (min-width: 1100px) {
+    .lift.hold .sheet { position: sticky; top: 0; }
+    .lift.hold .dwell { display: block; height: var(--dwell); }
   }
 
   .wrap { max-width: 1160px; margin: 0 auto; }
@@ -437,14 +437,21 @@
   }
 
   /* On a wide screen the head and the window fit one screen under the bar: the
-     window is 704px tall at rest and sits 236px under the sheet's top edge with
-     96px below it, so on a short screen it is zoomed down by the ratio of the
-     room left to that height, and never below 0.72, where the text in the
-     picture stops being readable. The tan(atan2()) pair is how CSS divides one
-     length by another. Narrower than 1100px the window keeps its size and the
-     page scrolls. */
+     window is 704px tall at rest and --fit is the room the sheet takes above and
+     below it (padding, head, gap), so on a short screen it is zoomed down by the
+     ratio of the room left to that height, and never below 0.72, where the text
+     in the picture stops being readable. The tan(atan2()) pair is how CSS
+     divides one length by another. Narrower than 1100px the window keeps its
+     size and the page scrolls. Under 880px tall the sheet tightens its padding
+     so it still fits, and the hold still applies, down to about 776px. */
+  :root { --fit: 332px; }
   @media (min-width: 1100px) {
-    .app { zoom: clamp(0.72, tan(atan2(100svh - 332px, 704px)), 1); }
+    .app { zoom: clamp(0.72, tan(atan2(100svh - var(--fit), 704px)), 1); }
+  }
+  @media (min-width: 1100px) and (max-height: 880px) {
+    :root { --fit: 269px; }
+    .sheet { padding: 112px 32px 56px; }
+    .sheet .head { margin-bottom: 32px; }
   }
 
   @media (max-width: 860px) {
@@ -766,20 +773,26 @@
       .fromTo(sheet, { borderTopLeftRadius: radius, borderTopRightRadius: radius }, { borderTopLeftRadius: 0, borderTopRightRadius: 0, duration: 0.2 }, 0.8);
   }
 
-  // The magnet. The sheet is sticky for the dwell under it (CSS), so the docked
-  // view spans a stretch of scroll positions. When a scroll ends near that
-  // stretch, the page glides to the end of it that the visitor was heading for:
-  // arriving from the hero and ending inside the dwell or up to 40 percent of a
-  // screen past it parks at the far end, so the next scroll down leaves at once;
-  // arriving from below parks at the near end, so the next scroll up leaves at
-  // once. A scroll that leaves the sheet is never pulled back, whichever way it
-  // goes, and any input during the glide stops it. A scroll counts as ended
-  // after 180ms without a scroll event, not on scrollend: Chrome fires scrollend
-  // between the ticks of one wheel gesture, which would split the gesture and
-  // lose where it began. Only where the dwell exists (the same media query);
-  // nothing under reduced motion.
-  if (live && matchMedia('(min-width: 1100px) and (min-height: 840px)').matches) {
-    const lift = document.querySelector('.lift');
+  // The hold applies only while the sheet fits the screen; held taller than the
+  // screen, it would hide its own bottom.
+  const lift = document.querySelector('.lift');
+  const sheetBox = document.querySelector('.sheet');
+  const fit = () => lift.classList.toggle('hold', sheetBox.offsetHeight <= innerHeight + 1);
+  fit();
+  addEventListener('resize', fit);
+  document.fonts.ready.then(fit);
+
+  // The magnet. The held sheet spans a stretch of scroll positions (the dwell).
+  // When a scroll arrives at the sheet, from either side, and ends inside the
+  // dwell or up to 40 percent of a screen past it, the page glides to the middle
+  // of the dwell: the docked sheet, with half the hold still to scroll through
+  // before it moves, which is the pause. A scroll that starts on the held sheet
+  // is leaving, and is never pulled back, whichever way it goes; any input
+  // during the glide stops it. A scroll counts as ended after 180ms without a
+  // scroll event, not on scrollend: Chrome fires scrollend between the ticks of
+  // one wheel gesture, which would split the gesture and lose where it began.
+  // Nothing under reduced motion.
+  if (live && matchMedia('(min-width: 1100px)').matches) {
     const dwell = document.querySelector('.dwell');
     // A gesture runs from its first scroll event until 180ms pass without one.
     // Input that cuts a glide short starts a fresh gesture from where the page
@@ -795,13 +808,14 @@
     };
     const settle = () => {
       moving = false;
+      if (!lift.classList.contains('hold')) return;
       const dock = lift.getBoundingClientRect().top + scrollY;
       const far = dock + dwell.offsetHeight;
       const reach = innerHeight * 0.4;
       const y = scrollY;
-      if (startY < dock && y >= dock && y <= far + reach) park(far);                      // came down onto the sheet
-      else if (startY > y && startY > far && y > far && y <= far + reach) park(far);       // came up, stopped just short of it
-      else if (startY > far && y <= far && y >= dock) park(dock);                          // came up onto the sheet
+      const onto = y >= dock && y <= far + reach;
+      const fromAbove = startY < dock, fromBelow = startY > far && y < startY;
+      if (onto && (fromAbove || fromBelow)) park(dock + dwell.offsetHeight / 2);
     };
     addEventListener('scroll', () => {
       if (ours) return;
