@@ -3,9 +3,12 @@
 The landing page for Phosphor, at https://phosphor.karimbabasf.com
 
 Static files, no build step. `index.html` carries its own CSS and JavaScript, `mark.svg` is
-the MP cube mark, `fonts/` holds Sora (Regular and SemiBold), the brand face, Manrope for everything under the hero,
-and Geist for the window mock, and `vendor/anime.esm.min.js` is anime.js 4.5.0 (MIT), vendored from the npm
-tarball, which drives the sheet's lift from the scroll position.
+the MP cube mark, `fonts/` holds Sora (Regular and SemiBold), the one face the page speaks in,
+and Geist plus Geist Mono for the window mock, which is a picture of the app in the app's own
+faces. `vendor/` holds GSAP 3.15.0 with ScrollTrigger (Standard license), which drives the
+sheet's lift from the scroll position and the load sequence, and Motion 13.3.0 (MIT), which
+runs the reveals on entering view and the Download swap. Both are the `dist` files from the
+npm tarballs.
 
 ## Run it
 
@@ -17,13 +20,16 @@ Then open http://localhost:4300. Serving matters: the font and icon paths are ab
 
 There is no test suite. Check these by hand before pushing:
 
-- the wordmark renders in Sora, not a fallback (compare with the banner in ~/Developer/artifacts/brand/phosphor/)
+- the wordmark renders in Sora, not a fallback (compare with the banner in ~/Developer/artifacts/brand/phosphor/), and so does everything else on the page outside the window mock
+- the field of bent hairlines moves behind the hero, bends around the pointer, and leaves plain green behind the wordmark and its line
+- on load the letters of the wordmark rise into view, the field comes up behind them, then the line under the wordmark and the bar follow
 - the mark shows in the nav with its cuts in green, not white, and `mark-green.svg` shows on the dark surfaces
-- the dark sheet comes up small and grows to full width as it reaches the top; the hero never moves
-- a scroll that ends near a section top settles on it; one that ends mid-way stays put; the three nav links land exactly
-- the window mock shows Trade mode: real BTC daily candles from Hyperliquid (a snapshot baked into the page, refetch to refresh), the rail, and the empty conversation column
+- the dark sheet comes up small and grows to full width as it reaches the top; the hero never moves; scrolling is plain, nothing snaps
+- the window mock shows Trade mode: real BTC daily candles from Hyperliquid (a snapshot baked into the page, refetch to refresh), the rail, and the empty conversation column; the candles and volume grow in left to right the first time the window comes into view
 - the window mock is a still picture: nothing inside it reacts to a click
-- Download says "Coming soon" on click and goes back after about two seconds
+- the three steps and the closing call fade up as they enter view
+- Download crossfades to "Coming soon" on click, the pill widens to fit, and it comes back after about two seconds
+- with reduced motion on, everything is visible at rest and the field is a still drawing
 - the browser console is clean
 
 `og.png` is a screenshot of the page at 2400x1260. Re-render it whenever the hero changes,
