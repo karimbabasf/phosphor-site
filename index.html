@@ -220,6 +220,23 @@
     padding: 104px 24px 72px;
   }
 
+  /* Once docked, the sheet holds for a short stretch of scroll before the page
+     moves on: it is sticky inside its wrapper, and a spacer under it gives it
+     the room (a spacer, not padding: sticky range is the containing block's
+     content box). The script at the end adds the magnet: a scroll that arrives
+     at the sheet and ends a little past it settles back on the docked sheet.
+     Not CSS scroll snap: a proximity snap point pulls every mouse-wheel notch
+     within a third of a screen back to itself, so a notch-by-notch scroll could
+     never leave the sheet. Only where the sheet fits the screen (the same range
+     as the one-screen fit below, 1100px wide and 840px tall or more): a held
+     sheet taller than the screen would hide its own bottom, and read as a jam. */
+  :root { --dwell: 40svh; }
+  .dwell { display: none; }
+  @media (min-width: 1100px) and (min-height: 840px) {
+    .sheet { position: sticky; top: 0; }
+    .dwell { display: block; height: var(--dwell); }
+  }
+
   .wrap { max-width: 1160px; margin: 0 auto; }
 
   /* One face for the whole page: Sora, the wordmark's own. The window mock is the
@@ -557,6 +574,7 @@
 
     </div>
   </section>
+  <div class="dwell" aria-hidden="true"></div>
   </div>
 
     <section class="steps dark" id="how">
@@ -746,6 +764,53 @@
     gsap.timeline({ scrollTrigger: { trigger: '.lift', start: 'top bottom', end: 'top top', scrub: true }, defaults: { ease: 'none' } })
       .fromTo('.lift', { scale: 0.88 }, { scale: 1, duration: 1 }, 0)
       .fromTo(sheet, { borderTopLeftRadius: radius, borderTopRightRadius: radius }, { borderTopLeftRadius: 0, borderTopRightRadius: 0, duration: 0.2 }, 0.8);
+  }
+
+  // The magnet. The sheet is sticky for the dwell under it (CSS), so the docked
+  // view spans a stretch of scroll positions. When a scroll ends near that
+  // stretch, the page glides to the end of it that the visitor was heading for:
+  // arriving from the hero and ending inside the dwell or up to 40 percent of a
+  // screen past it parks at the far end, so the next scroll down leaves at once;
+  // arriving from below parks at the near end, so the next scroll up leaves at
+  // once. A scroll that leaves the sheet is never pulled back, whichever way it
+  // goes, and any input during the glide stops it. A scroll counts as ended
+  // after 180ms without a scroll event, not on scrollend: Chrome fires scrollend
+  // between the ticks of one wheel gesture, which would split the gesture and
+  // lose where it began. Only where the dwell exists (the same media query);
+  // nothing under reduced motion.
+  if (live && matchMedia('(min-width: 1100px) and (min-height: 840px)').matches) {
+    const lift = document.querySelector('.lift');
+    const dwell = document.querySelector('.dwell');
+    // A gesture runs from its first scroll event until 180ms pass without one.
+    // Input that cuts a glide short starts a fresh gesture from where the page
+    // is, so a visitor who scrolls on during the glide is never pulled back.
+    let startY = scrollY, lastY = scrollY, moving = false, glide = null, ours = false, timer;
+    const release = () => { ours = false; moving = false; lastY = scrollY; };
+    const stop = () => { if (glide) { glide.kill(); glide = null; release(); } };
+    const park = (to) => {
+      if (Math.abs(to - scrollY) < 1) return;
+      ours = true;
+      const pos = { y: scrollY };
+      glide = gsap.to(pos, { y: to, duration: 0.55, ease: 'power3.out', onUpdate: () => scrollTo({ top: pos.y, behavior: 'instant' }), onComplete: () => { glide = null; setTimeout(release, 250); } });
+    };
+    const settle = () => {
+      moving = false;
+      const dock = lift.getBoundingClientRect().top + scrollY;
+      const far = dock + dwell.offsetHeight;
+      const reach = innerHeight * 0.4;
+      const y = scrollY;
+      if (startY < dock && y >= dock && y <= far + reach) park(far);                      // came down onto the sheet
+      else if (startY > y && startY > far && y > far && y <= far + reach) park(far);       // came up, stopped just short of it
+      else if (startY > far && y <= far && y >= dock) park(dock);                          // came up onto the sheet
+    };
+    addEventListener('scroll', () => {
+      if (ours) return;
+      if (!moving) { moving = true; startY = lastY; }
+      lastY = scrollY;
+      clearTimeout(timer);
+      timer = setTimeout(settle, 180);
+    }, { passive: true });
+    for (const ev of ['wheel', 'touchstart', 'pointerdown', 'keydown']) addEventListener(ev, stop, { passive: true });
   }
 
   // Below the window, things reveal as they enter view: each step in turn, then

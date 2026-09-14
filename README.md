@@ -25,7 +25,8 @@ There is no test suite. Check these by hand before pushing:
 - on the dark sections, whatever scrolls under the bar fades into ink, with no blur or glow, and the fade itself comes in with the scroll as a dark section slides under the bar; on the green sections the bar has no backing at all
 - on load the letters of the wordmark rise into view, the field comes up behind them, then the line under the wordmark and the bar follow
 - the mark shows in the nav with its cuts in green, not white, and `mark-green.svg` shows on the dark surfaces
-- the dark sheet comes up small and grows to full width as it reaches the top; the hero never moves; scrolling is plain, nothing snaps
+- the dark sheet comes up small and grows to full width as it reaches the top; the hero never moves
+- on a screen 1100px wide and 840px tall or more, the docked sheet holds for 40 percent of a screen of scroll before the page moves on, and a scroll that arrives at the sheet and ends inside that hold or up to 40 percent of a screen past it glides back onto the docked sheet; a scroll that leaves the sheet is never pulled back, a mouse wheel rolled notch by notch gets through, and any input during the glide stops it; smaller screens and phones scroll plain, nothing snaps
 - the window mock shows Trade mode: real BTC daily candles from Hyperliquid (a snapshot baked into the page, refetch to refresh), the rail, and the empty conversation column; as the sheet docks under the bar the candles and volume grow in left to right over about two seconds, the last-price line runs along under them, and the price tag and the live dot land with the last candle
 - the two dark sections share one ink and one head pattern: a short title left, one sentence on its baseline right; on a screen 1100px or wider the head and the window fit under the bar in one screen, the window zoomed down to fit but never below 0.72
 - the window mock is a still picture: nothing inside it reacts to a click
