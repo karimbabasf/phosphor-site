@@ -225,11 +225,15 @@
      within a third of a screen back to itself, so a notch-by-notch scroll could
      never leave the sheet. Only while the sheet fits the screen: the script sets
      .hold on the wrapper when it does, since a held sheet taller than the screen
-     would hide its own bottom and read as a jam. */
+     would hide its own bottom and read as a jam. A held sheet is also at least
+     the screen tall: its own height stops where the window reaches full size
+     (1034px), the screen can go on, and the spacer under a shorter sheet is
+     transparent, so the green hero showed through the gap below it on any
+     screen taller than that, as a hairline at 982 and a 400px band at 1440. */
   :root { --dwell: 40svh; }
   .dwell { display: none; }
   @media (min-width: 1100px) {
-    .lift.hold .sheet { position: sticky; top: 0; }
+    .lift.hold .sheet { position: sticky; top: 0; min-height: 100svh; }
     .lift.hold .dwell { display: block; height: var(--dwell); }
   }
 
