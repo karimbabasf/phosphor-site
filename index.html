@@ -19,7 +19,7 @@
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="2400">
 <meta property="og:image:height" content="1260">
-<meta property="og:image:alt" content="The Phosphor wordmark in black on phosphor green, with the line DeFi for everyone, driven by the agents you already pay for.">
+<meta property="og:image:alt" content="The Phosphor wordmark in black on phosphor green, with the line DeFi for everyone, driven by agents you already pay for.">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/Sora-SemiBold.ttf" as="font" type="font/ttf" crossorigin>
 <link rel="preload" href="/fonts/Sora-Regular.ttf" as="font" type="font/ttf" crossorigin>
@@ -91,6 +91,8 @@
      green surfaces, light on the dark ones. The script at the end reads which
      section sits under the bar on every scroll and sets data-on. */
 
+  @property --ground { syntax: "<color>"; inherits: true; initial-value: #3FFF6C; }
+
   .nav {
     position: fixed;
     inset: 0 0 auto 0;
@@ -100,9 +102,26 @@
     align-items: center;
     padding: 20px 24px;
     color: var(--ink);
-    transition: color 150ms ease;
+    --ground: var(--green);
+    transition: color 150ms ease, --ground 150ms ease;
   }
-  .nav[data-on="dark"] { color: #ECEEF1; }
+  .nav[data-on="dark"] { color: #ECEEF1; --ground: var(--ink); }
+
+  /* Whatever scrolls under the bar blurs and fades into the bar's ground on the
+     way up, so the links never sit on top of a title. The ground is the colour
+     of the section under the bar and switches with the text. */
+  .nav::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 -40px 0;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(to bottom, var(--ground) 0%, var(--ground) 48%, transparent 100%);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    -webkit-mask-image: linear-gradient(to bottom, #000 48%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 48%, transparent 100%);
+  }
 
   .sections { display: none; gap: 6px; }
   .links { justify-self: end; }
@@ -428,7 +447,7 @@
   <canvas class="field" aria-hidden="true"></canvas>
   <div class="lockup">
     <h1 class="wordmark">Phosphor</h1>
-    <p class="sub">DeFi for everyone, driven by the agents you already pay for.</p>
+    <p class="sub">DeFi for everyone, driven by agents you already pay for.</p>
   </div>
 </header>
 
@@ -567,15 +586,16 @@
   if (live) gsap.registerPlugin(ScrollTrigger);
   const out = [0.23, 1, 0.32, 1];
 
-  // The field: vertical hairlines bent by Perlin noise and pushed by the pointer,
-  // after reactbits' Waves, redrawn here without React. It runs only while the
-  // hero is on screen and the tab is visible; with reduced motion it draws once.
+  // The field: vertical hairlines bent by drifting Perlin noise, after reactbits'
+  // Waves, redrawn here without React and without its pointer physics. It runs
+  // only while the hero is on screen and the tab is visible; with reduced motion
+  // it draws once.
   {
     const canvas = document.querySelector('.field');
     const hero = document.querySelector('.hero');
     const lockup = document.querySelector('.lockup');
     const ctx = canvas.getContext('2d');
-    const cfg = { xGap: 10, yGap: 24, ampX: 32, ampY: 16, speedX: 0.0125, speedY: 0.005, friction: 0.925, tension: 0.005, reach: 100 };
+    const cfg = { xGap: 10, yGap: 24, ampX: 32, ampY: 16, speedX: 0.0125, speedY: 0.005 };
 
     const perm = new Uint8Array(512);
     {
@@ -599,7 +619,6 @@
     };
 
     let W = 0, H = 0, dpr = 0, lines = [];
-    const mouse = { x: -1e4, y: -1e4, sx: -1e4, sy: -1e4, lx: -1e4, ly: -1e4, v: 0, a: 0, set: false };
 
     const size = () => {
       const r = hero.getBoundingClientRect();
@@ -613,7 +632,7 @@
         const x0 = (W - cfg.xGap * nx) / 2, y0 = (H - cfg.yGap * ny) / 2;
         for (let i = 0; i <= nx; i++) {
           const pts = [];
-          for (let j = 0; j <= ny; j++) pts.push({ x: x0 + cfg.xGap * i, y: y0 + cfg.yGap * j, wx: 0, wy: 0, cx: 0, cy: 0, vx: 0, vy: 0, px: 0, py: 0 });
+          for (let j = 0; j <= ny; j++) pts.push({ x: x0 + cfg.xGap * i, y: y0 + cfg.yGap * j, px: 0, py: 0 });
           lines.push(pts);
         }
       }
@@ -625,22 +644,9 @@
     };
 
     const step = (t) => {
-      mouse.sx += (mouse.x - mouse.sx) * 0.1; mouse.sy += (mouse.y - mouse.sy) * 0.1;
-      const dx = mouse.x - mouse.lx, dy = mouse.y - mouse.ly;
-      mouse.v = Math.min(100, mouse.v + (Math.hypot(dx, dy) - mouse.v) * 0.1);
-      mouse.lx = mouse.x; mouse.ly = mouse.y; mouse.a = Math.atan2(dy, dx);
-      const reach = Math.max(175, mouse.v), push = reach * mouse.v * 0.00065;
       for (const pts of lines) for (const p of pts) {
         const m = noise((p.x + t * cfg.speedX) * 0.002, (p.y + t * cfg.speedY) * 0.0015) * 12;
-        p.wx = Math.cos(m) * cfg.ampX; p.wy = Math.sin(m) * cfg.ampY;
-        const dist = Math.hypot(p.x - mouse.sx, p.y - mouse.sy);
-        if (dist < reach) {
-          const f = Math.cos(dist * 0.001) * (1 - dist / reach) * push;
-          p.vx += Math.cos(mouse.a) * f; p.vy += Math.sin(mouse.a) * f;
-        }
-        p.vx = (p.vx - p.cx * cfg.tension) * cfg.friction; p.vy = (p.vy - p.cy * cfg.tension) * cfg.friction;
-        p.cx = Math.max(-cfg.reach, Math.min(cfg.reach, p.cx + p.vx * 2));
-        p.cy = Math.max(-cfg.reach, Math.min(cfg.reach, p.cy + p.vy * 2));
+        p.px = p.x + Math.cos(m) * cfg.ampX; p.py = p.y + Math.sin(m) * cfg.ampY;
       }
     };
 
@@ -652,11 +658,6 @@
       ctx.beginPath();
       for (const pts of lines) {
         const n = pts.length - 1;
-        for (let j = 0; j <= n; j++) {
-          // the two ends take no push, so every line stays pinned past the edges
-          const p = pts[j], end = j === 0 || j === n;
-          p.px = p.x + p.wx + (end ? 0 : p.cx); p.py = p.y + p.wy + (end ? 0 : p.cy);
-        }
         // one smooth curve through the points (Catmull-Rom as cubic Beziers), so
         // a bend is a bend and never a joint between two straight sticks
         ctx.moveTo(pts[0].px, pts[0].py);
@@ -680,10 +681,6 @@
     addEventListener('resize', () => { size(); if (still) once(); });
     addEventListener('scroll', sync, { passive: true });
     document.addEventListener('visibilitychange', sync);
-    addEventListener('pointermove', (e) => {
-      mouse.x = e.clientX; mouse.y = e.clientY;
-      if (!mouse.set) { mouse.sx = mouse.lx = mouse.x; mouse.sy = mouse.ly = mouse.y; mouse.set = true; }
-    }, { passive: true });
     size();
     if (still) once(); else sync();
     document.fonts.ready.then(size);
