@@ -17,8 +17,8 @@ There is no test suite. Check these by hand before pushing:
 
 - the wordmark renders in Sora, not a fallback (compare with the banner in ~/Developer/artifacts/brand/phosphor/)
 - the mark shows in the nav with its cuts in green, not white, and `mark-green.svg` shows on the dark surfaces
-- the dark sheet slides up over the hero with rounded corners; the hero stays put
-- Approve on the trade screen swaps to "Approved" and the card fades; Close and Cancel ask "Sure?" first
+- the hero shrinks and dims as the dark sheet slides over it (Chrome, Brave, Safari 26; Firefox shows the sheet over a still hero)
+- Yes on the amber card swaps it to "Done" and the card fades; No says "Nothing moved"
 - Download says "Coming soon" on click and goes back after about two seconds
 - the browser console is clean
 
@@ -27,5 +27,5 @@ or the share card goes stale.
 
 ## Branches
 
-- `main` is the page: green ground, black wordmark, MP cube mark, the trade screen sheet.
+- `main` is the page: green ground, black wordmark, MP cube mark, the Basic screen sheet.
 - `screen-two` is a parked branch of the old marble bust page. Not the thing that ships.
