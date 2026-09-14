@@ -27,6 +27,5 @@ or the share card goes stale.
 
 ## Branches
 
-- `main` is the page that ships today (the marble bust version).
-- `v2` is the rebuild on the locked brand: green ground, black wordmark, MP cube mark.
-- `screen-two` adds a scrolling section to the old page. Parked.
+- `main` is the page: green ground, black wordmark, MP cube mark, the trade screen sheet.
+- `screen-two` is a parked branch of the old marble bust page. Not the thing that ships.
