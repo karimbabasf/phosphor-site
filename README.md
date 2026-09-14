@@ -34,8 +34,9 @@ There is no test suite. Check these by hand before pushing:
 - with reduced motion on, everything is visible at rest and the field is a still drawing
 - the browser console is clean
 
-`og.png` is a screenshot of the page at 2400x1260. Re-render it whenever the hero changes,
-or the share card goes stale.
+`og.png` is the share card at 2400x1260: the green on black banner from
+~/Developer/Apps/phosphor/brand/phosphor-banner-twitter.png, scaled to the card's width and centred
+on the same ink. The favicon set is the mark in white; the touch icon puts it on the ink.
 
 ## Branches
 
