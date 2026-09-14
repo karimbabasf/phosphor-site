@@ -575,7 +575,7 @@
     const hero = document.querySelector('.hero');
     const lockup = document.querySelector('.lockup');
     const ctx = canvas.getContext('2d');
-    const cfg = { xGap: 10, yGap: 32, ampX: 32, ampY: 16, speedX: 0.0125, speedY: 0.005, friction: 0.925, tension: 0.005, reach: 100 };
+    const cfg = { xGap: 10, yGap: 24, ampX: 32, ampY: 16, speedX: 0.0125, speedY: 0.005, friction: 0.925, tension: 0.005, reach: 100 };
 
     const perm = new Uint8Array(512);
     {
@@ -613,7 +613,7 @@
         const x0 = (W - cfg.xGap * nx) / 2, y0 = (H - cfg.yGap * ny) / 2;
         for (let i = 0; i <= nx; i++) {
           const pts = [];
-          for (let j = 0; j <= ny; j++) pts.push({ x: x0 + cfg.xGap * i, y: y0 + cfg.yGap * j, wx: 0, wy: 0, cx: 0, cy: 0, vx: 0, vy: 0 });
+          for (let j = 0; j <= ny; j++) pts.push({ x: x0 + cfg.xGap * i, y: y0 + cfg.yGap * j, wx: 0, wy: 0, cx: 0, cy: 0, vx: 0, vy: 0, px: 0, py: 0 });
           lines.push(pts);
         }
       }
@@ -648,14 +648,21 @@
       ctx.clearRect(0, 0, W, H);
       ctx.strokeStyle = 'rgba(14, 15, 19, 0.18)';
       ctx.lineWidth = 1;
+      ctx.lineJoin = 'round';
       ctx.beginPath();
       for (const pts of lines) {
         const n = pts.length - 1;
         for (let j = 0; j <= n; j++) {
           // the two ends take no push, so every line stays pinned past the edges
           const p = pts[j], end = j === 0 || j === n;
-          const x = p.x + p.wx + (end ? 0 : p.cx), y = p.y + p.wy + (end ? 0 : p.cy);
-          if (j === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+          p.px = p.x + p.wx + (end ? 0 : p.cx); p.py = p.y + p.wy + (end ? 0 : p.cy);
+        }
+        // one smooth curve through the points (Catmull-Rom as cubic Beziers), so
+        // a bend is a bend and never a joint between two straight sticks
+        ctx.moveTo(pts[0].px, pts[0].py);
+        for (let j = 0; j < n; j++) {
+          const a = pts[Math.max(0, j - 1)], b = pts[j], c = pts[j + 1], d = pts[Math.min(n, j + 2)];
+          ctx.bezierCurveTo(b.px + (c.px - a.px) / 6, b.py + (c.py - a.py) / 6, c.px - (d.px - b.px) / 6, c.py - (d.py - b.py) / 6, c.px, c.py);
         }
       }
       ctx.stroke();
