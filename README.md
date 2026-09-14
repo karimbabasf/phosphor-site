@@ -36,7 +36,7 @@ There is no test suite. Check these by hand before pushing:
 
 `og.png` is the share card at 2400x1260: the green on black banner from
 ~/Developer/Apps/phosphor/brand/phosphor-banner-twitter.png, scaled to the card's width and centred
-on the same ink. The favicon set is the mark in black on a rounded white tile, the brand's black on white colourway; the touch icon is the same on a square tile.
+on the same ink. The favicon set is the mark in green on a rounded `#0E0F13` tile, the app icon's colourway; the touch icon is the same on a square tile.
 
 ## Branches
 
