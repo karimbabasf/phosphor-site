@@ -21,17 +21,12 @@
 <meta property="og:image:height" content="1260">
 <meta property="og:image:alt" content="The Phosphor mark and wordmark in phosphor green on black.">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="preload" href="/fonts/Sora-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/Sora-SemiBold.ttf" as="font" type="font/ttf" crossorigin>
 <link rel="preload" href="/fonts/Sora-Regular.ttf" as="font" type="font/ttf" crossorigin>
 <script>document.documentElement.classList.add("js");</script>
 <style>
   @font-face { font-family: "Sora"; font-weight: 400; font-display: block; src: url("/fonts/Sora-Regular.ttf") format("truetype"); }
   @font-face { font-family: "Sora"; font-weight: 600; font-display: block; src: url("/fonts/Sora-SemiBold.ttf") format("truetype"); }
-  /* The same Sora as a variable file, for the wordmark only: its letters walk the
-     weight axis (see the press, at the end), which two static instances cannot do.
-     At rest it is the SemiBold above, glyph for glyph. */
-  @font-face { font-family: "Sora Variable"; font-weight: 100 800; font-display: block; src: url("/fonts/Sora-Variable.woff2") format("woff2"); }
   @font-face { font-family: "Geist"; font-weight: 100 900; font-display: swap; src: url("/fonts/Geist-Variable.woff2") format("woff2"); }
   @font-face { font-family: "Geist Mono"; font-weight: 100 900; font-display: swap; src: url("/fonts/GeistMono-Variable.woff2") format("woff2"); }
 
@@ -176,34 +171,22 @@
 
   .lockup { position: relative; text-align: center; }
 
-  /* The wordmark is split into one span per letter by the script so the letters
-     can rise into view on load; the padding and margin cancel so the clip box
-     holds the glyph overshoot without moving anything. */
+  /* The wordmark is set from the first paint and never moves: it is the largest
+     thing on the page, and the one thing here that does not animate. */
   .wordmark {
-    font-family: "Sora Variable", "Sora", "Helvetica Neue", sans-serif;
+    margin: 0;
     font-weight: 600;
     font-size: min(12.4vw, 27vh);
     line-height: 1;
     letter-spacing: 0.07em;
     text-transform: uppercase;
     white-space: nowrap;
-    overflow: hidden;
-    padding: 0.12em 0.08em 0.06em;
-    margin: -0.12em -0.08em -0.06em;
   }
-  /* Each letter's weight is its own number, stepped by the press at the end.
-     Sora carries one axis, wght 100 to 800, so setting wght alone here resets
-     nothing else. The fallback is the wordmark's own 600, so the word is set
-     before the script runs and identical if it never does. While the script
-     holds a letter's box at its settled width, a lighter glyph measures a hair
-     narrower and sits centred in it rather than ragged against the left edge. */
-  @property --w { syntax: "<number>"; inherits: false; initial-value: 600; }
-  .wordmark span { display: inline-block; text-align: center; font-variation-settings: "wght" var(--w, 600); }
 
   /* What moves on load or on entering view starts hidden, but only once the
      script is known to be running (the js class on html) and motion is welcome. */
   @media (prefers-reduced-motion: no-preference) {
-    .js .wordmark, .js .sub, .js .nav, .js .field, .js .live, .js .steps li, .js .cta .wrap > * { opacity: 0; }
+    .js .sub, .js .nav, .js .field, .js .live, .js .steps li, .js .cta .wrap > * { opacity: 0; }
   }
 
   .sub {
@@ -757,90 +740,14 @@
     document.fonts.ready.then(size);
   }
 
-  // On load, one sequence: the letters of the wordmark rise into view and take
-  // ink as they land, the field comes up behind them, then the line under the
-  // wordmark and the bar follow. The split gives each letter its own span; the
-  // h1 keeps the word for readers.
-  const h1 = document.querySelector('.wordmark');
-  const word = h1.textContent.trim();
-  h1.setAttribute('aria-label', word);
-  h1.innerHTML = [...word].map((c) => `<span aria-hidden="true">${c}</span>`).join('');
-
-  // The press, the same move as the flag on the Frontier hold page. A plate
-  // coming onto press does not fade in: it arrives light, takes ink, and
-  // resolves into the word, so each letter walks Sora's weight axis from the
-  // light end to its stop, left to right, as it rises. Then the press keeps
-  // running: every five seconds a fresh impression crosses the word, each
-  // letter giving up its ink and taking it again as the pass reaches it. The
-  // axis does this alone, with no opacity riding along: ink density on a press
-  // IS weight, and a fade would say the same thing twice.
-  //
-  // Weight changes the advance width of a glyph, so eight letters moving along
-  // the axis together would resize the word on every frame, and centred type
-  // reflowing under its own animation is a shimmer nobody asked for. Each box
-  // is therefore held at the width its settled glyph occupies (the used width,
-  // which no transform on the hero can skew), so the ink moves inside the box
-  // and the box never moves. The hold is a pixel width, so a resize rebuilds
-  // it, and a hidden tab or a hero under the sheet pauses the loop.
-  const BARE = 200, SET = 600;
-  // How far a letter gives its ink back as an impression crosses it: one clear
-  // step down the axis, never so far that a still frame reads as a face that
-  // failed to load. The arrival may start from nothing; a pass never empties.
-  const PASS = 350;
-  // A letter is in flight for 0.3s while its neighbour starts 0.1s behind it,
-  // so about three letters move at any instant: a band crossing the word rather
-  // than the whole word breathing. Five seconds is the period, not the gap.
-  const STAGGER = 0.1, FLIGHT = 0.3, CYCLE = 5;
-  const letters = [...h1.children];
-  const lock = () => {
-    for (const el of letters) el.style.removeProperty('width');
-    const widths = letters.map((el) => parseFloat(getComputedStyle(el).width));
-    letters.forEach((el, i) => { if (widths[i] > 0) el.style.width = `${widths[i]}px`; });
-  };
-  // anime's power curves, so the pass reads here as it does on the Frontier:
-  // the letter gives its ink up on the way in and takes it back on the way out,
-  // the recovery the longer half. That asymmetry is the difference between a
-  // plate being re-inked and a light blinking.
-  const outPow = (n) => (p) => 1 - Math.pow(1 - p, n);
-  const inOutPow = (n) => (p) => p < 0.5 ? Math.pow(p * 2, n) / 2 : 1 - Math.pow(2 - p * 2, n) / 2;
-  const shown = () => !document.hidden && scrollY < innerHeight;
-  let pass = null, landed = false;
-  const press = () => {
-    landed = true;
-    pass = gsap.timeline({ repeat: -1, repeatDelay: Math.max(0, CYCLE - (STAGGER * (letters.length - 1) + FLIGHT)) });
-    letters.forEach((el, i) => pass
-      .to(el, { '--w': PASS, duration: FLIGHT * 0.4, ease: inOutPow(2) }, i * STAGGER)
-      .to(el, { '--w': SET, duration: FLIGHT * 0.6, ease: outPow(2.4) }, i * STAGGER + FLIGHT * 0.4));
-    pass.paused(!shown());
-  };
-
+  // On load, one sequence: the field comes up behind the wordmark, then the
+  // line under it and the bar follow. The wordmark itself is set from the first
+  // paint and never moves.
   if (live) document.fonts.ready.then(() => {
-    lock();
     gsap.timeline({ defaults: { ease: 'power4.out' } })
-      .set(h1, { opacity: 1 })
-      .fromTo(h1.children, { yPercent: 110, '--w': BARE }, { yPercent: 0, '--w': SET, duration: 1.1, stagger: 0.045 }, 0.1)
-      .call(press, null, '>')
       .fromTo('.field', { opacity: 0 }, { opacity: 1, duration: 1.6, ease: 'power2.out' }, 0.3)
       .fromTo('.sub', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.8 }, 0.6)
       .fromTo('.nav', { opacity: 0, y: -6 }, { opacity: 1, y: 0, duration: 0.7 }, 0.8);
-
-    const sync = () => { if (pass) pass.paused(!shown()); };
-    document.addEventListener('visibilitychange', sync);
-    addEventListener('scroll', sync, { passive: true });
-    // Measured a frame after the browser has reflowed to the new size, and once
-    // per drag of the window corner rather than sixty times. Mid arrival the
-    // boxes are read at the settled weight (the arrival re-renders its own value
-    // on the next tick) and the press starts on landing as usual.
-    let pending = 0;
-    addEventListener('resize', () => {
-      cancelAnimationFrame(pending);
-      pending = requestAnimationFrame(() => {
-        if (pass) pass.kill();
-        gsap.set(letters, { '--w': SET });
-        lock();
-        if (landed) press();
-      });
-    }, { passive: true });
   });
 
   // The lift: the sheet grows from 88 percent to full width while its top edge
