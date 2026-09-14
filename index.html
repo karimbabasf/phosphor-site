@@ -91,8 +91,6 @@
      green surfaces, light on the dark ones. The script at the end reads which
      section sits under the bar on every scroll and sets data-on. */
 
-  @property --ground { syntax: "<color>"; inherits: true; initial-value: #3FFF6C; }
-
   .nav {
     position: fixed;
     inset: 0 0 auto 0;
@@ -102,25 +100,25 @@
     align-items: center;
     padding: 20px 24px;
     color: var(--ink);
-    --ground: var(--green);
-    transition: color 150ms ease, --ground 150ms ease;
+    --veil: 0;
+    transition: color 150ms ease;
   }
-  .nav[data-on="dark"] { color: #ECEEF1; --ground: var(--ink); }
+  .nav[data-on="dark"] { color: #ECEEF1; }
 
-  /* Whatever scrolls under the bar blurs and fades into the bar's ground on the
-     way up, so the links never sit on top of a title. The ground is the colour
-     of the section under the bar and switches with the text. */
+  /* On the dark sections, whatever scrolls under the bar fades into ink on the
+     way up, so the links never sit on top of a title. A plain gradient, no blur:
+     blur made a white title bloom under the bar. The veil's opacity follows how
+     much of the bar a dark section has slid under (the script sets it on every
+     scroll), so it comes and goes with the scroll, and on the green sections it
+     is off entirely. */
   .nav::before {
     content: "";
     position: absolute;
     inset: 0 0 -40px 0;
     z-index: -1;
     pointer-events: none;
-    background: linear-gradient(to bottom, var(--ground) 0%, var(--ground) 48%, transparent 100%);
-    -webkit-backdrop-filter: blur(14px);
-    backdrop-filter: blur(14px);
-    -webkit-mask-image: linear-gradient(to bottom, #000 48%, transparent 100%);
-    mask-image: linear-gradient(to bottom, #000 48%, transparent 100%);
+    opacity: var(--veil);
+    background: linear-gradient(to bottom, var(--ink) 0%, var(--ink) 48%, transparent 100%);
   }
 
   .sections { display: none; gap: 6px; }
@@ -743,15 +741,24 @@
     dl.addEventListener('click', () => { swap('Coming soon'); clearTimeout(timer); timer = setTimeout(() => swap('Download'), 2200); });
   });
 
-  // The bar reads which section is under it: the dark ones turn it light.
+  // The bar reads which section is under it: the dark ones turn it light, and
+  // the veil behind it grows with the share of the bar's own height that dark
+  // sections cover, so it fades in as a dark section slides up under the bar.
   const nav = document.querySelector('.nav');
   const darkSections = [...document.querySelectorAll('.sheet, .steps, footer')];
   const probe = 44;
   let ticking = false;
   const tint = () => {
     ticking = false;
-    const dark = darkSections.some((el) => { const r = el.getBoundingClientRect(); return r.top <= probe && r.bottom > probe; });
+    const zone = nav.offsetHeight;
+    let dark = false, veil = 0;
+    for (const el of darkSections) {
+      const r = el.getBoundingClientRect();
+      if (r.top <= probe && r.bottom > probe) dark = true;
+      veil += Math.max(0, Math.min(r.bottom, zone) - Math.max(r.top, 0)) / zone;
+    }
     nav.dataset.on = dark ? 'dark' : 'green';
+    nav.style.setProperty('--veil', Math.min(1, veil).toFixed(3));
   };
   addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(tint); } }, { passive: true });
   addEventListener('resize', tint);

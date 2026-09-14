@@ -22,7 +22,7 @@ There is no test suite. Check these by hand before pushing:
 
 - the wordmark renders in Sora, not a fallback (compare with the banner in ~/Developer/artifacts/brand/phosphor/), and so does everything else on the page outside the window mock
 - the field of bent hairlines drifts behind the hero, ignores the pointer, and leaves plain green behind the wordmark and its line
-- whatever scrolls under the bar blurs and fades into the bar's ground, green on the green sections and ink on the dark ones, so the links never sit on a title
+- on the dark sections, whatever scrolls under the bar fades into ink, with no blur or glow, and the fade itself comes in with the scroll as a dark section slides under the bar; on the green sections the bar has no backing at all
 - on load the letters of the wordmark rise into view, the field comes up behind them, then the line under the wordmark and the bar follow
 - the mark shows in the nav with its cuts in green, not white, and `mark-green.svg` shows on the dark surfaces
 - the dark sheet comes up small and grows to full width as it reaches the top; the hero never moves; scrolling is plain, nothing snaps
