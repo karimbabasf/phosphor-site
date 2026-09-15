@@ -169,7 +169,9 @@
   .lockup { position: relative; text-align: center; }
 
   /* The wordmark is the largest thing on the page. It fades up once, on load,
-     and then never moves. */
+     and then never moves. The fade is CSS, keyed to Sora's arrival by the
+     script under this style block, so the first thing on the page waits for
+     nothing else: not the vendor scripts, not the window mock's faces. */
   .wordmark {
     margin: 0;
     font-weight: 600;
@@ -183,7 +185,19 @@
   /* What moves on load or on entering view starts hidden, but only once the
      script is known to be running (the js class on html) and motion is welcome. */
   @media (prefers-reduced-motion: no-preference) {
-    .js .wordmark, .js .sub, .js .nav, .js .field, .js .live, .js .steps li, .js .cta .wrap > * { opacity: 0; }
+    .js .sub, .js .nav, .js .field, .js .live, .js .steps li, .js .cta .wrap > * { opacity: 0; }
+    /* The wordmark fades through its colour, not its opacity. On this ink the
+       two look the same, and a text painted at opacity zero is invisible to the
+       browser's own paint timing until the next repaint of its layer, which
+       here is the line under it a quarter second later; a colour is paint on
+       every frame, so the largest paint on the page is timed where it is seen. */
+    .js .wordmark { color: transparent; }
+    .js[data-sora] .wordmark { animation: wordin 800ms var(--ease-out) both; }
+  }
+
+  @keyframes wordin {
+    from { color: transparent; transform: translateY(10px); }
+    to { color: var(--text); transform: none; }
   }
 
   .sub {
@@ -481,6 +495,15 @@
     .links a, .links button, .cta a, .cta button { transition: none; }
   }
 </style>
+<script>
+  // Settles when Sora is in, or after three seconds, the same limit as
+  // font-display: block: a face that fails or hangs must not leave the
+  // wordmark at opacity zero. The load sequence at the end waits on it too.
+  window.soraReady = Promise.race([
+    Promise.all([document.fonts.load('600 1em "Sora"'), document.fonts.load('400 1em "Sora"')]).catch(() => {}),
+    new Promise((r) => setTimeout(r, 3000)),
+  ]).then(() => document.documentElement.setAttribute('data-sora', ''));
+</script>
 </head>
 <body>
 
@@ -750,20 +773,16 @@
     startField = () => { ready = true; sync(); };
   }
 
-  // On load, one sequence, about a second in all: the wordmark fades up, the
-  // field comes up behind it, then the line under it and the bar follow. The
-  // wordmark rises ten pixels, no more: at its size a longer travel is a slide,
-  // and a slide is not a fade. It waits for Sora, so the letters that fade in
-  // are the face and not a fallback swapped out mid-fade, and for Sora only:
+  // On load, one sequence, about a second in all: the wordmark fades up (in
+  // CSS, keyed to data-sora from the head), the field comes up behind it, then
+  // the line under it and the bar follow. The wordmark rises ten pixels, no
+  // more: at its size a longer travel is a slide, and a slide is not a fade.
+  // The rest keys to the same moment, Sora's arrival, and to Sora only:
   // fonts.ready would hold the whole hero for the window mock's two faces,
-  // which nothing above the fold uses. Three seconds is the most it waits, the
-  // same as font-display: block: a face that fails or hangs must not leave the
-  // wordmark at opacity zero.
-  const sora = Promise.all([document.fonts.load('600 1em "Sora"'), document.fonts.load('400 1em "Sora"')]).catch(() => {});
-  if (live) Promise.race([sora, new Promise((r) => setTimeout(r, 3000))]).then(() => {
+  // which nothing above the fold uses.
+  if (live) soraReady.then(() => {
     startField();
     gsap.timeline({ defaults: { ease: 'power4.out' } })
-      .fromTo('.wordmark', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.8 }, 0)
       .fromTo('.field', { opacity: 0 }, { opacity: 1, duration: 0.9, ease: 'power2.out' }, 0.15)
       .fromTo('.sub', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.55 }, 0.25)
       .fromTo('.nav', { opacity: 0, y: -6 }, { opacity: 1, y: 0, duration: 0.5 }, 0.35);
