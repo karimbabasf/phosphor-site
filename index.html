@@ -782,8 +782,9 @@
   // place (in CSS, keyed to data-sora from the head), while the field, the
   // line under it and the bar assemble briskly around it, all in inside a
   // second. Karim, 2026-09-14: the title fade was too fast and the rest too
-  // slow, so the two run on different clocks; and the letters do not move, a
-  // ten pixel rise on the slow curve read as floating. The wordmark rises ten pixels, no
+  // slow, so the two run on different clocks; and nothing travels: the ten
+  // pixel rise under the wordmark, then the line's rise and the bar's drop,
+  // each read as floating. Everything on load fades where it stands. The wordmark rises ten pixels, no
   // more: at its size a longer travel is a slide, and a slide is not a fade.
   // The rest keys to the same moment, Sora's arrival, and to Sora only:
   // fonts.ready would hold the whole hero for the window mock's two faces,
@@ -792,8 +793,8 @@
     startField();
     gsap.timeline({ defaults: { ease: 'power4.out' } })
       .fromTo('.field', { opacity: 0 }, { opacity: 1, duration: 0.9, ease: 'power2.out' }, 0.15)
-      .fromTo('.sub', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5 }, 0.2)
-      .fromTo('.nav', { opacity: 0, y: -6 }, { opacity: 1, y: 0, duration: 0.45 }, 0.3);
+      .fromTo('.sub', { opacity: 0 }, { opacity: 1, duration: 0.5 }, 0.2)
+      .fromTo('.nav', { opacity: 0 }, { opacity: 1, duration: 0.45 }, 0.3);
   });
 
   // The lift: the sheet grows from 88 percent to full width while its top edge
