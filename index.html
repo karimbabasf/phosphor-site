@@ -169,8 +169,8 @@
 
   .lockup { position: relative; text-align: center; }
 
-  /* The wordmark is the largest thing on the page. It fades up once, on load,
-     and then never moves. The fade is CSS, keyed to Sora's arrival by the
+  /* The wordmark is the largest thing on the page. It fades in once, on load,
+     in place, and never moves. The fade is CSS, keyed to Sora's arrival by the
      script under this style block, so the first thing on the page waits for
      nothing else: not the vendor scripts, not the window mock's faces. */
   .wordmark {
@@ -201,8 +201,8 @@
   }
 
   @keyframes wordin {
-    from { color: transparent; transform: translateY(10px); }
-    to { color: var(--text); transform: none; }
+    from { color: transparent; }
+    to { color: var(--text); }
   }
 
   .sub {
@@ -778,11 +778,12 @@
     startField = () => { ready = true; sync(); };
   }
 
-  // On load, one sequence: the wordmark fades up slowly, over 1.4s (in CSS,
-  // keyed to data-sora from the head), while the field, the line under it and
-  // the bar assemble briskly around it, all in inside a second. Karim,
-  // 2026-09-14: the title fade was too fast and the rest too slow, so the two
-  // run on different clocks. The wordmark rises ten pixels, no
+  // On load, one sequence: the wordmark fades in slowly, over 1.4s and in
+  // place (in CSS, keyed to data-sora from the head), while the field, the
+  // line under it and the bar assemble briskly around it, all in inside a
+  // second. Karim, 2026-09-14: the title fade was too fast and the rest too
+  // slow, so the two run on different clocks; and the letters do not move, a
+  // ten pixel rise on the slow curve read as floating. The wordmark rises ten pixels, no
   // more: at its size a longer travel is a slide, and a slide is not a fade.
   // The rest keys to the same moment, Sora's arrival, and to Sora only:
   // fonts.ready would hold the whole hero for the window mock's two faces,
