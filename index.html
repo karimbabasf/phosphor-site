@@ -39,6 +39,7 @@
     --text-2: #9BA1AB;
     --rule: #262729;
     --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-fade: cubic-bezier(0.61, 1, 0.88, 1);
     --radius-sheet: 40px;
     color-scheme: dark;
   }
@@ -186,13 +187,17 @@
      script is known to be running (the js class on html) and motion is welcome. */
   @media (prefers-reduced-motion: no-preference) {
     .js .sub, .js .nav, .js .field, .js .live, .js .steps li, .js .cta .wrap > * { opacity: 0; }
-    /* The wordmark fades through its colour, not its opacity. On this ink the
+    /* The wordmark's curve is a sine ease-out, not the page's strong one: the
+       strong curve has the fade 60 percent done at a sixth of its length, so
+       whatever the duration the eye sees a 400 ms pop and a long dead tail.
+       The sine curve keeps the fade moving for most of its 1.4 s.
+       The wordmark fades through its colour, not its opacity. On this ink the
        two look the same, and a text painted at opacity zero is invisible to the
        browser's own paint timing until the next repaint of its layer, which
        here is the line under it a quarter second later; a colour is paint on
        every frame, so the largest paint on the page is timed where it is seen. */
     .js .wordmark { color: transparent; }
-    .js[data-sora] .wordmark { animation: wordin 1200ms var(--ease-out) both; }
+    .js[data-sora] .wordmark { animation: wordin 1400ms var(--ease-fade) both; }
   }
 
   @keyframes wordin {
@@ -773,10 +778,11 @@
     startField = () => { ready = true; sync(); };
   }
 
-  // On load, one sequence, a second and a half in all: the wordmark fades up
-  // over 1.2s (in CSS, keyed to data-sora from the head), the field comes up
-  // behind it, then the line under it and the bar follow. Karim, 2026-09-14:
-  // two seconds was too long and one was too fast. The wordmark rises ten pixels, no
+  // On load, one sequence: the wordmark fades up slowly, over 1.4s (in CSS,
+  // keyed to data-sora from the head), while the field, the line under it and
+  // the bar assemble briskly around it, all in inside a second. Karim,
+  // 2026-09-14: the title fade was too fast and the rest too slow, so the two
+  // run on different clocks. The wordmark rises ten pixels, no
   // more: at its size a longer travel is a slide, and a slide is not a fade.
   // The rest keys to the same moment, Sora's arrival, and to Sora only:
   // fonts.ready would hold the whole hero for the window mock's two faces,
@@ -784,9 +790,9 @@
   if (live) soraReady.then(() => {
     startField();
     gsap.timeline({ defaults: { ease: 'power4.out' } })
-      .fromTo('.field', { opacity: 0 }, { opacity: 1, duration: 1.2, ease: 'power2.out' }, 0.3)
-      .fromTo('.sub', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.7 }, 0.5)
-      .fromTo('.nav', { opacity: 0, y: -6 }, { opacity: 1, y: 0, duration: 0.6 }, 0.65);
+      .fromTo('.field', { opacity: 0 }, { opacity: 1, duration: 0.9, ease: 'power2.out' }, 0.15)
+      .fromTo('.sub', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5 }, 0.2)
+      .fromTo('.nav', { opacity: 0, y: -6 }, { opacity: 1, y: 0, duration: 0.45 }, 0.3);
   });
 
   // The lift: the sheet grows from 88 percent to full width while its top edge
