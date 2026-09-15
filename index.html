@@ -799,13 +799,16 @@
 
   // The lift: the sheet grows from 88 percent to full width while its top edge
   // travels from the bottom of the screen to the top. Progress is the scroll
-  // position, nothing else, so it sits still whenever the finger does. The
-  // corners stay round while the sheet is a card and square up only over the
-  // last fifth, as it docks, so nothing of the hero shows through them at the top.
+  // position and nothing else, followed with half a second of catch-up: a
+  // wheel notch moves the page in a step, and with the lift pinned to the
+  // step it stepped too, so it glides to where the scroll is instead. It still
+  // comes to rest wherever the finger does, half a second later. The corners
+  // stay round while the sheet is a card and square up only over the last
+  // fifth, as it docks, so nothing of the hero shows through them at the top.
   if (live) {
     const sheet = document.querySelector('.sheet');
     const radius = parseFloat(getComputedStyle(sheet).borderTopLeftRadius);
-    gsap.timeline({ scrollTrigger: { trigger: '.lift', start: 'top bottom', end: 'top top', scrub: true }, defaults: { ease: 'none' } })
+    gsap.timeline({ scrollTrigger: { trigger: '.lift', start: 'top bottom', end: 'top top', scrub: 0.5 }, defaults: { ease: 'none' } })
       .fromTo('.lift', { scale: 0.88 }, { scale: 1, duration: 1 }, 0)
       .fromTo(sheet, { borderTopLeftRadius: radius, borderTopRightRadius: radius }, { borderTopLeftRadius: 0, borderTopRightRadius: 0, duration: 0.2 }, 0.8);
   }
