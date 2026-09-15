@@ -2,14 +2,15 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "redirects": [
     {
-      "source": "/download/mac",
-      "destination": "https://github.com/karimbabasf/phosphor/releases/latest/download/Phosphor-macOS-arm64.dmg",
-      "permanent": false
-    },
-    {
       "source": "/download",
       "destination": "/download/mac",
       "permanent": false
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/download/mac",
+      "destination": "https://qr3z67hq2jd7gz5j.public.blob.vercel-storage.com/Phosphor-macOS-arm64.dmg"
     }
   ],
   "headers": [
