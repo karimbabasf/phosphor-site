@@ -486,6 +486,7 @@ const merge = (list, k, cap) => {
     if (live) pulse = Motion.animate(button, { transform: ['scale(1)', 'scale(1.045)', 'scale(1)'] }, { duration: 1.6, repeat: Infinity, ease: 'easeInOut' });
   };
   const arrive = async () => {
+    busy = true;
     packet.style.opacity = '0';
     put(0);
     state('', '');
@@ -496,6 +497,7 @@ const merge = (list, k, cap) => {
     await wait(0.9);
     await go(2);
     park();
+    busy = false;
   };
   const release = async () => {
     if (busy || at !== 2) return;
@@ -522,7 +524,6 @@ const merge = (list, k, cap) => {
     await wait(1.2);
     button.textContent = 'Approve';
     button.disabled = false;
-    busy = false;
     arrive();
   };
   button.addEventListener('click', release);
