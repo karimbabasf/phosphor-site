@@ -383,7 +383,7 @@ const redraw = () => {
 };
 // The observer's first notification carries the host's size, so that is the
 // first draw; a call before it would draw the same chart twice on load.
-new ResizeObserver(() => { if (!sweeping) { drawAt = performance.now(); draw(); } }).observe(host);
+new ResizeObserver(() => { if (sweeping) { wanted = true; return; } drawAt = performance.now(); draw(); }).observe(host);
 const reveal = () => {
   grown = true; sweeping = true;
   draw();
@@ -427,14 +427,29 @@ const merge = (list, k, cap) => {
   } catch (e) {
     return;
   }
-  let sock, backoff = 1000;
+  // One socket at a time: a retry is a timer that open() clears, and a socket
+  // that is connecting or open is left alone. After a gap the snapshots are
+  // read again, since the hourly window has holes the stream cannot fill.
+  let sock, backoff = 1000, retry = 0, first = true;
+  const refresh = async () => {
+    try {
+      const days = await snapshot('1d', 130 * DAY);
+      if (days.length > 20) candles = days.slice(-120);
+      hours = (await snapshot('1h', 26 * 3600000)).slice(-26);
+      head();
+      redraw();
+    } catch (e) {}
+  };
   const open = () => {
-    sock = new WebSocket('wss://api.hyperliquid.xyz/ws');
-    sock.onopen = () => {
+    clearTimeout(retry); retry = 0;
+    if (sock && sock.readyState <= 1) return;
+    const s = sock = new WebSocket('wss://api.hyperliquid.xyz/ws');
+    s.onopen = () => {
       backoff = 1000;
-      for (const interval of ['1d', '1h']) sock.send(JSON.stringify({ method: 'subscribe', subscription: { type: 'candle', coin: 'ETH', interval } }));
+      for (const interval of ['1d', '1h']) s.send(JSON.stringify({ method: 'subscribe', subscription: { type: 'candle', coin: 'ETH', interval } }));
+      if (first) first = false; else refresh();
     };
-    sock.onmessage = (e) => {
+    s.onmessage = (e) => {
       const m = JSON.parse(e.data);
       if (m.channel !== 'candle') return;
       const k = parse([m.data])[0];
@@ -442,13 +457,17 @@ const merge = (list, k, cap) => {
       else merge(hours, k, 26);
       head();
     };
-    sock.onclose = () => { if (!document.hidden) setTimeout(open, backoff); backoff = Math.min(backoff * 2, 30000); };
-    sock.onerror = () => sock.close();
+    s.onclose = () => {
+      if (s !== sock) return;
+      if (!document.hidden) retry = setTimeout(open, backoff);
+      backoff = Math.min(backoff * 2, 30000);
+    };
+    s.onerror = () => s.close();
   };
   open();
   // the time left on the candle moves once a minute even when the price does not
   setInterval(redraw, 60000);
-  document.addEventListener('visibilitychange', () => { if (!document.hidden && sock.readyState > 1) open(); });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) open(); });
 })();
 
 // The flow. The proposal is one line of English that travels the four stops:
@@ -470,7 +489,7 @@ const merge = (list, k, cap) => {
   const spot = (i) => {
     const f = flow.getBoundingClientRect(), n = nodes[i].getBoundingClientRect();
     const pad = parseFloat(getComputedStyle(nodes[i]).paddingLeft);
-    return { x: n.left - f.left + pad, y: n.bottom - f.top - 20 - 32 };
+    return { x: n.left - f.left + pad, y: n.bottom - f.top - pad - 32 };
   };
   const put = (i) => { const p = spot(i); packet.style.transform = `translate(${p.x}px, ${p.y}px)`; at = i; };
   const go = (i, duration = 0.8) => {
@@ -483,10 +502,13 @@ const merge = (list, k, cap) => {
   const horizontal = () => matchMedia('(min-width: 861px)').matches;
   const park = () => {
     state('waiting', 'waiting');
+    if (pulse) pulse.stop();
     if (live) pulse = Motion.animate(button, { transform: ['scale(1)', 'scale(1.045)', 'scale(1)'] }, { duration: 1.6, repeat: Infinity, ease: 'easeInOut' });
+    button.disabled = false;
   };
   const arrive = async () => {
     busy = true;
+    button.disabled = true;
     packet.style.opacity = '0';
     put(0);
     state('', '');
@@ -510,7 +532,7 @@ const merge = (list, k, cap) => {
       await wait(1.6);
       packet.style.opacity = '0';
       await wait(0.4);
-      put(2); park(); button.textContent = 'Approve'; button.disabled = false; busy = false;
+      put(2); packet.style.opacity = ''; park(); button.textContent = 'Approve'; busy = false;
       return;
     }
     await Motion.animate(glyph, { transform: ['scale(1)', 'scale(1.18)', 'scale(1)'] }, { duration: 0.7, ease: out }).finished;
@@ -523,7 +545,6 @@ const merge = (list, k, cap) => {
     await Motion.animate(packet, { transform: [`translate(${p.x}px, ${p.y}px)`, away], opacity: [1, 0] }, { duration: 0.6, ease: 'easeIn' }).finished;
     await wait(1.2);
     button.textContent = 'Approve';
-    button.disabled = false;
     arrive();
   };
   button.addEventListener('click', release);
@@ -532,6 +553,6 @@ const merge = (list, k, cap) => {
     put(2);
     if (!live) { park(); return; }
     packet.style.opacity = '0';
-    Motion.inView('.flow', () => { setTimeout(arrive, 700); }, { amount: 0.5 });
+    Motion.inView('.flow', () => { setTimeout(arrive, 700); }, { amount: 0.25 });
   });
 }

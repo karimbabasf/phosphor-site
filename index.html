@@ -399,11 +399,11 @@
   .market-side .stat { justify-items: end; }
 
   .chart-bar { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-bottom: 1px solid var(--line); }
-  .btn.small, .seg.small span, .field { font: 400 12px/1 "Geist Mono", ui-monospace, monospace; }
+  .btn.small, .seg.small span, .indicators { font: 400 12px/1 "Geist Mono", ui-monospace, monospace; }
   .btn.small { min-height: 28px; padding: 0 10px; gap: 7px; font-family: "Sora", sans-serif; font-weight: 500; }
   .seg.small span { padding: 5px 6px; font-weight: 400; }
   .seg.small span[data-on] { padding: 4px 5px; font-weight: 500; }
-  .field { display: inline-flex; align-items: center; height: 28px; width: 150px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg-1); color: var(--text-3); }
+  .indicators { display: inline-flex; align-items: center; height: 28px; width: 150px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg-1); color: var(--text-3); }
   .caret { width: 6px; height: 6px; border-right: 1.5px solid var(--text-3); border-bottom: 1.5px solid var(--text-3); transform: translateY(-2px) rotate(45deg); }
   .live-wrap { margin-left: auto; display: flex; align-items: center; gap: 10px; font: 400 12px/1 "Geist Mono", ui-monospace, monospace; color: var(--text-2); }
   .live { display: flex; align-items: center; gap: 6px; color: var(--up); }
@@ -552,9 +552,10 @@
   .venue-logo .word { font-weight: 600; font-size: 24px; letter-spacing: -0.02em; line-height: 1; }
   .venue-logo .hl { height: 48px; margin: -7px 0 -7px -8px; }
 
-  .venue-face { position: relative; }
+  .venue-face { display: grid; }
+  .venue-face > * { grid-area: 1 / 1; }
   .venue-line { font-size: 19px; line-height: 1.35; letter-spacing: -0.01em; max-width: 26ch; text-wrap: pretty; transition: opacity 220ms ease; }
-  .venue-facts { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; position: absolute; inset: 0; opacity: 0; transition: opacity 220ms ease; }
+  .venue-facts { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; align-content: start; opacity: 0; transition: opacity 220ms ease; }
   .venue-facts li { display: flex; gap: 12px; align-items: baseline; font-size: 15px; line-height: 1.4; color: var(--text-2); }
   .venue-facts li::before { content: ""; flex: 0 0 auto; width: 6px; height: 6px; border-radius: 50%; background: var(--green); transform: translateY(-2px); }
 
@@ -571,7 +572,7 @@
   /* Without a pointer to hover, the facts are simply there. */
   @media (hover: none) {
     .venue-line { display: none; }
-    .venue-facts { position: static; opacity: 1; }
+    .venue-facts { opacity: 1; }
   }
   .venue:focus-visible { outline: 2px solid var(--green); outline-offset: 4px; }
   .venue:focus-visible .venue-line { opacity: 0; }
@@ -636,7 +637,7 @@
     .conv { display: none; }
     .chart-host { height: 340px; }
     .seg.small span:nth-child(-n+4) { display: none; }
-    .field { display: none; }
+    .indicators { display: none; }
     .app-bar .danger { display: none; }
     .market { grid-template-columns: 1fr; }
     .market-side { display: none; }
@@ -655,7 +656,6 @@
     .price { font-size: 22px; }
     .live-wrap .ms { display: none; }
     .venue { min-height: 0; }
-    .venue-face { min-height: 120px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -759,7 +759,7 @@
               <div class="seg small" aria-label="Timeframe">
                 <span>1m</span><span>5m</span><span>15m</span><span>30m</span><span>1h</span><span>4h</span><span>8h</span><span data-on>1d</span>
               </div>
-              <span class="field">Indicators</span>
+              <span class="indicators">Indicators</span>
               <span class="btn ghost small">Layers<i class="caret"></i></span>
               <div class="live-wrap">
                 <span class="live"><i></i>live</span><span class="ms" id="ms"></span>
@@ -811,7 +811,7 @@
           <span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 8.2A6.5 6.5 0 0 1 18.5 12c0 3-0.4 5.6-1.2 7.8"/><path d="M4.6 12a7.4 7.4 0 0 1 .9-3.6"/><path d="M8.3 19.9c1-2.3 1.6-5 1.6-7.9a2.1 2.1 0 0 1 4.2 0c0 2.4-.3 4.6-.8 6.7"/><path d="M5.6 17.4c.8-1.7 1.3-3.5 1.3-5.4a5.1 5.1 0 0 1 8.3-4"/><path d="M15.4 15.9c.1-1.2.2-2.5.2-3.9"/></svg></span>
           <h3>You</h3>
           <span class="role">One click in the window, then your finger.</span>
-          <button class="approve" type="button" id="approve">Approve</button>
+          <button class="approve" type="button" id="approve" disabled>Approve</button>
         </div>
         <div class="link" aria-hidden="true"></div>
         <div class="node enclave">

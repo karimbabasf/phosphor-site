@@ -232,5 +232,5 @@ ${html}
     </div>
   </article>
 </main>`;
-  write('terms/index.html', shell({ title, description: summary, url: '/terms/', body: article, active: '', kind: 'read' }));
+  write('terms/index.html', shell({ title, description: summary.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1'), url: '/terms/', body: article, active: '', kind: 'read' }));
 }
