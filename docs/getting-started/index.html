@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Getting started</title>
+<meta name="description" content="Phosphor is a Mac app that holds your keys, your venue connections and your rules. An agent reads your money and proposes moves; you approve each one with a click in the window. This page takes you from the download to a wallet that is made, backed up and locked, and shows you the brake.">
+<link rel="canonical" href="https://phosphor.karimbabasf.com/docs/getting-started/">
+<meta name="theme-color" content="#0E0F13">
+<link rel="icon" href="/favicon.ico?v=9" sizes="32x32">
+<link rel="icon" href="/favicon.svg?v=9" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=9">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Phosphor">
+<meta property="og:url" content="https://phosphor.karimbabasf.com/docs/getting-started/">
+<meta property="og:title" content="Getting started">
+<meta property="og:description" content="Phosphor is a Mac app that holds your keys, your venue connections and your rules. An agent reads your money and proposes moves; you approve each one with a click in the window. This page takes you from the download to a wallet that is made, backed up and locked, and shows you the brake.">
+<meta property="og:image" content="https://phosphor.karimbabasf.com/og.png?v=2">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" href="/fonts/Sora-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/Sora-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+  /* The reading pages: the docs and the terms. The same ink, faces and bar as
+     the front page (index.html holds the originals of the nav and footer rules;
+     keep the two in step), and a measure built for reading: Sora at 17px on a
+     68ch column, Geist Mono for code and figures. */
+  @font-face { font-family: "Sora"; font-weight: 400; font-display: block; src: url("/fonts/Sora-Regular.woff2") format("woff2"); }
+  @font-face { font-family: "Sora"; font-weight: 600; font-display: block; src: url("/fonts/Sora-SemiBold.woff2") format("woff2"); }
+  @font-face { font-family: "Geist Mono"; font-weight: 100 900; font-display: swap; src: url("/fonts/GeistMono-Variable.woff2") format("woff2"); }
+
+  :root {
+    --green: #3FFF6C;
+    --ink: #0E0F13;
+    --ink-2: #151619;
+    --ink-3: #1B1D20;
+    --text: #ECEEF1;
+    --text-2: #9BA1AB;
+    --text-3: #828890;
+    --rule: #262729;
+    --rule-2: #363739;
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  html { scroll-behavior: smooth; scroll-padding-top: 96px; }
+  body { background: var(--ink); color: var(--text); font-family: "Sora", "Helvetica Neue", sans-serif; text-rendering: optimizeLegibility; }
+  ::selection { background: var(--green); color: var(--ink); }
+  :focus-visible { outline: 2px solid var(--green); outline-offset: 4px; border-radius: 2px; }
+  h1, h2, h3, h4, p { margin: 0; }
+  .mono { font-family: "Geist Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+
+  /* The bar, as on the front page, on a veil of ink so the text scrolls under it. */
+  .nav { position: fixed; inset: 0 0 auto 0; z-index: 10; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 20px 24px; }
+  .nav::before { content: ""; position: absolute; inset: 0 0 -40px 0; z-index: -1; pointer-events: none; background: linear-gradient(to bottom, var(--ink) 0%, var(--ink) 48%, transparent 100%); }
+  .sections { display: none; gap: 6px; }
+  .mark { display: block; line-height: 0; color: inherit; }
+  .mark img { display: block; width: 27px; height: 30px; }
+  .links { display: flex; align-items: center; gap: 6px; justify-self: end; }
+  .links a, .sections a { font: 400 15px/1 "Sora", sans-serif; color: inherit; text-decoration: none; padding: 10px 12px; border-radius: 999px; -webkit-tap-highlight-color: transparent; }
+  .links a:not(.download), .sections a { text-underline-offset: 5px; text-decoration-color: transparent; transition: text-decoration-color 150ms ease; }
+  .links a[aria-current="page"] { text-decoration-line: underline; text-decoration-color: currentColor; }
+  .links .download { font-weight: 600; background: var(--green); color: var(--ink); min-width: 108px; padding: 11px 18px; white-space: nowrap; transition: transform 160ms var(--ease-out), background-color 150ms ease; }
+  .links .download:active { transform: scale(0.97); }
+  @media (hover: hover) and (pointer: fine) {
+    .links a:not(.download):hover, .sections a:hover { text-decoration-line: underline; text-decoration-color: currentColor; }
+    .links .download:hover { background: #63FF87; }
+  }
+
+  .wrap { max-width: 1160px; margin: 0 auto; }
+
+  /* The page: a sidebar of pages and the article, side by side from 900px up. */
+  .docs { display: grid; grid-template-columns: 1fr; gap: 32px; padding: 112px 24px 96px; }
+  .docs.single { grid-template-columns: 1fr; justify-items: center; }
+  /* On a phone the page list sits behind a Pages button (a checkbox, no script);
+     from 900px up it is the sidebar, always open. */
+  .side-toggle { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .side-label { cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font: 600 14px/1 "Sora", sans-serif; padding: 10px 14px; border: 1px solid var(--rule-2); border-radius: 999px; -webkit-tap-highlight-color: transparent; }
+  .side-label::after { content: ""; width: 6px; height: 6px; border-right: 1.5px solid var(--text-2); border-bottom: 1.5px solid var(--text-2); transform: translateY(-2px) rotate(45deg); }
+  .side-toggle:focus-visible + .side-label { outline: 2px solid var(--green); outline-offset: 3px; }
+  .side-toggle:checked ~ .side-label::after { transform: translateY(1px) rotate(225deg); }
+  .side nav { display: none; padding-top: 16px; }
+  .side-toggle:checked ~ nav { display: block; }
+  .side ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+  .side a { display: block; padding: 7px 10px; border-radius: 8px; color: var(--text-2); text-decoration: none; font-size: 15px; line-height: 1.3; }
+  .side a:hover { color: var(--text); background: var(--ink-2); }
+  .side a[aria-current="page"] { color: var(--text); background: var(--ink-3); font-weight: 600; }
+  .side-head { margin: 22px 10px 6px; font-size: 12px; font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase; color: var(--text-3); }
+
+  .doc { min-width: 0; max-width: 68ch; }
+  .doc-head { padding-bottom: 28px; border-bottom: 1px solid var(--rule); margin-bottom: 32px; }
+  .doc h1 { font-weight: 600; font-size: clamp(30px, 3.4vw, 42px); line-height: 1.12; letter-spacing: -0.02em; text-wrap: balance; }
+  .lede { margin-top: 16px; font-size: 19px; line-height: 1.5; color: var(--text-2); text-wrap: pretty; }
+  .doc-meta { display: flex; align-items: center; gap: 16px; margin-top: 20px; font-size: 13px; color: var(--text-3); }
+  .doc-meta .mono { padding: 3px 8px; border: 1px solid var(--rule-2); border-radius: 6px; color: var(--text-2); }
+  .doc-meta a { color: var(--text-2); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--rule-2); }
+  .doc-meta a:hover { color: var(--text); }
+
+  .onpage { margin: 0 0 36px; padding: 18px 20px; border: 1px solid var(--rule); border-radius: 14px; }
+  .onpage ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .onpage a { color: var(--text-2); text-decoration: none; font-size: 15px; }
+  .onpage a:hover { color: var(--text); text-decoration: underline; text-underline-offset: 4px; }
+
+  .toc { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; counter-reset: page; }
+  .toc li { counter-increment: page; }
+  .toc a { display: grid; grid-template-columns: 1fr; gap: 4px; padding: 16px 18px; border: 1px solid var(--rule); border-radius: 14px; color: var(--text); text-decoration: none; transition: border-color 150ms ease, background-color 150ms ease; }
+  .toc a:hover { border-color: var(--rule-2); background: #111216; }
+  .toc strong { font-weight: 600; font-size: 17px; }
+  .toc span { color: var(--text-2); font-size: 15px; line-height: 1.45; }
+  .toc.plain { margin-top: 12px; }
+  .doc > h2 { margin-top: 48px; font-weight: 600; font-size: 22px; letter-spacing: -0.01em; }
+
+  /* The prose */
+  .prose { font-size: 17px; line-height: 1.65; }
+  .prose > * + * { margin-top: 18px; }
+  .prose h2 { margin-top: 52px; padding-top: 28px; border-top: 1px solid var(--rule); font-weight: 600; font-size: 24px; line-height: 1.25; letter-spacing: -0.015em; }
+  .prose h3 { margin-top: 34px; font-weight: 600; font-size: 19px; line-height: 1.3; }
+  .prose h4 { margin-top: 26px; font-weight: 600; font-size: 16px; }
+  .prose h2 + *, .prose h3 + *, .prose h4 + * { margin-top: 14px; }
+  .prose p { text-wrap: pretty; }
+  .prose a { color: var(--green); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: rgba(63, 255, 108, 0.35); }
+  .prose a:hover { text-decoration-color: currentColor; }
+  .anchor { margin-left: 10px; color: var(--text-3); text-decoration: none; font-weight: 400; opacity: 0; transition: opacity 150ms ease; }
+  .prose h2:hover .anchor, .prose h3:hover .anchor, .prose h4:hover .anchor, .anchor:focus-visible { opacity: 1; }
+  .prose ul, .prose ol { padding-left: 24px; }
+  .prose li + li { margin-top: 8px; }
+  .prose li::marker { color: var(--text-3); }
+  .prose code { font-family: "Geist Mono", ui-monospace, monospace; font-size: 0.88em; padding: 2px 6px; border-radius: 6px; background: var(--ink-2); border: 1px solid var(--rule); }
+  .prose pre { padding: 16px 18px; overflow-x: auto; border-radius: 12px; background: var(--ink-2); border: 1px solid var(--rule); font-size: 14px; line-height: 1.55; }
+  .prose pre code { padding: 0; border: 0; background: none; font-size: inherit; }
+  .prose blockquote { margin: 0; padding: 4px 0 4px 18px; border-left: 1px solid var(--rule-2); color: var(--text-2); }
+  .prose hr { border: 0; border-top: 1px solid var(--rule); margin: 40px 0; }
+  .prose table { width: 100%; border-collapse: collapse; font-size: 15px; line-height: 1.45; }
+  .prose th, .prose td { text-align: left; vertical-align: top; padding: 10px 12px 10px 0; border-bottom: 1px solid var(--rule); }
+  .prose th { font-weight: 600; color: var(--text-2); font-size: 13px; }
+  .prose td code { white-space: nowrap; }
+  .prose strong { font-weight: 600; }
+  .prose img { max-width: 100%; height: auto; border-radius: 12px; }
+
+  .pager { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 56px; padding-top: 28px; border-top: 1px solid var(--rule); }
+  .pager a { display: grid; gap: 4px; padding: 14px 16px; border: 1px solid var(--rule); border-radius: 12px; color: var(--text); text-decoration: none; font-weight: 600; font-size: 15px; }
+  .pager a:hover { border-color: var(--rule-2); background: #111216; }
+  .pager a span { font-weight: 400; font-size: 12px; color: var(--text-3); }
+  .pager .next { text-align: right; }
+
+  footer { background: var(--ink); color: var(--text-2); padding: 0 24px 32px; font-size: 13px; }
+  footer .wrap { border-top: 1px solid var(--rule); padding-top: 32px; }
+  .foot-row { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+  footer .mark img { width: 17px; height: 20px; }
+  footer a { color: inherit; text-decoration: none; text-underline-offset: 4px; }
+  footer a:hover { text-decoration: underline; }
+  footer .spacer { flex: 1; }
+  .foot-links { display: flex; gap: 18px; }
+  .fine { margin-top: 22px; max-width: 78ch; font-size: 12px; line-height: 1.55; color: #828890; text-wrap: pretty; }
+  .fine a { text-decoration: underline; text-decoration-color: rgba(130, 136, 144, 0.5); }
+
+  @media (min-width: 720px) {
+    .nav { padding: 24px 32px; }
+    .sections { display: flex; }
+    .links { gap: 10px; }
+    .docs { padding: 136px 32px 120px; }
+    footer { padding: 0 32px 32px; }
+  }
+
+  @media (min-width: 900px) {
+    .docs { grid-template-columns: 220px minmax(0, 1fr); gap: 56px; }
+    .side { position: sticky; top: 112px; align-self: start; }
+    .side-label { display: none; }
+    .side nav { display: block; padding-top: 6px; }
+  }
+
+  @media (max-width: 480px) {
+    .links a[href*="github"] { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .links a, .toc a, .anchor { transition: none; }
+  }
+
+</style>
+</head>
+<body class="read">
+
+<div class="nav">
+  <a class="mark" href="/" aria-label="Phosphor"><img src="/mark-green.svg" alt="" width="27" height="30"></a>
+  <nav class="sections" aria-label="Sections">
+    <a href="/#dashboard">The app</a>
+    <a href="/#security">Security</a>
+    <a href="/#venues">Venues</a>
+  </nav>
+  <nav class="links" aria-label="Site">
+    <a href="/docs/" aria-current="page">Docs</a>
+    <a href="https://github.com/karimbabasf/phosphor">GitHub</a>
+    <a class="download" href="/download/mac">Download for Mac</a>
+  </nav>
+</div>
+
+<main class="docs wrap">
+  
+<aside class="side">
+  <input type="checkbox" id="pages" class="side-toggle">
+  <label for="pages" class="side-label">Pages</label>
+  <nav aria-label="Docs">
+    <ul><li><a href="/docs/getting-started/" aria-current="page">Getting started</a></li><li><a href="/docs/connect-an-agent/">Connect an agent</a></li><li><a href="/docs/money/">Money</a></li><li><a href="/docs/trading/">Trading</a></li><li><a href="/docs/policy/">Policy</a></li><li><a href="/docs/security/">Security</a></li><li><a href="/docs/tools/">Tools</a></li><li><a href="/docs/troubleshooting/">Troubleshooting</a></li><li><a href="/docs/changelog/">Changelog</a></li></ul>
+    <div class="side-head">For developers</div>
+    <ul><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/architecture.md" target="_blank" rel="noopener">Architecture</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security-model.md" target="_blank" rel="noopener">Security model</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/reference.md" target="_blank" rel="noopener">Reference</a></li></ul>
+  </nav>
+</aside>
+  <article class="doc">
+    <header class="doc-head">
+      <h1>Getting started</h1>
+      <p class="lede">Phosphor is a Mac app that holds your keys, your venue connections and your rules. An agent reads your money and proposes moves; you approve each one with a click in the window. This page takes you from the download to a wallet that is made, backed up and locked, and shows you the brake.</p>
+      <div class="doc-meta"><span class="mono">v0.6.0</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/getting-started.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+    </header>
+    <nav class="onpage" aria-label="On this page"><ul><li><a href="#download">Download</a></li><li><a href="#check-the-file">Check the file</a></li><li><a href="#the-gatekeeper-warning">The Gatekeeper warning</a></li><li><a href="#first-open">First open</a></li><li><a href="#create-or-restore-a-wallet">Create or restore a wallet</a></li><li><a href="#the-backup-words">The backup words</a></li><li><a href="#touch-id-and-the-secure-enclave">Touch ID and the Secure Enclave</a></li><li><a href="#the-15-minute-lock">The 15 minute lock</a></li><li><a href="#freeze-everything">Freeze everything</a></li><li><a href="#next">Next</a></li></ul></nav>
+    <div class="prose">
+<h2 id="download">Download<a class="anchor" href="#download" aria-label="Link to this section">#</a></h2>
+<p>Download the disk image from <a href="https://phosphor.karimbabasf.com" target="_blank" rel="noopener">phosphor.karimbabasf.com</a>. It needs
+an Apple silicon Mac on macOS 13.5 or later. Open the disk image and drag Phosphor into
+Applications. The source is at <a href="https://github.com/karimbabasf/phosphor" target="_blank" rel="noopener">github.com/karimbabasf/phosphor</a>.</p>
+<h2 id="check-the-file">Check the file<a class="anchor" href="#check-the-file" aria-label="Link to this section">#</a></h2>
+<p>The app holds keys, so check the file before you open it. The release page lists the SHA-256 of
+the disk image. This line must print the same one:</p>
+<pre><code class="language-sh">shasum -a 256 ~/Downloads/Phosphor-macOS-arm64.dmg
+</code></pre>
+<p>If the two differ, delete the file and download it again.</p>
+<h2 id="the-gatekeeper-warning">The Gatekeeper warning<a class="anchor" href="#the-gatekeeper-warning" aria-label="Link to this section">#</a></h2>
+<p>The build is not notarized by Apple yet, so the first open stops with a warning. Open System
+Settings, then Privacy &amp; Security, scroll to Security and click Open Anyway. See
+<a href="/docs/troubleshooting/#macos-will-not-open-the-app">Troubleshooting</a> if the app still refuses.</p>
+<h2 id="first-open">First open<a class="anchor" href="#first-open" aria-label="Link to this section">#</a></h2>
+<p>The window opens on a welcome screen: &quot;Your money stays on this Mac, under a key only you hold.
+Your assistant does the work, and every move waits for your click.&quot; Nothing is uploaded and there
+is no account to make. Click Get started.</p>
+<p>Every address the app makes is a real address that can hold real money. There is no practice
+mode. Size your first deposit as a test.</p>
+<h2 id="create-or-restore-a-wallet">Create or restore a wallet<a class="anchor" href="#create-or-restore-a-wallet" aria-label="Link to this section">#</a></h2>
+<p>What the first run shows depends on your Mac.</p>
+<h3 id="with-a-secure-enclave">With a Secure Enclave<a class="anchor" href="#with-a-secure-enclave" aria-label="Link to this section">#</a></h3>
+<p>The Secure Enclave is a separate chip inside your Mac that holds keys and never lets them out. On
+a Mac that has one, the first run is short: Create your wallet is one click and one Touch ID.
+There is nothing to write down yet. The app then shows your addresses and asks you to connect an
+assistant, see <a href="/docs/connect-an-agent/">Connect an agent</a>.</p>
+<h3 id="with-a-password">With a password<a class="anchor" href="#with-a-password" aria-label="Link to this section">#</a></h3>
+<p>Without an enclave, the app asks you to make a new wallet or bring one in with its recovery
+words. Set a password of at least eight characters. Nobody can reset it, not the app and not your
+assistant. The app then shows twelve recovery words once, and asks you to type three of them back
+by their number before it goes on.</p>
+<p>The last screen, Set the ask threshold, shows the click threshold. The shipped default is $100. A
+change to it goes through your assistant and waits for your click, see <a href="/docs/policy/">Policy</a>.</p>
+<h3 id="a-wallet-from-another-mac">A wallet from another Mac<a class="anchor" href="#a-wallet-from-another-mac" aria-label="Link to this section">#</a></h3>
+<p>A wallet file made on a different Mac cannot be opened here, because its key lives in that Mac&#39;s
+enclave. The window says Made on another Mac and asks for your recovery phrase, twelve or
+twenty-four words, to bring the wallet here.</p>
+<h2 id="the-backup-words">The backup words<a class="anchor" href="#the-backup-words" aria-label="Link to this section">#</a></h2>
+<p>The recovery phrase is the only way back to the wallet. Anyone who has it has your money, and
+nobody from this app will ever ask you for it.</p>
+<p>On an enclave wallet the phrase is not shown at first run. Open the Vault tab, then Recovery,
+and click Reveal recovery phrase. Touch ID shows the words on that screen only. Write them down
+somewhere that is not this Mac, then click Prove it and type three of the words back by their
+number. Only that turns the chip from Not backed up to Backed up.</p>
+<p>Until then the top bar shows Not backed up, and the first deposit that lands raises a card that
+says &quot;You have money in. Back up now.&quot; The Vault tab refuses to forget a wallet whose phrase has
+not been proven backed up.</p>
+<p>A password wallet shows its words at creation. The Vault tab also offers Show my recovery words
+and Save an encrypted backup, both behind the password.</p>
+<h2 id="touch-id-and-the-secure-enclave">Touch ID and the Secure Enclave<a class="anchor" href="#touch-id-and-the-secure-enclave" aria-label="Link to this section">#</a></h2>
+<p>The Vault tab&#39;s Custody card says which kind of wallet you have. Secure Enclave on this Mac opens
+with Touch ID, or your Mac login password. The key file, <code>keys.enc.json</code>, sits under <code>~/.phosphor</code>,
+outside the app and outside any code checkout. Its contents are sealed with a data key, and that
+data key is wrapped to a key the enclave made and cannot export. Nothing on disk opens the file
+without the enclave.</p>
+<p>On an enclave wallet, every click you make on a proposal ends in a Touch ID dialog. The dialog
+is drawn by macOS, and its sentence is composed by the app from the proposal&#39;s own numbers: the
+amount, the receiver shortened to eight characters at each end, and the chain. Read it before you
+confirm. <a href="/docs/security/">Security</a> says what this does and does not protect against.</p>
+<p>A password wallet on a Mac that has an enclave shows a Move behind the Secure Enclave button. The
+Custody card says Software, on this disk until you press it.</p>
+<h2 id="the-15-minute-lock">The 15 minute lock<a class="anchor" href="#the-15-minute-lock" aria-label="Link to this section">#</a></h2>
+<p>The wallet locks after fifteen minutes with nobody at the window, when the Mac sleeps, and when
+you close the window. The window frosts and says Phosphor is locked. Unlock with Touch ID, or with
+your password on a software wallet.</p>
+<p>Locked, every read still works and the window still shows your balances. A move the agent asks
+for while the wallet is locked is drafted, priced and checked against your rules, then waits as
+Needs the unlock. When you unlock, each waiting move is decided again and lands as something to
+click. An unlock is never an approval.</p>
+<h2 id="freeze-everything">Freeze everything<a class="anchor" href="#freeze-everything" aria-label="Link to this section">#</a></h2>
+<p>Freeze everything is the last button in the top bar, on every tab. It is the brake. The dialog
+says it cancels every working order and disarms every rule, and it asks you to confirm.</p>
+<p>Frozen, the policy reads &quot;KILL SWITCH ON: all writes refused.&quot; Every proposal is refused until you
+press the button again, whatever its size. The app also cancels every order it placed, ends every
+armed plan, and closes the positions those plans opened when it can reach the venue. Money does
+not leave the app. Check the Trade tab afterwards, see <a href="/docs/trading/">Trading</a>.</p>
+<h2 id="next">Next<a class="anchor" href="#next" aria-label="Link to this section">#</a></h2>
+<ul>
+<li><a href="/docs/connect-an-agent/">Connect an agent</a>: start the built-in assistant or connect your own.</li>
+<li><a href="/docs/money/">Money</a>: deposit, swap, send, and fund the trading account.</li>
+<li><a href="/docs/policy/">Policy</a>: the rules that decide what needs your click.</li>
+</ul>
+
+    </div>
+    <nav class="pager" aria-label="Pages">
+      <span></span>
+      <a class="next" href="/docs/connect-an-agent/"><span>Next</span>Connect an agent</a>
+    </nav>
+  </article>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-row">
+      <a class="mark" href="/" aria-label="Phosphor"><img src="/mark-green.svg" alt="" width="17" height="20"></a>
+      <span>Phosphor</span>
+      <span class="spacer"></span>
+      <span class="foot-links">
+        <a href="/docs/">Docs</a>
+        <a href="https://github.com/karimbabasf/phosphor">GitHub</a>
+        <a href="https://github.com/karimbabasf/phosphor/blob/main/LICENSE">License</a>
+        <a href="/terms/">Terms</a>
+      </span>
+    </div>
+    <p class="fine">Phosphor is software you run yourself. Your keys stay on your Mac. It is not a wallet service, an exchange, a broker or an adviser, and nothing in it is financial advice. Trading and transfers carry risk, transactions are final, and you can lose money. By downloading or using Phosphor you accept the <a href="/terms/">terms</a>.</p>
+  </div>
+</footer>
+</body>
+</html>

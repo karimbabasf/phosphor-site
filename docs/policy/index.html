@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Policy</title>
+<meta name="description" content="Your rules decide what the agent may do on its own, what waits for your click, and what is refused outright. They live in the app as plain sentences, a pure engine enforces them with no model in the path, and no proposal reaches execution without either your click or an allow inside limits you wrote. This page explains the rules, the click threshold, how a rule changes, and why the gate has no off switch.">
+<link rel="canonical" href="https://phosphor.karimbabasf.com/docs/policy/">
+<meta name="theme-color" content="#0E0F13">
+<link rel="icon" href="/favicon.ico?v=9" sizes="32x32">
+<link rel="icon" href="/favicon.svg?v=9" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=9">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Phosphor">
+<meta property="og:url" content="https://phosphor.karimbabasf.com/docs/policy/">
+<meta property="og:title" content="Policy">
+<meta property="og:description" content="Your rules decide what the agent may do on its own, what waits for your click, and what is refused outright. They live in the app as plain sentences, a pure engine enforces them with no model in the path, and no proposal reaches execution without either your click or an allow inside limits you wrote. This page explains the rules, the click threshold, how a rule changes, and why the gate has no off switch.">
+<meta property="og:image" content="https://phosphor.karimbabasf.com/og.png?v=2">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" href="/fonts/Sora-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/Sora-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+  /* The reading pages: the docs and the terms. The same ink, faces and bar as
+     the front page (index.html holds the originals of the nav and footer rules;
+     keep the two in step), and a measure built for reading: Sora at 17px on a
+     68ch column, Geist Mono for code and figures. */
+  @font-face { font-family: "Sora"; font-weight: 400; font-display: block; src: url("/fonts/Sora-Regular.woff2") format("woff2"); }
+  @font-face { font-family: "Sora"; font-weight: 600; font-display: block; src: url("/fonts/Sora-SemiBold.woff2") format("woff2"); }
+  @font-face { font-family: "Geist Mono"; font-weight: 100 900; font-display: swap; src: url("/fonts/GeistMono-Variable.woff2") format("woff2"); }
+
+  :root {
+    --green: #3FFF6C;
+    --ink: #0E0F13;
+    --ink-2: #151619;
+    --ink-3: #1B1D20;
+    --text: #ECEEF1;
+    --text-2: #9BA1AB;
+    --text-3: #828890;
+    --rule: #262729;
+    --rule-2: #363739;
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  html { scroll-behavior: smooth; scroll-padding-top: 96px; }
+  body { background: var(--ink); color: var(--text); font-family: "Sora", "Helvetica Neue", sans-serif; text-rendering: optimizeLegibility; }
+  ::selection { background: var(--green); color: var(--ink); }
+  :focus-visible { outline: 2px solid var(--green); outline-offset: 4px; border-radius: 2px; }
+  h1, h2, h3, h4, p { margin: 0; }
+  .mono { font-family: "Geist Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+
+  /* The bar, as on the front page, on a veil of ink so the text scrolls under it. */
+  .nav { position: fixed; inset: 0 0 auto 0; z-index: 10; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 20px 24px; }
+  .nav::before { content: ""; position: absolute; inset: 0 0 -40px 0; z-index: -1; pointer-events: none; background: linear-gradient(to bottom, var(--ink) 0%, var(--ink) 48%, transparent 100%); }
+  .sections { display: none; gap: 6px; }
+  .mark { display: block; line-height: 0; color: inherit; }
+  .mark img { display: block; width: 27px; height: 30px; }
+  .links { display: flex; align-items: center; gap: 6px; justify-self: end; }
+  .links a, .sections a { font: 400 15px/1 "Sora", sans-serif; color: inherit; text-decoration: none; padding: 10px 12px; border-radius: 999px; -webkit-tap-highlight-color: transparent; }
+  .links a:not(.download), .sections a { text-underline-offset: 5px; text-decoration-color: transparent; transition: text-decoration-color 150ms ease; }
+  .links a[aria-current="page"] { text-decoration-line: underline; text-decoration-color: currentColor; }
+  .links .download { font-weight: 600; background: var(--green); color: var(--ink); min-width: 108px; padding: 11px 18px; white-space: nowrap; transition: transform 160ms var(--ease-out), background-color 150ms ease; }
+  .links .download:active { transform: scale(0.97); }
+  @media (hover: hover) and (pointer: fine) {
+    .links a:not(.download):hover, .sections a:hover { text-decoration-line: underline; text-decoration-color: currentColor; }
+    .links .download:hover { background: #63FF87; }
+  }
+
+  .wrap { max-width: 1160px; margin: 0 auto; }
+
+  /* The page: a sidebar of pages and the article, side by side from 900px up. */
+  .docs { display: grid; grid-template-columns: 1fr; gap: 32px; padding: 112px 24px 96px; }
+  .docs.single { grid-template-columns: 1fr; justify-items: center; }
+  /* On a phone the page list sits behind a Pages button (a checkbox, no script);
+     from 900px up it is the sidebar, always open. */
+  .side-toggle { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .side-label { cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font: 600 14px/1 "Sora", sans-serif; padding: 10px 14px; border: 1px solid var(--rule-2); border-radius: 999px; -webkit-tap-highlight-color: transparent; }
+  .side-label::after { content: ""; width: 6px; height: 6px; border-right: 1.5px solid var(--text-2); border-bottom: 1.5px solid var(--text-2); transform: translateY(-2px) rotate(45deg); }
+  .side-toggle:focus-visible + .side-label { outline: 2px solid var(--green); outline-offset: 3px; }
+  .side-toggle:checked ~ .side-label::after { transform: translateY(1px) rotate(225deg); }
+  .side nav { display: none; padding-top: 16px; }
+  .side-toggle:checked ~ nav { display: block; }
+  .side ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+  .side a { display: block; padding: 7px 10px; border-radius: 8px; color: var(--text-2); text-decoration: none; font-size: 15px; line-height: 1.3; }
+  .side a:hover { color: var(--text); background: var(--ink-2); }
+  .side a[aria-current="page"] { color: var(--text); background: var(--ink-3); font-weight: 600; }
+  .side-head { margin: 22px 10px 6px; font-size: 12px; font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase; color: var(--text-3); }
+
+  .doc { min-width: 0; max-width: 68ch; }
+  .doc-head { padding-bottom: 28px; border-bottom: 1px solid var(--rule); margin-bottom: 32px; }
+  .doc h1 { font-weight: 600; font-size: clamp(30px, 3.4vw, 42px); line-height: 1.12; letter-spacing: -0.02em; text-wrap: balance; }
+  .lede { margin-top: 16px; font-size: 19px; line-height: 1.5; color: var(--text-2); text-wrap: pretty; }
+  .doc-meta { display: flex; align-items: center; gap: 16px; margin-top: 20px; font-size: 13px; color: var(--text-3); }
+  .doc-meta .mono { padding: 3px 8px; border: 1px solid var(--rule-2); border-radius: 6px; color: var(--text-2); }
+  .doc-meta a { color: var(--text-2); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--rule-2); }
+  .doc-meta a:hover { color: var(--text); }
+
+  .onpage { margin: 0 0 36px; padding: 18px 20px; border: 1px solid var(--rule); border-radius: 14px; }
+  .onpage ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .onpage a { color: var(--text-2); text-decoration: none; font-size: 15px; }
+  .onpage a:hover { color: var(--text); text-decoration: underline; text-underline-offset: 4px; }
+
+  .toc { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; counter-reset: page; }
+  .toc li { counter-increment: page; }
+  .toc a { display: grid; grid-template-columns: 1fr; gap: 4px; padding: 16px 18px; border: 1px solid var(--rule); border-radius: 14px; color: var(--text); text-decoration: none; transition: border-color 150ms ease, background-color 150ms ease; }
+  .toc a:hover { border-color: var(--rule-2); background: #111216; }
+  .toc strong { font-weight: 600; font-size: 17px; }
+  .toc span { color: var(--text-2); font-size: 15px; line-height: 1.45; }
+  .toc.plain { margin-top: 12px; }
+  .doc > h2 { margin-top: 48px; font-weight: 600; font-size: 22px; letter-spacing: -0.01em; }
+
+  /* The prose */
+  .prose { font-size: 17px; line-height: 1.65; }
+  .prose > * + * { margin-top: 18px; }
+  .prose h2 { margin-top: 52px; padding-top: 28px; border-top: 1px solid var(--rule); font-weight: 600; font-size: 24px; line-height: 1.25; letter-spacing: -0.015em; }
+  .prose h3 { margin-top: 34px; font-weight: 600; font-size: 19px; line-height: 1.3; }
+  .prose h4 { margin-top: 26px; font-weight: 600; font-size: 16px; }
+  .prose h2 + *, .prose h3 + *, .prose h4 + * { margin-top: 14px; }
+  .prose p { text-wrap: pretty; }
+  .prose a { color: var(--green); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: rgba(63, 255, 108, 0.35); }
+  .prose a:hover { text-decoration-color: currentColor; }
+  .anchor { margin-left: 10px; color: var(--text-3); text-decoration: none; font-weight: 400; opacity: 0; transition: opacity 150ms ease; }
+  .prose h2:hover .anchor, .prose h3:hover .anchor, .prose h4:hover .anchor, .anchor:focus-visible { opacity: 1; }
+  .prose ul, .prose ol { padding-left: 24px; }
+  .prose li + li { margin-top: 8px; }
+  .prose li::marker { color: var(--text-3); }
+  .prose code { font-family: "Geist Mono", ui-monospace, monospace; font-size: 0.88em; padding: 2px 6px; border-radius: 6px; background: var(--ink-2); border: 1px solid var(--rule); }
+  .prose pre { padding: 16px 18px; overflow-x: auto; border-radius: 12px; background: var(--ink-2); border: 1px solid var(--rule); font-size: 14px; line-height: 1.55; }
+  .prose pre code { padding: 0; border: 0; background: none; font-size: inherit; }
+  .prose blockquote { margin: 0; padding: 4px 0 4px 18px; border-left: 1px solid var(--rule-2); color: var(--text-2); }
+  .prose hr { border: 0; border-top: 1px solid var(--rule); margin: 40px 0; }
+  .prose table { width: 100%; border-collapse: collapse; font-size: 15px; line-height: 1.45; }
+  .prose th, .prose td { text-align: left; vertical-align: top; padding: 10px 12px 10px 0; border-bottom: 1px solid var(--rule); }
+  .prose th { font-weight: 600; color: var(--text-2); font-size: 13px; }
+  .prose td code { white-space: nowrap; }
+  .prose strong { font-weight: 600; }
+  .prose img { max-width: 100%; height: auto; border-radius: 12px; }
+
+  .pager { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 56px; padding-top: 28px; border-top: 1px solid var(--rule); }
+  .pager a { display: grid; gap: 4px; padding: 14px 16px; border: 1px solid var(--rule); border-radius: 12px; color: var(--text); text-decoration: none; font-weight: 600; font-size: 15px; }
+  .pager a:hover { border-color: var(--rule-2); background: #111216; }
+  .pager a span { font-weight: 400; font-size: 12px; color: var(--text-3); }
+  .pager .next { text-align: right; }
+
+  footer { background: var(--ink); color: var(--text-2); padding: 0 24px 32px; font-size: 13px; }
+  footer .wrap { border-top: 1px solid var(--rule); padding-top: 32px; }
+  .foot-row { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+  footer .mark img { width: 17px; height: 20px; }
+  footer a { color: inherit; text-decoration: none; text-underline-offset: 4px; }
+  footer a:hover { text-decoration: underline; }
+  footer .spacer { flex: 1; }
+  .foot-links { display: flex; gap: 18px; }
+  .fine { margin-top: 22px; max-width: 78ch; font-size: 12px; line-height: 1.55; color: #828890; text-wrap: pretty; }
+  .fine a { text-decoration: underline; text-decoration-color: rgba(130, 136, 144, 0.5); }
+
+  @media (min-width: 720px) {
+    .nav { padding: 24px 32px; }
+    .sections { display: flex; }
+    .links { gap: 10px; }
+    .docs { padding: 136px 32px 120px; }
+    footer { padding: 0 32px 32px; }
+  }
+
+  @media (min-width: 900px) {
+    .docs { grid-template-columns: 220px minmax(0, 1fr); gap: 56px; }
+    .side { position: sticky; top: 112px; align-self: start; }
+    .side-label { display: none; }
+    .side nav { display: block; padding-top: 6px; }
+  }
+
+  @media (max-width: 480px) {
+    .links a[href*="github"] { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .links a, .toc a, .anchor { transition: none; }
+  }
+
+</style>
+</head>
+<body class="read">
+
+<div class="nav">
+  <a class="mark" href="/" aria-label="Phosphor"><img src="/mark-green.svg" alt="" width="27" height="30"></a>
+  <nav class="sections" aria-label="Sections">
+    <a href="/#dashboard">The app</a>
+    <a href="/#security">Security</a>
+    <a href="/#venues">Venues</a>
+  </nav>
+  <nav class="links" aria-label="Site">
+    <a href="/docs/" aria-current="page">Docs</a>
+    <a href="https://github.com/karimbabasf/phosphor">GitHub</a>
+    <a class="download" href="/download/mac">Download for Mac</a>
+  </nav>
+</div>
+
+<main class="docs wrap">
+  
+<aside class="side">
+  <input type="checkbox" id="pages" class="side-toggle">
+  <label for="pages" class="side-label">Pages</label>
+  <nav aria-label="Docs">
+    <ul><li><a href="/docs/getting-started/">Getting started</a></li><li><a href="/docs/connect-an-agent/">Connect an agent</a></li><li><a href="/docs/money/">Money</a></li><li><a href="/docs/trading/">Trading</a></li><li><a href="/docs/policy/" aria-current="page">Policy</a></li><li><a href="/docs/security/">Security</a></li><li><a href="/docs/tools/">Tools</a></li><li><a href="/docs/troubleshooting/">Troubleshooting</a></li><li><a href="/docs/changelog/">Changelog</a></li></ul>
+    <div class="side-head">For developers</div>
+    <ul><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/architecture.md" target="_blank" rel="noopener">Architecture</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security-model.md" target="_blank" rel="noopener">Security model</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/reference.md" target="_blank" rel="noopener">Reference</a></li></ul>
+  </nav>
+</aside>
+  <article class="doc">
+    <header class="doc-head">
+      <h1>Policy</h1>
+      <p class="lede">Your rules decide what the agent may do on its own, what waits for your click, and what is refused outright. They live in the app as plain sentences, a pure engine enforces them with no model in the path, and no proposal reaches execution without either your click or an allow inside limits you wrote. This page explains the rules, the click threshold, how a rule changes, and why the gate has no off switch.</p>
+      <div class="doc-meta"><span class="mono">v0.6.0</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/policy.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+    </header>
+    <nav class="onpage" aria-label="On this page"><ul><li><a href="#the-rules">The rules</a></li><li><a href="#the-click-threshold">The click threshold</a></li><li><a href="#policy-as-sentences">Policy as sentences</a></li><li><a href="#changing-a-rule">Changing a rule</a></li><li><a href="#the-three-verdicts">The three verdicts</a></li><li><a href="#why-the-gate-has-no-off-switch">Why the gate has no off switch</a></li></ul></nav>
+    <div class="prose">
+<h2 id="the-rules">The rules<a class="anchor" href="#the-rules" aria-label="Link to this section">#</a></h2>
+<p>A fresh install ships with four rules:</p>
+<pre><code>Refuse any single transaction above $10,000.
+Refuse more than $25,000 in any 24 hours.
+Ask me before anything above $100.
+Ask me once auto-approved moves pass $500 in 24 hours.
+</code></pre>
+<p>The first two are hard caps: nothing above them runs, click or no click. The third is the click
+threshold. The fourth is a daily ceiling on what runs without you: once the moves the policy
+approved on its own pass $500 in a day, the next one waits for a click however small it is.</p>
+<p>Three more kinds of rule exist and appear only once you set them: a cap on how much of your
+holdings one stablecoin issuer may hold (&quot;Tether may not exceed 30% of holdings&quot;), a cap on how
+much may be freezable by an issuer (&quot;No more than 20% of holdings may be freezable&quot;), and a list
+of issuers the app may never move funds into. These judge the state a move would leave behind,
+so a portfolio already past a cap cannot make further moves until you change the rule or the
+breach clears.</p>
+<p>The last line, when it shows, is the brake: &quot;KILL SWITCH ON: all writes refused.&quot; That is Freeze
+everything in the top bar, see <a href="/docs/getting-started/#freeze-everything">Getting started</a>.</p>
+<h2 id="the-click-threshold">The click threshold<a class="anchor" href="#the-click-threshold" aria-label="Link to this section">#</a></h2>
+<p>The click threshold splits every write into two kinds. At or below it, the policy engine decides
+alone and the move may execute at once, with no click and, on an enclave wallet, no Touch ID,
+as long as the vault is open. Above it, nothing happens until you click. The Vault tab says the
+same in one line: &quot;Moves under $100 run without a click while the vault is open. Above that,
+nothing happens until you click.&quot;</p>
+<p>This convenience applies only to money that stays in your own custody: a swap inside NEAR
+Intents, funding the Hyperliquid account, arming a trade. Three moves wait for a click at any
+size, and the policy engine never executes them on its own:</p>
+<ul>
+<li>A send, because the money leaves for somebody else. See <a href="/docs/money/#send">Money</a>.</li>
+<li>A withdrawal from Hyperliquid. See <a href="/docs/money/#withdraw-from-hyperliquid">Money</a>.</li>
+<li>A policy change, because a rule the human did not click is how every other guarantee gets
+removed.</li>
+</ul>
+<p>The card for a move above the threshold shows the simulation, the totals, and Why you are being
+asked, then two buttons: Yes and No. On a send the button reads Approve, then Touch ID.</p>
+<p>If a hostile process running as you is in your threat model, lower the threshold or set it to
+zero: at zero every move waits for a person. <a href="/docs/security/#the-honest-limits">Security</a> says why
+that is the one exposure that remains.</p>
+<h2 id="policy-as-sentences">Policy as sentences<a class="anchor" href="#policy-as-sentences" aria-label="Link to this section">#</a></h2>
+<p>The policy is stored as a file but read as English. The sentences are rendered from the file by
+a pure function, so what you read is what the engine enforces, and there is no second version
+anywhere. You see them in three places: the rules strip on the Basic tab (&quot;Asks you above $100&quot;,
+&quot;Refuses above $10,000&quot;), the Policy card on the Pro tab, and the <code>policy_show</code> tool your
+assistant reads.</p>
+<p>Limits that mean something at their default always render. Opt-in restrictions render only once
+set, because &quot;no issuer may exceed 100%&quot; says nothing. The kill switch line always renders last.</p>
+<h2 id="changing-a-rule">Changing a rule<a class="anchor" href="#changing-a-rule" aria-label="Link to this section">#</a></h2>
+<p>The Pro tab&#39;s Policy card says it in one line: &quot;Ask your assistant to change a rule. Every change
+waits for your click.&quot; There is no editor in the window. The agent proposes the change with
+<code>propose_policy_change</code>, carrying the patch and a sentence that says what it means, and the card
+is headed Change your limits. It always lands as something to click, however small the change.</p>
+<p>The engine holds a patch to these rules before it ever reaches you:</p>
+<ul>
+<li>The kill switch, the file version and the rendered sentences cannot be patched at all.</li>
+<li>A patch is checked against the schema, and an unknown field refuses it.</li>
+<li>One change may loosen a cap by at most ten times. Past that, make it in steps you read each
+time.</li>
+<li>A cap at zero cannot be raised by a patch. Zero is a different policy, not a small number.</li>
+<li>A click threshold above the transaction cap is refused, because nothing would ever wait for
+you.</li>
+<li>The destination allowlist is replaced whole, never merged, so a patch carries the whole list.</li>
+</ul>
+<h2 id="the-three-verdicts">The three verdicts<a class="anchor" href="#the-three-verdicts" aria-label="Link to this section">#</a></h2>
+<p>The engine returns exactly one of three verdicts, and there is no fourth:</p>
+<ul>
+<li>Refuse: nothing happens. The refusal names the rule and the reasons, and both are logged.</li>
+<li>Needs approval: the proposal is saved as pending and drawn in the window with its simulation.
+It executes only after your click.</li>
+<li>Allow: inside every cap and at or below the threshold, so the app executes it and logs the
+verdict that let it.</li>
+</ul>
+<p>The chain runs in a fixed order and stops at the first refusal: the policy file is unreadable,
+the kill switch is on, the move is not a rail this app runs, the amount the app priced is not a
+positive number, the venue or the account the money lands in is not allowed (a send is the
+exception: its receiver is yours to check, and the click stands in for a list), the
+per-transaction cap, the rolling 24 hour cap, then the composition rules. What is left is judged
+against the click threshold and the daily ceiling, and only then allowed. Every rail then
+simulates before anything is signed, and a simulation that fails is a refusal, never a pending
+card you could click.</p>
+<p>There is no override argument, no force flag and no &quot;the user said it was fine&quot; field anywhere
+in the tool surface. An agent that dislikes a refusal has one recourse: propose a rule change,
+which waits for your click.</p>
+<h2 id="why-the-gate-has-no-off-switch">Why the gate has no off switch<a class="anchor" href="#why-the-gate-has-no-off-switch" aria-label="Link to this section">#</a></h2>
+<p>There used to be one. A setting turned the gate off so a rail could be exercised without a click
+on every proposal, and it was the one deliberate hole in the model. It is gone. There is no flag,
+no environment variable, no proposal kind and no configuration that reaches execution without
+either your click or a policy allow inside limits you wrote.</p>
+<p>The audit log records who decided every executed move: human for a click, policy for an allow.
+Only a click is recorded as human, and a click needs the window token the agent never holds, see
+<a href="/docs/security/#the-window-token">Security</a>. A pending card cannot be dismissed from the chat: if the
+agent disconnects, the card is still there and still yours to decide.</p>
+
+    </div>
+    <nav class="pager" aria-label="Pages">
+      <a class="prev" href="/docs/trading/"><span>Previous</span>Trading</a>
+      <a class="next" href="/docs/security/"><span>Next</span>Security</a>
+    </nav>
+  </article>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-row">
+      <a class="mark" href="/" aria-label="Phosphor"><img src="/mark-green.svg" alt="" width="17" height="20"></a>
+      <span>Phosphor</span>
+      <span class="spacer"></span>
+      <span class="foot-links">
+        <a href="/docs/">Docs</a>
+        <a href="https://github.com/karimbabasf/phosphor">GitHub</a>
+        <a href="https://github.com/karimbabasf/phosphor/blob/main/LICENSE">License</a>
+        <a href="/terms/">Terms</a>
+      </span>
+    </div>
+    <p class="fine">Phosphor is software you run yourself. Your keys stay on your Mac. It is not a wallet service, an exchange, a broker or an adviser, and nothing in it is financial advice. Trading and transfers carry risk, transactions are final, and you can lose money. By downloading or using Phosphor you accept the <a href="/terms/">terms</a>.</p>
+  </div>
+</footer>
+</body>
+</html>

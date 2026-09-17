@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Terms of use</title>
+<meta name="description" content="The rules for this site and for the Phosphor app. Read them before you download the app, and read the [disclaimer](https://github.com/karimbabasf/phosphor/blob/main/DISCLAIMER.md) before you fund a wallet. Last updated 2026-09-17.">
+<link rel="canonical" href="https://phosphor.karimbabasf.com/terms/">
+<meta name="theme-color" content="#0E0F13">
+<link rel="icon" href="/favicon.ico?v=9" sizes="32x32">
+<link rel="icon" href="/favicon.svg?v=9" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=9">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Phosphor">
+<meta property="og:url" content="https://phosphor.karimbabasf.com/terms/">
+<meta property="og:title" content="Terms of use">
+<meta property="og:description" content="The rules for this site and for the Phosphor app. Read them before you download the app, and read the [disclaimer](https://github.com/karimbabasf/phosphor/blob/main/DISCLAIMER.md) before you fund a wallet. Last updated 2026-09-17.">
+<meta property="og:image" content="https://phosphor.karimbabasf.com/og.png?v=2">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" href="/fonts/Sora-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/Sora-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+  /* The reading pages: the docs and the terms. The same ink, faces and bar as
+     the front page (index.html holds the originals of the nav and footer rules;
+     keep the two in step), and a measure built for reading: Sora at 17px on a
+     68ch column, Geist Mono for code and figures. */
+  @font-face { font-family: "Sora"; font-weight: 400; font-display: block; src: url("/fonts/Sora-Regular.woff2") format("woff2"); }
+  @font-face { font-family: "Sora"; font-weight: 600; font-display: block; src: url("/fonts/Sora-SemiBold.woff2") format("woff2"); }
+  @font-face { font-family: "Geist Mono"; font-weight: 100 900; font-display: swap; src: url("/fonts/GeistMono-Variable.woff2") format("woff2"); }
+
+  :root {
+    --green: #3FFF6C;
+    --ink: #0E0F13;
+    --ink-2: #151619;
+    --ink-3: #1B1D20;
+    --text: #ECEEF1;
+    --text-2: #9BA1AB;
+    --text-3: #828890;
+    --rule: #262729;
+    --rule-2: #363739;
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  html { scroll-behavior: smooth; scroll-padding-top: 96px; }
+  body { background: var(--ink); color: var(--text); font-family: "Sora", "Helvetica Neue", sans-serif; text-rendering: optimizeLegibility; }
+  ::selection { background: var(--green); color: var(--ink); }
+  :focus-visible { outline: 2px solid var(--green); outline-offset: 4px; border-radius: 2px; }
+  h1, h2, h3, h4, p { margin: 0; }
+  .mono { font-family: "Geist Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+
+  /* The bar, as on the front page, on a veil of ink so the text scrolls under it. */
+  .nav { position: fixed; inset: 0 0 auto 0; z-index: 10; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 20px 24px; }
+  .nav::before { content: ""; position: absolute; inset: 0 0 -40px 0; z-index: -1; pointer-events: none; background: linear-gradient(to bottom, var(--ink) 0%, var(--ink) 48%, transparent 100%); }
+  .sections { display: none; gap: 6px; }
+  .mark { display: block; line-height: 0; color: inherit; }
+  .mark img { display: block; width: 27px; height: 30px; }
+  .links { display: flex; align-items: center; gap: 6px; justify-self: end; }
+  .links a, .sections a { font: 400 15px/1 "Sora", sans-serif; color: inherit; text-decoration: none; padding: 10px 12px; border-radius: 999px; -webkit-tap-highlight-color: transparent; }
+  .links a:not(.download), .sections a { text-underline-offset: 5px; text-decoration-color: transparent; transition: text-decoration-color 150ms ease; }
+  .links a[aria-current="page"] { text-decoration-line: underline; text-decoration-color: currentColor; }
+  .links .download { font-weight: 600; background: var(--green); color: var(--ink); min-width: 108px; padding: 11px 18px; white-space: nowrap; transition: transform 160ms var(--ease-out), background-color 150ms ease; }
+  .links .download:active { transform: scale(0.97); }
+  @media (hover: hover) and (pointer: fine) {
+    .links a:not(.download):hover, .sections a:hover { text-decoration-line: underline; text-decoration-color: currentColor; }
+    .links .download:hover { background: #63FF87; }
+  }
+
+  .wrap { max-width: 1160px; margin: 0 auto; }
+
+  /* The page: a sidebar of pages and the article, side by side from 900px up. */
+  .docs { display: grid; grid-template-columns: 1fr; gap: 32px; padding: 112px 24px 96px; }
+  .docs.single { grid-template-columns: 1fr; justify-items: center; }
+  /* On a phone the page list sits behind a Pages button (a checkbox, no script);
+     from 900px up it is the sidebar, always open. */
+  .side-toggle { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .side-label { cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font: 600 14px/1 "Sora", sans-serif; padding: 10px 14px; border: 1px solid var(--rule-2); border-radius: 999px; -webkit-tap-highlight-color: transparent; }
+  .side-label::after { content: ""; width: 6px; height: 6px; border-right: 1.5px solid var(--text-2); border-bottom: 1.5px solid var(--text-2); transform: translateY(-2px) rotate(45deg); }
+  .side-toggle:focus-visible + .side-label { outline: 2px solid var(--green); outline-offset: 3px; }
+  .side-toggle:checked ~ .side-label::after { transform: translateY(1px) rotate(225deg); }
+  .side nav { display: none; padding-top: 16px; }
+  .side-toggle:checked ~ nav { display: block; }
+  .side ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+  .side a { display: block; padding: 7px 10px; border-radius: 8px; color: var(--text-2); text-decoration: none; font-size: 15px; line-height: 1.3; }
+  .side a:hover { color: var(--text); background: var(--ink-2); }
+  .side a[aria-current="page"] { color: var(--text); background: var(--ink-3); font-weight: 600; }
+  .side-head { margin: 22px 10px 6px; font-size: 12px; font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase; color: var(--text-3); }
+
+  .doc { min-width: 0; max-width: 68ch; }
+  .doc-head { padding-bottom: 28px; border-bottom: 1px solid var(--rule); margin-bottom: 32px; }
+  .doc h1 { font-weight: 600; font-size: clamp(30px, 3.4vw, 42px); line-height: 1.12; letter-spacing: -0.02em; text-wrap: balance; }
+  .lede { margin-top: 16px; font-size: 19px; line-height: 1.5; color: var(--text-2); text-wrap: pretty; }
+  .doc-meta { display: flex; align-items: center; gap: 16px; margin-top: 20px; font-size: 13px; color: var(--text-3); }
+  .doc-meta .mono { padding: 3px 8px; border: 1px solid var(--rule-2); border-radius: 6px; color: var(--text-2); }
+  .doc-meta a { color: var(--text-2); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--rule-2); }
+  .doc-meta a:hover { color: var(--text); }
+
+  .onpage { margin: 0 0 36px; padding: 18px 20px; border: 1px solid var(--rule); border-radius: 14px; }
+  .onpage ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .onpage a { color: var(--text-2); text-decoration: none; font-size: 15px; }
+  .onpage a:hover { color: var(--text); text-decoration: underline; text-underline-offset: 4px; }
+
+  .toc { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; counter-reset: page; }
+  .toc li { counter-increment: page; }
+  .toc a { display: grid; grid-template-columns: 1fr; gap: 4px; padding: 16px 18px; border: 1px solid var(--rule); border-radius: 14px; color: var(--text); text-decoration: none; transition: border-color 150ms ease, background-color 150ms ease; }
+  .toc a:hover { border-color: var(--rule-2); background: #111216; }
+  .toc strong { font-weight: 600; font-size: 17px; }
+  .toc span { color: var(--text-2); font-size: 15px; line-height: 1.45; }
+  .toc.plain { margin-top: 12px; }
+  .doc > h2 { margin-top: 48px; font-weight: 600; font-size: 22px; letter-spacing: -0.01em; }
+
+  /* The prose */
+  .prose { font-size: 17px; line-height: 1.65; }
+  .prose > * + * { margin-top: 18px; }
+  .prose h2 { margin-top: 52px; padding-top: 28px; border-top: 1px solid var(--rule); font-weight: 600; font-size: 24px; line-height: 1.25; letter-spacing: -0.015em; }
+  .prose h3 { margin-top: 34px; font-weight: 600; font-size: 19px; line-height: 1.3; }
+  .prose h4 { margin-top: 26px; font-weight: 600; font-size: 16px; }
+  .prose h2 + *, .prose h3 + *, .prose h4 + * { margin-top: 14px; }
+  .prose p { text-wrap: pretty; }
+  .prose a { color: var(--green); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: rgba(63, 255, 108, 0.35); }
+  .prose a:hover { text-decoration-color: currentColor; }
+  .anchor { margin-left: 10px; color: var(--text-3); text-decoration: none; font-weight: 400; opacity: 0; transition: opacity 150ms ease; }
+  .prose h2:hover .anchor, .prose h3:hover .anchor, .prose h4:hover .anchor, .anchor:focus-visible { opacity: 1; }
+  .prose ul, .prose ol { padding-left: 24px; }
+  .prose li + li { margin-top: 8px; }
+  .prose li::marker { color: var(--text-3); }
+  .prose code { font-family: "Geist Mono", ui-monospace, monospace; font-size: 0.88em; padding: 2px 6px; border-radius: 6px; background: var(--ink-2); border: 1px solid var(--rule); }
+  .prose pre { padding: 16px 18px; overflow-x: auto; border-radius: 12px; background: var(--ink-2); border: 1px solid var(--rule); font-size: 14px; line-height: 1.55; }
+  .prose pre code { padding: 0; border: 0; background: none; font-size: inherit; }
+  .prose blockquote { margin: 0; padding: 4px 0 4px 18px; border-left: 1px solid var(--rule-2); color: var(--text-2); }
+  .prose hr { border: 0; border-top: 1px solid var(--rule); margin: 40px 0; }
+  .prose table { width: 100%; border-collapse: collapse; font-size: 15px; line-height: 1.45; }
+  .prose th, .prose td { text-align: left; vertical-align: top; padding: 10px 12px 10px 0; border-bottom: 1px solid var(--rule); }
+  .prose th { font-weight: 600; color: var(--text-2); font-size: 13px; }
+  .prose td code { white-space: nowrap; }
+  .prose strong { font-weight: 600; }
+  .prose img { max-width: 100%; height: auto; border-radius: 12px; }
+
+  .pager { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 56px; padding-top: 28px; border-top: 1px solid var(--rule); }
+  .pager a { display: grid; gap: 4px; padding: 14px 16px; border: 1px solid var(--rule); border-radius: 12px; color: var(--text); text-decoration: none; font-weight: 600; font-size: 15px; }
+  .pager a:hover { border-color: var(--rule-2); background: #111216; }
+  .pager a span { font-weight: 400; font-size: 12px; color: var(--text-3); }
+  .pager .next { text-align: right; }
+
+  footer { background: var(--ink); color: var(--text-2); padding: 0 24px 32px; font-size: 13px; }
+  footer .wrap { border-top: 1px solid var(--rule); padding-top: 32px; }
+  .foot-row { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+  footer .mark img { width: 17px; height: 20px; }
+  footer a { color: inherit; text-decoration: none; text-underline-offset: 4px; }
+  footer a:hover { text-decoration: underline; }
+  footer .spacer { flex: 1; }
+  .foot-links { display: flex; gap: 18px; }
+  .fine { margin-top: 22px; max-width: 78ch; font-size: 12px; line-height: 1.55; color: #828890; text-wrap: pretty; }
+  .fine a { text-decoration: underline; text-decoration-color: rgba(130, 136, 144, 0.5); }
+
+  @media (min-width: 720px) {
+    .nav { padding: 24px 32px; }
+    .sections { display: flex; }
+    .links { gap: 10px; }
+    .docs { padding: 136px 32px 120px; }
+    footer { padding: 0 32px 32px; }
+  }
+
+  @media (min-width: 900px) {
+    .docs { grid-template-columns: 220px minmax(0, 1fr); gap: 56px; }
+    .side { position: sticky; top: 112px; align-self: start; }
+    .side-label { display: none; }
+    .side nav { display: block; padding-top: 6px; }
+  }
+
+  @media (max-width: 480px) {
+    .links a[href*="github"] { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .links a, .toc a, .anchor { transition: none; }
+  }
+
+</style>
+</head>
+<body class="read">
+
+<div class="nav">
+  <a class="mark" href="/" aria-label="Phosphor"><img src="/mark-green.svg" alt="" width="27" height="30"></a>
+  <nav class="sections" aria-label="Sections">
+    <a href="/#dashboard">The app</a>
+    <a href="/#security">Security</a>
+    <a href="/#venues">Venues</a>
+  </nav>
+  <nav class="links" aria-label="Site">
+    <a href="/docs/">Docs</a>
+    <a href="https://github.com/karimbabasf/phosphor">GitHub</a>
+    <a class="download" href="/download/mac">Download for Mac</a>
+  </nav>
+</div>
+
+<main class="docs wrap single">
+  <article class="doc">
+    <header class="doc-head">
+      <h1>Terms of use</h1>
+      <p class="lede">The rules for this site and for the Phosphor app. Read them before you download the app, and read the <a href="https://github.com/karimbabasf/phosphor/blob/main/DISCLAIMER.md" target="_blank" rel="noopener">disclaimer</a> before you fund a wallet. Last updated 2026-09-17.</p>
+    </header>
+    <div class="prose">
+<h2 id="who-this-is-between">Who this is between<a class="anchor" href="#who-this-is-between" aria-label="Link to this section">#</a></h2>
+<p>These terms are between you and Karim Baba, the author of Phosphor (&quot;the author&quot;, &quot;I&quot;). They cover the website at phosphor.karimbabasf.com, the Phosphor app you download from it, the source code, and the documentation.</p>
+<h2 id="accepting-these-terms">Accepting these terms<a class="anchor" href="#accepting-these-terms" aria-label="Link to this section">#</a></h2>
+<p>By downloading, installing, opening or using Phosphor, or by using this site, you accept these terms and the <a href="https://github.com/karimbabasf/phosphor/blob/main/DISCLAIMER.md" target="_blank" rel="noopener">disclaimer</a>. If you do not accept them, do not download or use the app.</p>
+<h2 id="what-phosphor-is">What Phosphor is<a class="anchor" href="#what-phosphor-is" aria-label="Link to this section">#</a></h2>
+<p>Phosphor is software that runs on your own Mac. It holds the keys to your own accounts on your machine, sealed to that machine&#39;s Secure Enclave, and lets an AI agent you already use read your balances and draft moves. Every move that spends money waits for your click in the app window, and a send waits for your fingerprint as well. The app connects, on your instruction, to two venues run by other people: NEAR Intents and Hyperliquid.</p>
+<p>The source code is public under the <a href="https://github.com/karimbabasf/phosphor/blob/main/LICENSE" target="_blank" rel="noopener">Functional Source License</a> so that you can read what the app does before you trust it.</p>
+<h2 id="what-phosphor-is-not">What Phosphor is not<a class="anchor" href="#what-phosphor-is-not" aria-label="Link to this section">#</a></h2>
+<p>Phosphor is not a wallet service, an exchange, a broker, a dealer, a money transmitter, a money services business, a custodian, a payment processor, an investment adviser or a financial institution. There is no account with the author, no server that holds your money or your keys, no fee and no commission. Using the app creates no customer, fiduciary or agency relationship with the author.</p>
+<p>Nothing on this site, in the app, in the documentation or in anything an AI agent says while driving the app is financial, investment, trading, legal or tax advice, and none of it is an offer or a recommendation to buy, sell or hold any asset.</p>
+<h2 id="who-may-use-it">Who may use it<a class="anchor" href="#who-may-use-it" aria-label="Link to this section">#</a></h2>
+<p>You may use Phosphor only if all of these are true:</p>
+<ul>
+<li>You are at least 18 years old and able to enter a binding contract where you live.</li>
+<li>You are not a sanctioned person and you are not in a country or region under sanctions or an embargo, including the programs run by the US Office of Foreign Assets Control.</li>
+<li>The activity the app enables (holding crypto assets, swapping, sending, and trading perpetual futures) is lawful for you where you are.</li>
+</ul>
+<p>You are responsible for checking this, and for every tax, reporting, securities, derivatives and anti-money-laundering rule that applies to you.</p>
+<h2 id="your-responsibilities">Your responsibilities<a class="anchor" href="#your-responsibilities" aria-label="Link to this section">#</a></h2>
+<ul>
+<li><strong>Your keys.</strong> The wallet, the backup words, the password and the device are yours to keep safe. The author cannot see them, recover them, reset them or reverse anything signed with them. Anyone who has your backup words has your money.</li>
+<li><strong>Your download.</strong> Check the SHA-256 of the disk image against the one on the release page before you open it. The app holds keys.</li>
+<li><strong>Your clicks.</strong> Read every card before you approve it. The amount, the receiver and the venue on the card and in the Touch ID dialog are what will happen. A click is final.</li>
+<li><strong>Your rules.</strong> The policy in the app runs your rules exactly as written, including when the market makes a rule wrong and including while you are asleep. Set them with care and change them when your situation changes.</li>
+<li><strong>Your agent.</strong> You choose which agent to connect and what to tell it. It is your agent, not the author&#39;s.</li>
+</ul>
+<h2 id="the-risks-you-take-on">The risks you take on<a class="anchor" href="#the-risks-you-take-on" aria-label="Link to this section">#</a></h2>
+<ul>
+<li><strong>You can lose money, including all of it.</strong> Prices move fast. A perpetual futures position is held on margin at a multiple of what you put in, and it can be liquidated in full.</li>
+<li><strong>Transactions are final.</strong> A wrong address, a wrong amount or a signed message you did not read cannot be undone by anyone.</li>
+<li><strong>The app is alpha software.</strong> Version 0.x. It is written by one person, it can carry bugs, its safety systems are engineering and not a guarantee, and it has had no third-party security audit. Interfaces, tool names and behaviour change without notice.</li>
+<li><strong>Venues, bridges and networks fail.</strong> A deposit or a send can be delayed, refunded, stuck or lost by a venue, a bridge, a solver, a chain, an RPC provider or a price feed the author does not run. When a move is waiting on one of them the app says &quot;settling&quot; and can only show you what it can read. The author cannot speed it up, reverse it or make it whole.</li>
+<li><strong>AI agents make mistakes.</strong> A model can misread you, invent a proposal or be manipulated by something it read. The approval gate exists for that reason, and the click stays yours.</li>
+</ul>
+<h2 id="third-parties">Third parties<a class="anchor" href="#third-parties" aria-label="Link to this section">#</a></h2>
+<p>Phosphor routes through services the author does not own, run, monitor or vet: NEAR Intents and its 1Click bridge, Hyperliquid, the underlying blockchains, RPC providers, price feeds, and the AI agent you connect (for example Claude Code or Codex). Their terms apply to your use of them. The author is not responsible for their code, availability, fees, slippage, censorship, insolvency, exploits or decisions. Their names and logos belong to their owners and appear here only to say what the app works with.</p>
+<h2 id="license-and-ownership">License and ownership<a class="anchor" href="#license-and-ownership" aria-label="Link to this section">#</a></h2>
+<p>The Phosphor source code is licensed under the Functional Source License, version 1.1, with an MIT future license (<a href="https://github.com/karimbabasf/phosphor/blob/main/LICENSE" target="_blank" rel="noopener">FSL-1.1-MIT</a>). You may read, run, copy, change and share it for any purpose except offering Phosphor, or a product or service that does what Phosphor does, to other people commercially. Each version becomes MIT licensed two years after its release. The Phosphor name and mark are the author&#39;s and are not licensed for your own products.</p>
+<h2 id="availability-and-changes">Availability and changes<a class="anchor" href="#availability-and-changes" aria-label="Link to this section">#</a></h2>
+<p>The app, the site and the documentation can change or stop at any time. There is no service level and no duty to maintain, fix, answer or keep anything working. These terms can change too: the date at the top says when. If you keep using the app after a change, you accept the changed terms.</p>
+<h2 id="no-warranty">No warranty<a class="anchor" href="#no-warranty" aria-label="Link to this section">#</a></h2>
+<p>THE SITE, THE APP, THE CODE AND THE DOCUMENTATION ARE PROVIDED &quot;AS IS&quot; AND &quot;AS AVAILABLE&quot;, WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, NON-INFRINGEMENT, ACCURACY, AVAILABILITY AND SECURITY. THE AUTHOR DOES NOT WARRANT THAT THE APP WILL WORK WITHOUT ERROR, THAT ANY MOVE WILL COMPLETE, OR THAT ANY THIRD-PARTY SERVICE WILL BE AVAILABLE.</p>
+<h2 id="limitation-of-liability">Limitation of liability<a class="anchor" href="#limitation-of-liability" aria-label="Link to this section">#</a></h2>
+<p>TO THE FULLEST EXTENT PERMITTED BY LAW, THE AUTHOR IS NOT LIABLE TO YOU FOR ANY LOSS OR DAMAGE ARISING OUT OF OR RELATED TO THE SITE, THE APP, THE CODE, THE DOCUMENTATION, ANY THIRD-PARTY SERVICE OR ANY AI AGENT, INCLUDING LOST FUNDS, LOST PROFITS, LOST DATA AND ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL OR PUNITIVE DAMAGES, EVEN IF TOLD THEY WERE POSSIBLE, AND WHATEVER THE LEGAL THEORY. IF ANY LIABILITY IS FOUND DESPITE THIS, IT IS LIMITED TO ONE HUNDRED US DOLLARS. SOME PLACES DO NOT ALLOW SOME OF THESE LIMITS, SO SOME OF THEM MAY NOT APPLY TO YOU.</p>
+<h2 id="indemnity">Indemnity<a class="anchor" href="#indemnity" aria-label="Link to this section">#</a></h2>
+<p>You will defend and hold the author harmless from any claim, loss, liability or cost (including reasonable legal fees) that comes from your use of the app or the site, your trading, your breach of these terms, or your breach of any law.</p>
+<h2 id="governing-law">Governing law<a class="anchor" href="#governing-law" aria-label="Link to this section">#</a></h2>
+<p>These terms are governed by the laws of the State of California, USA, without regard to its conflict of law rules. Any dispute that cannot be settled between us is brought only in the state or federal courts in San Francisco County, California, and you consent to their jurisdiction.</p>
+<h2 id="general">General<a class="anchor" href="#general" aria-label="Link to this section">#</a></h2>
+<p>If a part of these terms is found unenforceable, the rest stays in force. A failure to enforce a term is not a waiver of it. These terms, the disclaimer and the license are the whole agreement between you and the author about Phosphor. You may not transfer your rights under them; the author may.</p>
+<h2 id="contact">Contact<a class="anchor" href="#contact" aria-label="Link to this section">#</a></h2>
+<p>Questions about these terms: <a href="mailto:founder@karimbabasf.com">founder@karimbabasf.com</a>. Security issues: see <a href="https://github.com/karimbabasf/phosphor/blob/main/SECURITY.md" target="_blank" rel="noopener">SECURITY.md</a>.</p>
+
+    </div>
+  </article>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-row">
+      <a class="mark" href="/" aria-label="Phosphor"><img src="/mark-green.svg" alt="" width="17" height="20"></a>
+      <span>Phosphor</span>
+      <span class="spacer"></span>
+      <span class="foot-links">
+        <a href="/docs/">Docs</a>
+        <a href="https://github.com/karimbabasf/phosphor">GitHub</a>
+        <a href="https://github.com/karimbabasf/phosphor/blob/main/LICENSE">License</a>
+        <a href="/terms/">Terms</a>
+      </span>
+    </div>
+    <p class="fine">Phosphor is software you run yourself. Your keys stay on your Mac. It is not a wallet service, an exchange, a broker or an adviser, and nothing in it is financial advice. Trading and transfers carry risk, transactions are final, and you can lose money. By downloading or using Phosphor you accept the <a href="/terms/">terms</a>.</p>
+  </div>
+</footer>
+</body>
+</html>
