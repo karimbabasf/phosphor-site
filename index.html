@@ -23,6 +23,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/Sora-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/Sora-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/Manrope-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <script>document.documentElement.classList.add("js");</script>
 <style>
   @font-face { font-family: "Sora"; font-weight: 400; font-display: block; src: url("/fonts/Sora-Regular.woff2") format("woff2"); }
@@ -187,7 +188,7 @@
   /* The wordmark is the largest thing on the page. It fades in once, on load,
      in place, and never moves. The fade is CSS, keyed to Sora's arrival by the
      script under this style block, so the first thing on the page waits for
-     nothing else: not the vendor scripts, not the window mock's faces. */
+     nothing else: not the page script, not the window mock's faces. */
   .wordmark {
     margin: 0;
     font-weight: 600;
@@ -231,9 +232,9 @@
 
   /* Everything after the hero rides above it. The sheet comes up from under the
      bottom edge small and far, and grows to full width as it arrives, so it reads
-     as coming toward you while the hero stays exactly where it is. GSAP's
-     ScrollTrigger scrubs the scale from the scroll position (the script at the
-     end); the top edge is the origin, so it tracks the finger exactly. */
+     as coming toward you while the hero stays exactly where it is. The script
+     at the end scrubs the scale from the scroll position, with half a second of
+     catch-up; the top edge is the origin, so it tracks the finger exactly. */
 
   .after { position: relative; z-index: 1; font-family: var(--face); }
   .lift { transform-origin: 50% 0; }
@@ -426,6 +427,7 @@
   .chart-host { position: relative; flex: 1 1 auto; min-height: 0; }
   .chart-host svg { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
   .chart-host [data-bar] { transform-box: fill-box; transform-origin: 50% 100%; }
+  .chart-host [data-line] { transform-box: fill-box; transform-origin: 0 50%; }
 
   .desk { border-top: 1px solid var(--line); padding: 0 16px 14px; }
   .tabs { display: flex; align-items: center; gap: 22px; font-size: 15px; font-weight: 500; color: var(--text-2); }
@@ -994,10 +996,7 @@
 
 </div>
 
-<script defer src="/vendor/gsap.min.js"></script>
-<script defer src="/vendor/ScrollTrigger.min.js"></script>
-<script defer src="/vendor/motion.min.js"></script>
-<script type="module" src="/js/page.js?v=7"></script>
+<script type="module" src="/js/page.js?v=8"></script>
 
 </body>
 </html>

@@ -1,12 +1,54 @@
-// Motion is split by job: GSAP owns what is tied to the scroll position and
-// the load sequence, Motion owns what answers the visitor (reveals in view,
-// the button swap). Without either, or with reduced motion on, the page shows
-// everything at rest.
+// No animation library. Everything that moves on this page is one of three
+// things: a Web Animations API tween (opacity, transform, colour), a callback
+// when something enters view (IntersectionObserver), or a number eased over
+// time on requestAnimationFrame (the sheet's scrub and the magnet's glide).
+// The kit below is those three, in the shape the page uses them. With
+// reduced motion on, the page shows everything at rest.
 const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const live = !still && typeof gsap !== 'undefined' && typeof Motion !== 'undefined';
+const live = !still;
 if (!live) document.documentElement.classList.remove('js');
-if (live) gsap.registerPlugin(ScrollTrigger);
-const out = [0.23, 1, 0.32, 1];
+const out = 'cubic-bezier(0.23, 1, 0.32, 1)';
+// Penner's curves, as GSAP names them.
+const power2out = 'cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+const power3out = 'cubic-bezier(0.215, 0.61, 0.355, 1)';
+const power4out = 'cubic-bezier(0.165, 0.84, 0.44, 1)';
+const list = (t) => typeof t === 'string' ? [...document.querySelectorAll(t)] : t instanceof Element ? [t] : [...t];
+// animate(targets, { prop: [from, to] | to }, { duration, delay, ease }) in
+// seconds. Once a tween ends its last values are written to the element's
+// own style and the animation is dropped, so a later style write is not
+// overruled by a filled animation. delay may be a function of the index.
+const animate = (targets, keyframes, { duration = 0.3, delay = 0, ease = 'ease' } = {}) => {
+  const els = list(targets);
+  const finished = Promise.all(els.map((el, i) => {
+    const d = typeof delay === 'function' ? delay(i, els.length) : delay;
+    const a = el.animate(keyframes, { duration: duration * 1000, delay: d * 1000, easing: ease, fill: 'both' });
+    return a.finished.then(() => {
+      for (const [k, v] of Object.entries(keyframes)) el.style[k] = Array.isArray(v) ? v[v.length - 1] : v;
+      a.cancel();
+    }, () => {});
+  }));
+  return { finished };
+};
+const stagger = (step, { startDelay = 0 } = {}) => (i) => startDelay + i * step;
+// inView(target, onEnter, { amount }): onEnter each time that share of the
+// element is on screen.
+const inView = (target, onEnter, { amount = 0 } = {}) => {
+  const io = new IntersectionObserver((entries) => { for (const e of entries) if (e.isIntersecting) onEnter(e.target); }, { threshold: amount });
+  for (const el of list(target)) io.observe(el);
+};
+// tween(from, to, duration, ease, onUpdate, onComplete): one number over
+// time, with a kill(). Eases are functions of progress here, not curves.
+const easeOut3 = (t) => 1 - Math.pow(1 - t, 3);
+const tween = (from, to, duration, ease, onUpdate, onComplete) => {
+  let raf = 0; const t0 = performance.now();
+  const frame = (now) => {
+    const t = Math.min(1, (now - t0) / (duration * 1000));
+    onUpdate(from + (to - from) * ease(t));
+    if (t < 1) raf = requestAnimationFrame(frame); else if (onComplete) onComplete();
+  };
+  raf = requestAnimationFrame(frame);
+  return { kill: () => cancelAnimationFrame(raf) };
+};
 
 // The field: vertical hairlines bent by drifting Perlin noise, after reactbits'
 // Waves, redrawn here without React and without its pointer physics. It runs
@@ -93,8 +135,11 @@ let startField = () => {};
     ctx.stroke();
   };
 
-  let raf = 0, on = false, ready = !live;
-  const frame = (t) => { step(t); draw(); raf = requestAnimationFrame(frame); };
+  // On a touch screen the drift draws every other frame: it is slow enough
+  // that 30 frames a second read the same, at half the battery.
+  const coarse = matchMedia('(hover: none) and (pointer: coarse)').matches;
+  let raf = 0, on = false, ready = !live, odd = false;
+  const frame = (t) => { odd = !odd; if (!coarse || odd) { step(t); draw(); } raf = requestAnimationFrame(frame); };
   const once = () => { step(0); draw(); };
   const wanted = () => ready && !still && !document.hidden && scrollY < H;
   const sync = () => {
@@ -124,10 +169,9 @@ let startField = () => {};
 // which nothing above the fold uses.
 if (live) soraReady.then(() => {
   startField();
-  gsap.timeline({ defaults: { ease: 'power4.out' } })
-    .fromTo('.field', { opacity: 0 }, { opacity: 1, duration: 0.9, ease: 'power2.out' }, 0.15)
-    .fromTo('.sub', { opacity: 0 }, { opacity: 1, duration: 0.5 }, 0.2)
-    .fromTo('.nav', { opacity: 0 }, { opacity: 1, duration: 0.45 }, 0.3);
+  animate('.field', { opacity: [0, 1] }, { duration: 0.9, delay: 0.15, ease: power2out });
+  animate('.sub', { opacity: [0, 1] }, { duration: 0.5, delay: 0.2, ease: power4out });
+  animate('.nav', { opacity: [0, 1] }, { duration: 0.45, delay: 0.3, ease: power4out });
 });
 
 // The lift: the sheet grows from 88 percent to full width while its top edge
@@ -138,12 +182,30 @@ if (live) soraReady.then(() => {
 // comes to rest wherever the finger does, half a second later. The corners
 // stay round while the sheet is a card and square up only over the last
 // fifth, as it docks, so nothing of the hero shows through them at the top.
+let onLift = () => {};
 if (live) {
+  const lift = document.querySelector('.lift');
   const sheet = document.querySelector('.sheet');
   const radius = parseFloat(getComputedStyle(sheet).borderTopLeftRadius);
-  gsap.timeline({ scrollTrigger: { trigger: '.lift', start: 'top bottom', end: 'top top', scrub: 0.5 }, defaults: { ease: 'none' } })
-    .fromTo('.lift', { scale: 0.88 }, { scale: 1, duration: 1 }, 0)
-    .fromTo(sheet, { borderTopLeftRadius: radius, borderTopRightRadius: radius }, { borderTopLeftRadius: 0, borderTopRightRadius: 0, duration: 0.2 }, 0.8);
+  let shown = -1, glide = null;
+  const apply = (p) => {
+    if (p === shown) return;
+    shown = p;
+    lift.style.transform = `scale(${(0.88 + 0.12 * p).toFixed(4)})`;
+    const r = radius * (1 - Math.min(1, Math.max(0, (p - 0.8) / 0.2)));
+    sheet.style.borderTopLeftRadius = sheet.style.borderTopRightRadius = `${r.toFixed(2)}px`;
+  };
+  const measure = () => {
+    const top = lift.getBoundingClientRect().top;
+    const p = Math.min(1, Math.max(0, (innerHeight - top) / innerHeight));
+    onLift(top);
+    if (glide) glide.kill();
+    if (shown < 0) { apply(p); return; }
+    glide = tween(shown, p, 0.5, easeOut3, apply, () => { glide = null; });
+  };
+  addEventListener('scroll', measure, { passive: true });
+  addEventListener('resize', measure);
+  measure();
 }
 
 // The hold applies only while the sheet fits the screen; held taller than the
@@ -176,8 +238,7 @@ if (live && matchMedia('(min-width: 1100px)').matches) {
   const park = (to) => {
     if (Math.abs(to - scrollY) < 1) return;
     ours = true;
-    const pos = { y: scrollY };
-    glide = gsap.to(pos, { y: to, duration: 0.55, ease: 'power3.out', onUpdate: () => scrollTo({ top: pos.y, behavior: 'instant' }), onComplete: () => { glide = null; setTimeout(release, 250); } });
+    glide = tween(scrollY, to, 0.55, easeOut3, (y) => scrollTo({ top: y, behavior: 'instant' }), () => { glide = null; setTimeout(release, 250); });
   };
   const settle = () => {
     moving = false;
@@ -203,7 +264,6 @@ if (live && matchMedia('(min-width: 1100px)').matches) {
 // Below the window, things reveal as they enter view: the four stops of the
 // flow in turn, then its two lists, then the two venues.
 if (live) {
-  const { animate, inView, stagger } = Motion;
   const rise = (els, delay = 0) => animate(els, { opacity: [0, 1], transform: ['translateY(18px)', 'translateY(0px)'] }, { duration: 0.7, delay, ease: out });
   inView('.flow', () => {
     rise(document.querySelectorAll('.node'), stagger(0.09));
@@ -391,13 +451,13 @@ const reveal = () => {
   draw();
   const per = 0.012, sweep = per * lastCount;
   const bars = svg.querySelectorAll('[data-bar]');
-  Motion.animate(bars, { transform: ['scaleY(0)', 'scaleY(1)'] }, { duration: 0.65, delay: (i) => +bars[i].dataset.bar * per, ease: out });
-  Motion.animate(svg.querySelector('[data-line]'), { x2: [0, chartW] }, { duration: sweep, ease: 'linear' });
-  Motion.animate(svg.querySelector('[data-tag]'), { opacity: [0, 1], transform: ['translateX(10px)', 'translateX(0px)'] }, { duration: 0.4, delay: sweep - 0.1, ease: out });
-  Motion.animate('.live', { opacity: [0, 1] }, { duration: 0.4, delay: sweep - 0.1 });
+  animate(bars, { transform: ['scaleY(0)', 'scaleY(1)'] }, { duration: 0.65, delay: (i) => +bars[i].dataset.bar * per, ease: out });
+  animate(svg.querySelector('[data-line]'), { transform: ['scaleX(0)', 'scaleX(1)'] }, { duration: sweep, ease: 'linear' });
+  animate(svg.querySelector('[data-tag]'), { opacity: [0, 1], transform: ['translateX(10px)', 'translateX(0px)'] }, { duration: 0.4, delay: sweep - 0.1, ease: out });
+  animate('.live', { opacity: [0, 1] }, { duration: 0.4, delay: sweep - 0.1 });
   setTimeout(() => { sweeping = false; if (wanted) { wanted = false; redraw(); } }, (sweep + 0.7) * 1000);
 };
-if (live) ScrollTrigger.create({ trigger: '.lift', start: 'top 10%', once: true, onEnter: reveal });
+if (live) { let cued = false; onLift = (top) => { if (!cued && top <= innerHeight * 0.1) { cued = true; reveal(); } }; onLift(document.querySelector('.lift').getBoundingClientRect().top); }
 head();
 
 // The venue. One request for the daily candles and one for the hourly ones,
@@ -417,7 +477,14 @@ const merge = (list, k, cap) => {
   if (last && k.t === last.t) list[list.length - 1] = k;
   else if (!last || k.t > last.t) { list.push(k); if (list.length > cap) list.shift(); }
 };
-(async () => {
+// The snapshot in the page is drawn at once; the venue is asked for its own
+// candles when the window is within a screen of coming into view, and a
+// visitor who never scrolls never opens the socket.
+const near = new Promise((r) => {
+  const io = new IntersectionObserver((es) => { if (es.some(e => e.isIntersecting)) { io.disconnect(); r(); } }, { rootMargin: '100% 0px' });
+  io.observe(host);
+});
+near.then(async () => {
   try {
     const t0 = performance.now();
     const days = await snapshot('1d', 130 * DAY);
@@ -470,7 +537,7 @@ const merge = (list, k, cap) => {
   // the time left on the candle moves once a minute even when the price does not
   setInterval(redraw, 60000);
   document.addEventListener('visibilitychange', () => { if (!document.hidden) open(); });
-})();
+});
 
 // The flow. Nothing rides the road: it lights up, one stretch at a time, in
 // the colour of whoever drove that stretch, and each tile rings as the light
@@ -522,11 +589,11 @@ const merge = (list, k, cap) => {
   const relight = () => lit.forEach((_, k) => light(k, k < at));
   const grow = (k, duration) => {
     const axis = horizontal() ? 'scaleX' : 'scaleY';
-    return Motion.animate(lit[k], { transform: [`${axis}(0)`, `${axis}(1)`] }, { duration, ease: out }).finished;
+    return animate(lit[k], { transform: [`${axis}(0)`, `${axis}(1)`] }, { duration, ease: out }).finished;
   };
   const ring = (el) => { el.classList.remove('ping'); void el.offsetWidth; el.classList.add('ping'); };
   const wait = (s) => new Promise(r => setTimeout(r, s * 1000));
-  const fade = (el, to, duration) => Motion.animate(el, { opacity: to }, { duration }).finished;
+  const fade = (el, to, duration) => animate(el, { opacity: to }, { duration }).finished;
   const state = (s, t) => { card.dataset.state = s; kicker.textContent = t; };
   // One stretch lights, and the tile at its end rings as the light arrives.
   const reach = async (i, duration = 0.7) => {
@@ -568,7 +635,7 @@ const merge = (list, k, cap) => {
       return;
     }
     ring(tiles[2]);
-    await Motion.animate(tiles[2], { transform: ['scale(1)', 'scale(1.14)', 'scale(1)'] }, { duration: 0.7, ease: out }).finished;
+    await animate(tiles[2], { transform: ['scale(1)', 'scale(1.14)', 'scale(1)'] }, { duration: 0.7, ease: out }).finished;
     await wait(0.3);
     await reach(3);
     state('signed', 'Signed');
@@ -579,7 +646,7 @@ const merge = (list, k, cap) => {
     await grow(3, 0.6);
     await wait(0.5);
     await Promise.all([
-      Motion.animate(lit, { opacity: [1, 0] }, { duration: 0.5 }).finished,
+      animate(lit, { opacity: [1, 0] }, { duration: 0.5 }).finished,
       fade(card, 0, 0.5),
     ]);
     lit.forEach((_, k) => light(k, false));
@@ -595,6 +662,6 @@ const merge = (list, k, cap) => {
     relight();
     if (!live) { park(); return; }
     card.style.opacity = '0';
-    Motion.inView('.flow', () => { setTimeout(arrive, 500); }, { amount: 0.5 });
+    inView('.flow', () => { setTimeout(arrive, 500); }, { amount: 0.5 });
   });
 }

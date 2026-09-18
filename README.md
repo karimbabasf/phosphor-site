@@ -3,13 +3,13 @@
 The landing page for Phosphor, at https://phosphor.karimbabasf.com
 
 Static files, no build on Vercel. `index.html` carries its own CSS, `js/page.js` the script,
-`mark.svg` is the MP cube mark, `fonts/` holds Sora (Regular and SemiBold), the face the page
-and the app both speak in, and Geist Mono for figures and code. `logos/` holds the venue and
-token marks (their own notices in `logos/LICENSE.md`). `vendor/` holds GSAP 3.15.0 with
-ScrollTrigger (Standard license), which drives the sheet's lift from the scroll position and
-the load sequence, and Motion 13.3.0 (MIT), which runs the reveals on entering view, the
-chart's first draw and the proposal in the security diagram. Both are the `dist` files from
-the npm tarballs.
+`mark.svg` and `mark-green.svg` are the MP cube mark (the same path as the favicon, in ink and
+in green), `fonts/` holds Sora (Regular and SemiBold), the face the wordmark and the app speak
+in, Manrope (on test for everything after the hero, through the `--face` token in the CSS), and
+Geist Mono for figures and code, subset to Latin. `logos/` holds the venue and token marks
+(their own notices in `logos/LICENSE.md`). No animation library: the kit at the top of
+`js/page.js` is the Web Animations API for tweens, an IntersectionObserver for what enters
+view, and one requestAnimationFrame tween for the sheet's scrub and the magnet's glide.
 
 The docs at `/docs/`, the terms, privacy and security pages at `/terms/`, `/privacy/` and
 `/security/`, the `404.html` page and `sitemap.xml` are generated. The docs source is markdown
