@@ -424,73 +424,90 @@
 
   /* Security: the same ink as the sheet with a rule across the join, so the page
      after the hero reads as one sheet, not slabs a shade apart. The section is a
-     diagram and two lists, no paragraphs: what the agent reaches and what it
-     cannot, drawn as a flow the visitor can release with the one button the
-     agent has no way to press. */
+     diagram and two lists, no paragraphs: one road with four stops, drawn as a
+     road. The proposal rides it, and the visitor releases it with the one button
+     the agent has no way to press. Phones read the road top to bottom with the
+     lists under it; tablets keep it vertical with the lists beside it; from
+     1100px it runs left to right and the lists go under it in two columns. */
 
-  .secure { background: var(--ink); padding: 0 24px 88px; }
+  .secure { background: var(--ink); padding: 0 24px 88px; overflow: clip; }
   .secure .wrap { border-top: 1px solid var(--rule); padding-top: 72px; }
 
-  .flow {
-    position: relative;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0;
-    margin-top: 8px;
-  }
+  .flow { position: relative; display: grid; gap: 64px; margin-top: 8px; }
 
+  /* A stop: the tile on the road, the title and the role beside it. */
   .node {
     position: relative;
     display: grid;
     grid-template-columns: 44px 1fr;
-    gap: 4px 16px;
+    column-gap: 14px;
+    row-gap: 4px;
     align-items: center;
-    padding: 18px 20px 66px;
-    border: 1px solid var(--rule);
-    border-radius: 16px;
-    background: var(--ink);
   }
-  /* The slot at the bottom of each node is where the proposal parks: a stop on
-     the road, drawn even when the proposal is elsewhere. */
-  .node::after { content: ""; position: absolute; left: 20px; right: 20px; bottom: 20px; height: 32px; border: 1px dashed #2E3034; border-radius: 999px; }
-  .node .glyph { grid-row: 1 / 3; width: 44px; height: 44px; display: grid; place-items: center; border-radius: 12px; }
+  .node .glyph { position: relative; z-index: 3; grid-row: 1 / 3; width: 44px; height: 44px; display: grid; place-items: center; border-radius: 12px; }
   .node .glyph svg { width: 22px; height: 22px; display: block; }
-  .node h3 { font-weight: 600; font-size: 17px; line-height: 1.2; letter-spacing: -0.01em; }
-  .node .role { font-size: 14px; line-height: 1.4; color: var(--text-2); text-wrap: pretty; }
+  .node h3 { grid-column: 2; align-self: end; font-weight: 600; font-size: 17px; line-height: 1.2; letter-spacing: -0.01em; }
+  .node .role { grid-column: 2; align-self: start; font-size: 14px; line-height: 1.45; color: var(--text-2); text-wrap: pretty; }
 
-  .node.agent .glyph { color: #B79CFF; background: rgba(183, 156, 255, 0.12); }
+  /* Tiles are opaque and sit above the road and the proposal, so the road
+     never shows through them and the proposal passes under each stop. */
+  .node.agent { --ring: rgba(183, 156, 255, 0.5); --lit: #B79CFF; }
+  .node.rules { --ring: rgba(236, 238, 241, 0.3); --lit: #ECEEF1; }
+  .node.you { --ring: rgba(63, 255, 108, 0.5); --lit: var(--green); }
+  .node.enclave { --ring: rgba(63, 255, 108, 0.5); --lit: var(--green); }
+  .node.agent .glyph { color: #B79CFF; background: #222131; }
   .node.rules .glyph { color: var(--text); background: #1B1D20; }
   .node.you .glyph { color: var(--ink); background: var(--green); }
-  .node.enclave .glyph { color: var(--green); background: rgba(63, 255, 108, 0.1); }
-  .node.enclave { border-color: rgba(63, 255, 108, 0.35); }
+  .node.enclave .glyph { color: var(--green); background: #14261A; }
 
-  /* The link between two nodes: a hairline with the packet's stop on it. */
-  .link { position: relative; height: 44px; }
-  .link::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; border-left: 1px dashed #363739; }
+  /* The road: one hairline through the four tiles, laid by the script from
+     where the tiles are, running off the end and fading: out to the venue.
+     Over it, one lit stretch per stop, from its tile to the next, that grows
+     in step with the proposal in the colour of whoever drove that stretch.
+     The agent's is violet and ends at the rules, which is the claim in the
+     heading drawn. */
+  .road, .lit { position: absolute; left: 0; top: 0; width: 1px; height: 1px; pointer-events: none; }
+  .road { background: #2E3034; }
+  .lit { background: var(--lit); transform: scaleX(0); transform-origin: top left; }
+  .lit.agent { --lit: #B79CFF; }
+  .lit.rules { --lit: #ECEEF1; }
+  .lit.you, .lit.enclave { --lit: var(--green); }
+  .road, .lit.enclave { mask-image: linear-gradient(to bottom, #000 calc(100% - 44px), transparent); }
+
+  /* The pulse a stop gives when the proposal reaches it, and the button gives
+     when it is the visitor's turn. One ring, once. */
+  @keyframes ping { from { box-shadow: 0 0 0 0 var(--ring); } to { box-shadow: 0 0 0 14px transparent; } }
+  .ping { animation: ping 800ms var(--ease-out); }
 
   /* The one real control in the diagram. It is the app's Approve button, and
-     the visitor can press it. */
+     the visitor can press it. Hollow while the proposal is still on its way,
+     solid the moment it is waiting: the button itself says whose turn it is. */
   .approve {
+    --ring: rgba(63, 255, 108, 0.5);
     grid-column: 2;
     justify-self: start;
-    margin-top: 6px;
-    font: 600 14px/1 "Sora", sans-serif;
+    margin-top: 10px;
+    font: 500 14px/1 "Sora", sans-serif;
+    letter-spacing: -0.01em;
     color: var(--ink);
     background: var(--green);
-    border: 0;
+    border: 1px solid var(--green);
     border-radius: 10px;
     height: 36px;
     padding: 0 18px;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
-    transition: transform 160ms var(--ease-out), background-color 150ms ease, opacity 150ms ease;
+    transition: transform 160ms var(--ease-out), background-color 240ms ease, border-color 240ms ease, color 240ms ease;
   }
-  .approve:hover { background: #63FF87; }
-  .approve:active { transform: scale(0.97); }
+  .approve[disabled] { cursor: default; color: var(--text-2); background: transparent; border-color: #363739; }
+  @media (hover: hover) and (pointer: fine) {
+    .approve:not([disabled]):hover { background: #63FF87; border-color: #63FF87; }
+  }
+  .approve:not([disabled]):active { transform: scale(0.97); }
   .approve:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
-  .approve[disabled] { cursor: default; opacity: 0.55; }
 
-  /* The proposal itself: one line of English, travelling the flow. */
+  /* The proposal itself: one line of English, riding the road. Its ink halo
+     keeps the road from touching it. */
   .packet {
     position: absolute;
     z-index: 2;
@@ -504,18 +521,25 @@
     border-radius: 999px;
     background: var(--ink);
     border: 1px solid #363739;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+    box-shadow: 0 0 0 4px var(--ink);
     font: 500 12px/1 "Geist Mono", ui-monospace, monospace;
     color: var(--text);
     white-space: nowrap;
     pointer-events: none;
     will-change: transform;
+    transition: border-color 300ms ease;
   }
-  .packet i { width: 6px; height: 6px; border-radius: 50%; background: #B79CFF; }
-  .packet[data-state="checked"] i { background: var(--green); }
+  .packet i { width: 6px; height: 6px; border-radius: 50%; background: #B79CFF; transition: background-color 300ms ease; }
+  .packet:not([data-state=""]) i { background: var(--green); }
   .packet[data-state="signed"] { border-color: var(--green); }
+  .packet[data-state="signed"] .tag { color: var(--green); }
   .packet .tag { color: var(--text-2); }
   .packet .tag:empty { display: none; }
+
+  /* Between stops the proposal travels as a signal: the pill folds to its dot,
+     the dot rides the road under the next tile, and the pill opens again there. */
+  .bead { position: absolute; z-index: 2; left: 0; top: 0; width: 8px; height: 8px; border-radius: 50%; background: #B79CFF; box-shadow: 0 0 12px 2px rgba(183, 156, 255, 0.55); opacity: 0; pointer-events: none; will-change: transform; }
+  .bead:not([data-state=""]) { background: var(--green); box-shadow: 0 0 12px 2px rgba(63, 255, 108, 0.55); }
 
   .ledger { display: grid; gap: 24px; margin-top: 48px; }
   .ledger h3 { font-weight: 600; font-size: 15px; letter-spacing: -0.01em; margin-bottom: 14px; }
@@ -606,11 +630,28 @@
 
   @media (min-width: 861px) {
     .head { grid-template-columns: 1fr 1fr; align-items: baseline; gap: 40px; margin-bottom: 40px; }
-    /* The flow runs left to right: four nodes with a link between each pair. */
-    .flow { grid-template-columns: 1fr 44px 1fr 44px 1fr 44px 1fr; align-items: stretch; margin-top: 16px; }
-    .node { align-content: start; padding: 22px 22px 74px; }
-    .node::after { left: 22px; right: 22px; bottom: 22px; }
-    .link::before { left: 0; right: 0; top: 50%; bottom: auto; border-left: 0; border-top: 1px dashed #363739; }
+    .flow { margin-top: 16px; }
+  }
+
+  /* Tablets: the road stays vertical on the left and the two lists sit beside
+     it, so the width is used and the road is not a strip down an empty page. */
+  @media (min-width: 861px) and (max-width: 1099px) {
+    .secure .wrap { display: grid; grid-template-columns: 1fr 1fr; column-gap: 40px; }
+    .secure .head { grid-column: 1 / -1; }
+    .flow { grid-column: 1; }
+    .ledger { grid-column: 2; grid-template-columns: 1fr; gap: 36px; margin-top: 16px; }
+  }
+
+  /* From 1100px the road runs left to right: the tiles sit on it, the words
+     hang under them, and the proposal parks on the road beside each tile. */
+  @media (min-width: 1100px) {
+    .flow { grid-template-columns: repeat(4, 1fr); gap: 24px; }
+    .node { grid-template-columns: 1fr; row-gap: 0; align-items: start; align-content: start; }
+    .node .glyph { grid-row: 1; margin-bottom: 18px; }
+    .node h3, .node .role, .approve { grid-column: 1; }
+    .node .role { margin-top: 6px; max-width: 34ch; }
+    .approve { margin-top: 14px; }
+    .road, .lit.enclave { mask-image: linear-gradient(to right, #000 calc(100% - 120px), transparent); }
   }
 
   /* On a wide screen the head and the window fit one screen under the bar: the
@@ -795,31 +836,32 @@
       </div>
 
       <div class="flow" aria-label="How a proposal travels: the agent drafts it, your rules check it, you release it, and the Secure Enclave signs it">
+        <!-- The four glyphs are Lucide's terminal, sliders-horizontal, fingerprint and cpu (ISC, notice in logos/LICENSE.md): one family, one stroke. -->
         <div class="node agent">
-          <span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7l5 5-5 5"/><path d="M12 17h7"/></svg></span>
+          <span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19h8"/><path d="m4 17 6-6-6-6"/></svg></span>
           <h3>Your agent</h3>
           <span class="role">Reads the market and your balances. Writes one line.</span>
         </div>
-        <div class="link" aria-hidden="true"></div>
         <div class="node rules">
-          <span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/><circle cx="9" cy="7" r="2" fill="#0E0F13"/><circle cx="15" cy="12" r="2" fill="#0E0F13"/><circle cx="7" cy="17" r="2" fill="#0E0F13"/></svg></span>
+          <span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 5H3"/><path d="M12 19H3"/><path d="M14 3v4"/><path d="M16 17v4"/><path d="M21 12h-9"/><path d="M21 19h-5"/><path d="M21 5h-7"/><path d="M8 10v4"/><path d="M8 12H3"/></svg></span>
           <h3>Your rules</h3>
           <span class="role">Size, the multiple, risk per day. No model in the path.</span>
         </div>
-        <div class="link" aria-hidden="true"></div>
         <div class="node you">
-          <span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 8.2A6.5 6.5 0 0 1 18.5 12c0 3-0.4 5.6-1.2 7.8"/><path d="M4.6 12a7.4 7.4 0 0 1 .9-3.6"/><path d="M8.3 19.9c1-2.3 1.6-5 1.6-7.9a2.1 2.1 0 0 1 4.2 0c0 2.4-.3 4.6-.8 6.7"/><path d="M5.6 17.4c.8-1.7 1.3-3.5 1.3-5.4a5.1 5.1 0 0 1 8.3-4"/><path d="M15.4 15.9c.1-1.2.2-2.5.2-3.9"/></svg></span>
+          <span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"/><path d="M14 13.12c0 2.38 0 6.38-1 8.88"/><path d="M17.29 21.02c.12-.6.43-2.3.5-3.02"/><path d="M2 12a10 10 0 0 1 18-6"/><path d="M2 16h.01"/><path d="M21.8 16c.2-2 .131-5.354 0-6"/><path d="M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2"/><path d="M8.65 22c.21-.66.45-1.32.57-2"/><path d="M9 6.8a6 6 0 0 1 9 5.2v2"/></svg></span>
           <h3>You</h3>
           <span class="role">One click in the window, then your finger.</span>
           <button class="approve" type="button" id="approve" disabled>Approve</button>
         </div>
-        <div class="link" aria-hidden="true"></div>
         <div class="node enclave">
-          <span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="2"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></svg></span>
+          <span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20v2"/><path d="M12 2v2"/><path d="M17 20v2"/><path d="M17 2v2"/><path d="M2 12h2"/><path d="M2 17h2"/><path d="M2 7h2"/><path d="M20 12h2"/><path d="M20 17h2"/><path d="M20 7h2"/><path d="M7 20v2"/><path d="M7 2v2"/><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg></span>
           <h3>Secure Enclave</h3>
           <span class="role">The key is sealed to this Mac. It signs once, after you.</span>
         </div>
-        <div class="packet" id="packet" aria-hidden="true"><i></i>Long ETH $150<span class="tag"></span></div>
+        <i class="road" aria-hidden="true"></i>
+        <i class="lit agent" aria-hidden="true"></i><i class="lit rules" aria-hidden="true"></i><i class="lit you" aria-hidden="true"></i><i class="lit enclave" aria-hidden="true"></i>
+        <i class="bead" aria-hidden="true" data-state=""></i>
+        <div class="packet" id="packet" aria-hidden="true" data-state=""><i></i>Long ETH $150<span class="tag"></span></div>
       </div>
 
       <div class="ledger">
@@ -905,7 +947,7 @@
 <script defer src="/vendor/gsap.min.js"></script>
 <script defer src="/vendor/ScrollTrigger.min.js"></script>
 <script defer src="/vendor/motion.min.js"></script>
-<script type="module" src="/js/page.js?v=3"></script>
+<script type="module" src="/js/page.js?v=4"></script>
 
 </body>
 </html>

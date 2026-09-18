@@ -470,54 +470,104 @@ const merge = (list, k, cap) => {
   document.addEventListener('visibilitychange', () => { if (!document.hidden) open(); });
 })();
 
-// The flow. The proposal is one line of English that travels the four stops:
-// it appears with the agent, moves to the rules and gets its green dot, then
-// moves to You and waits there for as long as the visitor likes. Approve is the
-// one real control on the page, and the only way the proposal goes any further:
-// then the finger, the enclave, "signed", and out to the venue. Each node keeps
-// a slot at its bottom edge for the proposal to park in, so it never sits on a
-// word. With reduced motion the proposal simply waits at You and the click
-// moves it to the enclave in one step.
+// The flow. The proposal is one line of English that rides one road with four
+// stops: it appears with the agent, moves to the rules and gets its green dot,
+// then moves to You and waits there for as long as the visitor likes. Approve
+// is the one real control on the page, and the only way the proposal goes any
+// further: then the finger, the enclave, "signed", and off the end of the road
+// to the venue. The road is laid from where the tiles are, and each stop owns
+// the lit stretch that leaves it, which grows in step with the proposal in the
+// colour of whoever drove it, so the agent's violet stretch visibly ends at
+// the rules. Under 1100px the road runs top to bottom and the proposal parks
+// on it under each stop; from 1100px it runs left to right and the proposal
+// parks beside each tile. With reduced motion the proposal simply waits at
+// You and the click moves it to the enclave in one step.
 {
   const flow = document.querySelector('.flow');
   const packet = document.getElementById('packet');
   const tag = packet.querySelector('.tag');
   const nodes = [...flow.querySelectorAll('.node')];
+  const tiles = nodes.map(n => n.querySelector('.glyph'));
+  const road = flow.querySelector('.road');
+  const lit = [...flow.querySelectorAll('.lit')];
+  const bead = flow.querySelector('.bead');
   const button = document.getElementById('approve');
-  const glyph = nodes[2].querySelector('.glyph');
-  let at = 2, busy = false, pulse = null;
+  let at = 2, busy = false;
+  const horizontal = () => matchMedia('(min-width: 1100px)').matches;
+  const box = (el) => { const f = flow.getBoundingClientRect(), r = el.getBoundingClientRect(); return { x: r.left - f.left, y: r.top - f.top, w: r.width, h: r.height, cx: r.left - f.left + r.width / 2, cy: r.top - f.top + r.height / 2 }; };
+  // The road and its four stretches, as boxes inside the flow: through the
+  // tile centres, then on past the last tile to fade out.
+  const lay = () => {
+    const t = tiles.map(box), f = flow.getBoundingClientRect();
+    const last = box(nodes[3]);
+    const end = horizontal() ? f.width + 32 : last.y + last.h + 56;
+    const put = (el, from, to) => {
+      if (horizontal()) { el.style.left = `${from}px`; el.style.top = `${t[0].cy - 0.5}px`; el.style.width = `${to - from}px`; el.style.height = '1px'; }
+      else { el.style.left = `${t[0].cx - 0.5}px`; el.style.top = `${from}px`; el.style.width = '1px'; el.style.height = `${to - from}px`; }
+    };
+    const c = (i) => horizontal() ? t[i].cx : t[i].cy;
+    put(road, c(0), end);
+    lit.forEach((el, k) => put(el, c(k), k < 3 ? c(k + 1) : end));
+  };
+  // Where the proposal parks at stop i, as a translate inside the flow: on the
+  // road beside the tile when the road is horizontal; on the road under the
+  // stop, with its dot on the line, when vertical.
   const spot = (i) => {
-    const f = flow.getBoundingClientRect(), n = nodes[i].getBoundingClientRect();
-    const pad = parseFloat(getComputedStyle(nodes[i]).paddingLeft);
-    return { x: n.left - f.left + pad, y: n.bottom - f.top - pad - 32 };
+    const t = box(tiles[i]), n = box(nodes[i]);
+    return horizontal() ? { x: t.x + t.w + 12, y: t.cy - 16 } : { x: t.cx - 14, y: n.y + n.h + 16 };
   };
   const put = (i) => { const p = spot(i); packet.style.transform = `translate(${p.x}px, ${p.y}px)`; at = i; };
-  const go = (i, duration = 0.8) => {
-    const a = spot(at), b = spot(i);
+  // A stretch is lit end to end (scale 1 on both axes) or not at all (scaleX 0
+  // is invisible whichever way the road runs), so a finished state survives a
+  // switch between the two layouts.
+  const light = (k, on) => { lit[k].style.opacity = ''; lit[k].style.transform = on ? 'scale(1)' : 'scaleX(0)'; };
+  const relight = () => lit.forEach((_, k) => light(k, k < at));
+  const grow = (k, duration) => {
+    const axis = horizontal() ? 'scaleX' : 'scaleY';
+    return Motion.animate(lit[k], { transform: [`${axis}(0)`, `${axis}(1)`] }, { duration, ease: out }).finished;
+  };
+  const ring = (el) => { el.classList.remove('ping'); void el.offsetWidth; el.classList.add('ping'); };
+  // The dot of the parked pill at stop i, as the top left corner of the bead.
+  const dot = (i) => { const p = spot(i); return { x: p.x + 10, y: p.y + 12 }; };
+  const fade = (el, to, duration) => Motion.animate(el, { opacity: to }, { duration }).finished;
+  // One hop: the pill folds to its dot, the dot rides the stretch it is on
+  // while that stretch lights under it, and the pill opens at the next stop.
+  const go = async (i, next, duration = 0.7) => {
+    const a = dot(at), b = dot(i), k = at;
     at = i;
-    return Motion.animate(packet, { transform: [`translate(${a.x}px, ${a.y}px)`, `translate(${b.x}px, ${b.y}px)`] }, { duration, ease: out }).finished;
+    bead.dataset.state = packet.dataset.state;
+    bead.style.transform = `translate(${a.x}px, ${a.y}px)`;
+    await fade(packet, 0, 0.16);
+    bead.style.opacity = '1';
+    await Promise.all([
+      Motion.animate(bead, { transform: [`translate(${a.x}px, ${a.y}px)`, `translate(${b.x}px, ${b.y}px)`] }, { duration, ease: out }).finished,
+      grow(k, duration),
+    ]);
+    bead.style.opacity = '0';
+    put(i);
+    if (next) state(next, next);
+    ring(tiles[i]);
+    await fade(packet, 1, 0.22);
   };
   const wait = (s) => new Promise(r => setTimeout(r, s * 1000));
   const state = (s, t) => { packet.dataset.state = s; tag.textContent = t; };
-  const horizontal = () => matchMedia('(min-width: 861px)').matches;
   const park = () => {
-    state('waiting', 'waiting');
-    if (pulse) pulse.stop();
-    if (live) pulse = Motion.animate(button, { transform: ['scale(1)', 'scale(1.045)', 'scale(1)'] }, { duration: 1.6, repeat: Infinity, ease: 'easeInOut' });
     button.disabled = false;
+    ring(button);
   };
   const arrive = async () => {
     busy = true;
     button.disabled = true;
     packet.style.opacity = '0';
     put(0);
+    relight();
     state('', '');
     await Motion.animate(packet, { opacity: [0, 1] }, { duration: 0.4 }).finished;
+    ring(tiles[0]);
     await wait(0.9);
-    await go(1);
-    state('checked', 'checked');
+    await go(1, 'checked');
     await wait(0.9);
-    await go(2);
+    await go(2, 'waiting');
     park();
     busy = false;
   };
@@ -525,34 +575,47 @@ const merge = (list, k, cap) => {
     if (busy || at !== 2) return;
     busy = true;
     button.disabled = true;
-    if (pulse) { pulse.stop(); pulse = null; button.style.transform = ''; }
     button.textContent = 'Touch ID';
     if (!live) {
-      put(3); state('signed', 'signed');
+      put(3); relight(); state('signed', 'signed');
       await wait(1.6);
       packet.style.opacity = '0';
       await wait(0.4);
-      put(2); packet.style.opacity = ''; park(); button.textContent = 'Approve'; busy = false;
+      put(2); relight(); state('waiting', 'waiting'); packet.style.opacity = ''; park(); button.textContent = 'Approve'; busy = false;
       return;
     }
-    await Motion.animate(glyph, { transform: ['scale(1)', 'scale(1.18)', 'scale(1)'] }, { duration: 0.7, ease: out }).finished;
-    state('checked', 'released');
-    await go(3);
-    state('signed', 'signed');
-    await wait(0.9);
-    const p = spot(3);
-    const away = horizontal() ? `translate(${p.x + 140}px, ${p.y}px)` : `translate(${p.x}px, ${p.y + 70}px)`;
-    await Motion.animate(packet, { transform: [`translate(${p.x}px, ${p.y}px)`, away], opacity: [1, 0] }, { duration: 0.6, ease: 'easeIn' }).finished;
-    await wait(1.2);
+    ring(tiles[2]);
+    await Motion.animate(tiles[2], { transform: ['scale(1)', 'scale(1.14)', 'scale(1)'] }, { duration: 0.7, ease: out }).finished;
+    await go(3, 'signed');
     button.textContent = 'Approve';
+    await wait(0.9);
+    // Off the end of the road: the pill folds, the dot runs on where the road
+    // fades, and the last stretch lights under it.
+    const a = dot(3);
+    const away = horizontal() ? `translate(${a.x + 150}px, ${a.y}px)` : `translate(${a.x}px, ${a.y + 44}px)`;
+    bead.dataset.state = 'signed';
+    bead.style.transform = `translate(${a.x}px, ${a.y}px)`;
+    await fade(packet, 0, 0.16);
+    bead.style.opacity = '1';
+    await Promise.all([
+      Motion.animate(bead, { transform: [`translate(${a.x}px, ${a.y}px)`, away], opacity: [1, 0] }, { duration: 0.6, ease: 'easeIn' }).finished,
+      grow(3, 0.6),
+    ]);
+    await Motion.animate(lit, { opacity: [1, 0] }, { duration: 0.5, delay: 0.5 }).finished;
+    lit.forEach((_, k) => light(k, false));
+    await wait(0.3);
     arrive();
   };
   button.addEventListener('click', release);
-  addEventListener('resize', () => { if (!busy) put(at); });
+  // Any reflow of the flow (a resize, a font arriving, text wrapping) lays the
+  // road again and puts the parked proposal back on it.
+  new ResizeObserver(() => { lay(); if (!busy) { put(at); relight(); } }).observe(flow);
   document.fonts.ready.then(() => {
+    lay();
     put(2);
-    if (!live) { park(); return; }
+    relight();
+    if (!live) { state('waiting', 'waiting'); park(); return; }
     packet.style.opacity = '0';
-    Motion.inView('.flow', () => { setTimeout(arrive, 700); }, { amount: 0.25 });
+    Motion.inView('.flow', () => { setTimeout(arrive, 500); }, { amount: 0.5 });
   });
 }
