@@ -569,8 +569,8 @@
   .approve[disabled] { cursor: default; color: var(--text-2); background: transparent; border-color: #363739; }
 
   /* While it is the visitor's turn the button breathes: a ring swells off it
-     and fades, and the fill lifts a shade with it, once every 2.6 seconds,
-     slow enough to read as an invitation and not an alarm. The first breath
+     and fades, and the fill lifts a shade with it, once every 1.5 seconds
+     (Karim's pace, 2026-09-18: "faster"). The first breath
      is the ring the button used to give on arrival. It stops the moment the
      button goes hollow. */
   @keyframes breathe {
@@ -578,7 +578,7 @@
     18% { background-color: #63FF87; }
     42%, 100% { box-shadow: 0 0 0 12px transparent; background-color: var(--green); }
   }
-  .approve:not([disabled]) { animation: breathe 2.6s var(--ease-out) infinite; }
+  .approve:not([disabled]) { animation: breathe 1.5s var(--ease-out) infinite; }
   @media (hover: hover) and (pointer: fine) {
     .approve:not([disabled]):hover { background: #63FF87; border-color: #63FF87; }
   }
