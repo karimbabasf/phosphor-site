@@ -472,31 +472,28 @@ const merge = (list, k, cap) => {
   document.addEventListener('visibilitychange', () => { if (!document.hidden) open(); });
 })();
 
-// The flow. The proposal is the app's card, one line of it, and it lands
-// under the words of each stop in turn: it appears with the agent, travels to
-// the rules and reads checked, then to You, where it waits for as long as the
-// visitor likes. Approve is the one real control on the page, and the only
-// way the proposal goes any further: then the finger, the enclave, signed, and
-// off the end of the road to the venue. The road is laid from where the tiles
-// are as three stretches between them and a tail after the last, each
-// stopping 8px short of the tile at either end, so it docks at a stop rather
-// than running through one. Each stop owns the lit copy of the stretch that
-// leaves it, which grows in step with the proposal in the colour of whoever
-// drove it, so the agent's violet stretch visibly ends at the rules. Between
-// stops the card folds to a dot that rides the stretch. Under 1200px the road
-// runs top to bottom; from 1200px left to right through the wall between the
-// two cells. With reduced motion the card simply waits at You and the click
-// moves it to the enclave in one step.
+// The flow. Nothing rides the road: it lights up, one stretch at a time, in
+// the colour of whoever drove that stretch, and each tile rings as the light
+// reaches it. The agent's violet stretch ends at the rules, which is the
+// claim in the heading drawn. When the light reaches You the proposal appears
+// where the app shows it, as the app's own card with the Approve button
+// inside, the one real control on the page and the only way the light goes
+// any further: then Touch ID, the enclave's green stretch, signed, and the
+// tail off the end of the road to the venue. Then the road goes dark, the
+// card fades, and it starts again. The road is laid from where the tiles are
+// as three stretches between them and a tail after the last, each stopping
+// 8px short of the tile at either end, so it docks at a stop rather than
+// running through one. Under 1200px it runs top to bottom; from 1200px left
+// to right through the wall between the two cells. With reduced motion the
+// card simply waits at You and the click marks it signed.
 {
   const flow = document.querySelector('.flow');
-  const packet = document.getElementById('packet');
-  const tag = packet.querySelector('.tag');
+  const card = document.getElementById('card');
+  const kicker = document.getElementById('kicker');
   const nodes = [...flow.querySelectorAll('.node')];
   const tiles = nodes.map(n => n.querySelector('.glyph'));
-  const roles = nodes.map(n => n.querySelector('.role'));
   const roads = [...flow.querySelectorAll('.road')];
   const lit = [...flow.querySelectorAll('.lit')];
-  const bead = flow.querySelector('.bead');
   const button = document.getElementById('approve');
   const GAP = 8, TAIL = 44;
   let at = 2, busy = false;
@@ -518,10 +515,6 @@ const merge = (list, k, cap) => {
       }
     }
   };
-  // Where the card lands at stop i: under the stop's words, as a translate
-  // inside the flow.
-  const spot = (i) => { const r = box(roles[i]); return { x: r.x, y: r.y + r.h + 12 }; };
-  const put = (i) => { const p = spot(i); packet.style.transform = `translate(${p.x}px, ${p.y}px)`; at = i; };
   // A stretch is lit end to end (scale 1 on both axes) or not at all (scaleX 0
   // is invisible whichever way the road runs), so a finished state survives a
   // switch between the two layouts.
@@ -532,36 +525,15 @@ const merge = (list, k, cap) => {
     return Motion.animate(lit[k], { transform: [`${axis}(0)`, `${axis}(1)`] }, { duration, ease: out }).finished;
   };
   const ring = (el) => { el.classList.remove('ping'); void el.offsetWidth; el.classList.add('ping'); };
-  // The two ends of stretch k as top left corners of the bead, centred on the line.
-  const ends = (k) => {
-    const s = stretch(k);
-    return horizontal()
-      ? [{ x: s.from - 4, y: s.y - 4 }, { x: s.to - 4, y: s.y - 4 }]
-      : [{ x: s.x - 4, y: s.from - 4 }, { x: s.x - 4, y: s.to - 4 }];
-  };
-  const fade = (el, to, duration) => Motion.animate(el, { opacity: to }, { duration }).finished;
-  // One hop: the card folds to its dot, the dot rides the stretch out of the
-  // stop it is at while that stretch lights under it, and the card opens
-  // under the next stop.
-  const go = async (i, next, duration = 0.7) => {
-    const k = at, [a, b] = ends(k);
-    at = i;
-    bead.dataset.state = packet.dataset.state;
-    bead.style.transform = `translate(${a.x}px, ${a.y}px)`;
-    await fade(packet, 0, 0.16);
-    bead.style.opacity = '1';
-    await Promise.all([
-      Motion.animate(bead, { transform: [`translate(${a.x}px, ${a.y}px)`, `translate(${b.x}px, ${b.y}px)`] }, { duration, ease: out }).finished,
-      grow(k, duration),
-    ]);
-    bead.style.opacity = '0';
-    put(i);
-    if (next) state(...next);
-    ring(tiles[i]);
-    await fade(packet, 1, 0.22);
-  };
   const wait = (s) => new Promise(r => setTimeout(r, s * 1000));
-  const state = (s, t) => { packet.dataset.state = s; tag.textContent = t; };
+  const fade = (el, to, duration) => Motion.animate(el, { opacity: to }, { duration }).finished;
+  const state = (s, t) => { card.dataset.state = s; kicker.textContent = t; };
+  // One stretch lights, and the tile at its end rings as the light arrives.
+  const reach = async (i, duration = 0.7) => {
+    await grow(i - 1, duration);
+    at = i;
+    ring(tiles[i]);
+  };
   const park = () => {
     button.disabled = false;
     ring(button);
@@ -569,16 +541,17 @@ const merge = (list, k, cap) => {
   const arrive = async () => {
     busy = true;
     button.disabled = true;
-    packet.style.opacity = '0';
-    put(0);
+    card.style.opacity = '0';
+    at = 0;
     relight();
-    state('', 'Drafted');
-    await Motion.animate(packet, { opacity: [0, 1] }, { duration: 0.4 }).finished;
+    state('waiting', 'Waiting for you');
+    button.textContent = 'Approve';
     ring(tiles[0]);
-    await wait(0.9);
-    await go(1, ['checked', 'Checked']);
-    await wait(0.9);
-    await go(2, ['waiting', 'Waiting for you']);
+    await wait(0.7);
+    await reach(1);
+    await wait(0.6);
+    await reach(2);
+    await fade(card, 1, 0.3);
     park();
     busy = false;
   };
@@ -587,45 +560,41 @@ const merge = (list, k, cap) => {
     busy = true;
     button.disabled = true;
     button.textContent = 'Touch ID';
+    state('touch', 'Confirm on your Mac');
     if (!live) {
-      put(3); relight(); state('signed', 'Signed');
+      at = 3; relight(); state('signed', 'Signed'); button.textContent = 'Approved';
       await wait(1.6);
-      packet.style.opacity = '0';
-      await wait(0.4);
-      put(2); relight(); state('waiting', 'Waiting for you'); packet.style.opacity = ''; park(); button.textContent = 'Approve'; busy = false;
+      at = 2; relight(); state('waiting', 'Waiting for you'); button.textContent = 'Approve'; park(); busy = false;
       return;
     }
     ring(tiles[2]);
     await Motion.animate(tiles[2], { transform: ['scale(1)', 'scale(1.14)', 'scale(1)'] }, { duration: 0.7, ease: out }).finished;
-    await go(3, ['signed', 'Signed']);
-    button.textContent = 'Approve';
-    await wait(0.9);
-    // Off the end of the road: the card folds, the dot runs down the tail as
-    // it fades, and the tail lights under it.
-    const [a, b] = ends(3);
-    bead.dataset.state = 'signed';
-    bead.style.transform = `translate(${a.x}px, ${a.y}px)`;
-    await fade(packet, 0, 0.16);
-    bead.style.opacity = '1';
+    await wait(0.3);
+    await reach(3);
+    state('signed', 'Signed');
+    button.textContent = 'Approved';
+    await wait(0.8);
+    // Off the end of the road: the tail lights, then the whole road goes dark
+    // with the card, and the next proposal starts at the agent.
+    await grow(3, 0.6);
+    await wait(0.5);
     await Promise.all([
-      Motion.animate(bead, { transform: [`translate(${a.x}px, ${a.y}px)`, `translate(${b.x}px, ${b.y}px)`], opacity: [1, 0] }, { duration: 0.6, ease: 'easeIn' }).finished,
-      grow(3, 0.6),
+      Motion.animate(lit, { opacity: [1, 0] }, { duration: 0.5 }).finished,
+      fade(card, 0, 0.5),
     ]);
-    await Motion.animate(lit, { opacity: [1, 0] }, { duration: 0.5, delay: 0.5 }).finished;
     lit.forEach((_, k) => light(k, false));
     await wait(0.3);
     arrive();
   };
   button.addEventListener('click', release);
   // Any reflow of the flow (a resize, a font arriving, text wrapping) lays the
-  // road again and puts the parked proposal back on it.
-  new ResizeObserver(() => { lay(); if (!busy) { put(at); relight(); } }).observe(flow);
+  // road again.
+  new ResizeObserver(() => { lay(); if (!busy) relight(); }).observe(flow);
   document.fonts.ready.then(() => {
     lay();
-    put(2);
     relight();
-    if (!live) { state('waiting', 'Waiting for you'); park(); return; }
-    packet.style.opacity = '0';
+    if (!live) { park(); return; }
+    card.style.opacity = '0';
     Motion.inView('.flow', () => { setTimeout(arrive, 500); }, { amount: 0.5 });
   });
 }

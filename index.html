@@ -173,6 +173,15 @@
     .links .download:hover { background: #63FF87; }
   }
 
+  /* On a phone or a tablet there is nothing to download, so the pill is a
+     quiet note in its place rather than a green button that fetches a Mac
+     disk image to a device that cannot open it. */
+  .links .only { display: none; }
+  @media (hover: none) and (pointer: coarse) {
+    .links .download { display: none; }
+    .links .only { display: inline-flex; align-items: center; height: 38px; padding: 0 14px; border-radius: 999px; border: 1px solid #363739; color: var(--text-2); font-size: 14px; white-space: nowrap; }
+  }
+
   .lockup { position: relative; text-align: center; }
 
   /* The wordmark is the largest thing on the page. It fades in once, on load,
@@ -434,10 +443,10 @@
      them a shade stronger than the panel's own rules. One road runs through the
      four stops and crosses the wall once: laid as three stretches between the
      tiles and a tail after the last, each stopping short of the tile it meets,
-     so the line docks at a stop and never runs through one. The proposal is the
-     app's own card in one line, and it lands under the words of the stop it has
-     reached, over the Approve button at You, the way the card sits over its
-     buttons in the app; the road carries only the signal between stops. Under
+     so the line docks at a stop and never runs through one. Nothing rides it:
+     each stretch lights up in turn in the colour of whoever drove it, and the
+     proposal is the app's own card, which appears where the app shows it, at
+     You, with the Approve button inside. Under
      each pair of stops, on a rule, the list of what the agent can and cannot
      do, so each list sits on the side where it is true. The two cells are
      `display: contents` at every width and the panel places their parts: on a
@@ -465,9 +474,8 @@
 
   .side-label { padding: 20px 20px 0 78px; font-weight: 600; font-size: 12px; line-height: 1; letter-spacing: 0.08em; text-transform: uppercase; color: #828890; }
 
-  /* The stops, 64px apart on a vertical road, with the same room under the
-     last one: the card lands in that gap, under the stop it has reached. */
-  .stops { display: grid; gap: 64px; padding: 24px 20px 64px; }
+  /* The stops, on a vertical road, with room under the last for the road's tail. */
+  .stops { display: grid; gap: 40px; padding: 24px 20px 56px; }
 
   /* A stop: the tile on the road, the title and the role beside it. */
   .node {
@@ -512,14 +520,38 @@
   @keyframes ping { from { box-shadow: 0 0 0 0 var(--ring); } to { box-shadow: 0 0 0 14px transparent; } }
   .ping { animation: ping 800ms var(--ease-out); }
 
-  /* The one real control in the diagram. It is the app's Approve button, and
-     the visitor can press it. Hollow while the proposal is still on its way,
-     solid the moment it is waiting: the button itself says whose turn it is. */
-  .approve {
-    --ring: rgba(63, 255, 108, 0.5);
+  /* The proposal is the app's own card, and it sits where the app shows it:
+     in the window, at You. A kicker that says whose move it is, the line the
+     agent wrote with its figure in Geist Mono, and the one real control in the
+     diagram, the Approve button the visitor can press. It appears when the
+     road reaches You and stays through the click, Touch ID and the signing,
+     then fades with the road. Nothing rides the road: the road lights up. */
+  .card {
     grid-column: 2;
     justify-self: start;
-    margin-top: 10px;
+    width: 100%;
+    max-width: 264px;
+    margin-top: 12px;
+    display: grid;
+    gap: 9px;
+    padding: 12px 14px 14px;
+    border-radius: 14px;
+    background: #151619;
+    border: 1px solid #262729;
+    transition: border-color 300ms ease;
+  }
+  .card .kicker { font-size: 12px; font-weight: 500; line-height: 1.2; color: var(--green); transition: color 300ms ease; }
+  .card[data-state="touch"] .kicker { color: var(--text-2); }
+  .card .line { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 15px; font-weight: 600; line-height: 1.3; letter-spacing: -0.01em; }
+  .card .line b { font: 500 15px/1.3 "Geist Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+  .card[data-state="signed"] { border-color: #1F4A2B; }
+
+  /* Solid while it is the visitor's turn, hollow the moment the click has
+     landed and the Mac has the moment: the button itself says whose turn it is. */
+  .approve {
+    --ring: rgba(63, 255, 108, 0.5);
+    margin-top: 3px;
+    width: 100%;
     font: 500 14px/1 var(--face);
     letter-spacing: -0.01em;
     color: var(--ink);
@@ -538,47 +570,6 @@
   }
   .approve:not([disabled]):active { transform: scale(0.97); }
   .approve:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
-
-  /* The proposal: the app's card, one line of it. What the agent wrote and
-     the figure, and at the right the state it is in, in the colour of the stop
-     that put it there. The words sit in Sora, the figure in Geist Mono, as in
-     the app. It lands under the words of the stop it has reached. */
-  .packet {
-    position: absolute;
-    z-index: 2;
-    left: 0;
-    top: 0;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    height: 40px;
-    padding: 0 12px;
-    border-radius: 10px;
-    background: #151619;
-    border: 1px solid #262729;
-    font: 500 13px/1 var(--face);
-    letter-spacing: -0.005em;
-    color: var(--text);
-    white-space: nowrap;
-    pointer-events: none;
-    will-change: transform;
-    transition: border-color 300ms ease;
-  }
-  .packet .line { display: inline-flex; align-items: baseline; gap: 7px; }
-  .packet .line b { font: 500 13px/1 "Geist Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
-  .packet .tag { margin-left: auto; font-size: 12px; color: #B79CFF; transition: color 300ms ease; }
-  .packet[data-state="checked"] .tag { color: var(--text-2); }
-  .packet[data-state="waiting"] .tag, .packet[data-state="signed"] .tag { color: var(--green); }
-  .packet[data-state="signed"] { border-color: #1F4A2B; }
-
-  /* The card sits over the button at You, the way it does in the app: the
-     button keeps the card's room above it. */
-  .node.you .approve { margin-top: 64px; }
-
-  /* Between stops the proposal travels as a signal: the card fades, the dot
-     rides the stretch to the next tile, and the card opens again under it. */
-  .bead { position: absolute; z-index: 2; left: 0; top: 0; width: 8px; height: 8px; border-radius: 50%; background: #B79CFF; box-shadow: 0 0 12px 2px rgba(183, 156, 255, 0.55); opacity: 0; pointer-events: none; will-change: transform; }
-  .bead:not([data-state=""]) { background: var(--green); box-shadow: 0 0 12px 2px rgba(63, 255, 108, 0.55); }
 
   .ledger { border-top: 1px solid var(--rule); padding: 22px 20px 24px; }
   .ledger h3 { font-weight: 600; font-size: 15px; letter-spacing: -0.01em; margin-bottom: 12px; }
@@ -665,7 +656,7 @@
     /* No column gap: the second cell's tone has to reach across the row. */
     .flow { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
     .side-label { grid-column: 1 / -1; padding: 24px 28px 0 86px; }
-    .stops { grid-column: 1; padding: 24px 20px 64px 28px; }
+    .stops { grid-column: 1; padding: 24px 20px 56px 28px; }
     .side.auto > .ledger { grid-row: 2; }
     .side.needs > .ledger { grid-row: 4; background: #111216; }
     .side > .ledger { grid-column: 2; border-top: 0; padding: 24px 28px 28px 20px; }
@@ -696,7 +687,7 @@
     .flow .side > .ledger { grid-row: 3; border-top: 1px solid var(--rule); padding: 22px 28px 28px; }
     .node { grid-template-columns: 1fr; row-gap: 0; align-items: start; align-content: start; }
     .node .glyph { grid-row: 1; margin-bottom: 18px; }
-    .node h3, .node .role, .approve { grid-column: 1; }
+    .node h3, .node .role, .card { grid-column: 1; }
     .node .role { margin-top: 6px; max-width: 34ch; }
     .road.tail, .lit.enclave { mask-image: linear-gradient(to right, #000 calc(100% - 120px), transparent); }
   }
@@ -770,6 +761,7 @@
     <a href="/docs/">Docs</a>
     <a href="https://github.com/karimbabasf/phosphor">GitHub</a>
     <a class="download" href="/download/mac">Download for Mac</a>
+    <span class="only">Available for Mac</span>
   </nav>
 </div>
 <header class="hero">
@@ -915,7 +907,11 @@
               <span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"/><path d="M14 13.12c0 2.38 0 6.38-1 8.88"/><path d="M17.29 21.02c.12-.6.43-2.3.5-3.02"/><path d="M2 12a10 10 0 0 1 18-6"/><path d="M2 16h.01"/><path d="M21.8 16c.2-2 .131-5.354 0-6"/><path d="M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2"/><path d="M8.65 22c.21-.66.45-1.32.57-2"/><path d="M9 6.8a6 6 0 0 1 9 5.2v2"/></svg></span>
               <h3>You</h3>
               <span class="role">One click in the window, then your finger.</span>
-              <button class="approve" type="button" id="approve" disabled>Approve</button>
+              <div class="card" id="card" data-state="waiting">
+                <span class="kicker" id="kicker">Waiting for you</span>
+                <span class="line"><span>Long ETH</span><b>$150</b></span>
+                <button class="approve" type="button" id="approve" disabled>Approve</button>
+              </div>
             </div>
             <div class="node enclave">
               <span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20v2"/><path d="M12 2v2"/><path d="M17 20v2"/><path d="M17 2v2"/><path d="M2 12h2"/><path d="M2 17h2"/><path d="M2 7h2"/><path d="M20 12h2"/><path d="M20 17h2"/><path d="M20 7h2"/><path d="M7 20v2"/><path d="M7 2v2"/><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg></span>
@@ -936,8 +932,6 @@
         </div>
         <i class="road" aria-hidden="true"></i><i class="road" aria-hidden="true"></i><i class="road" aria-hidden="true"></i><i class="road tail" aria-hidden="true"></i>
         <i class="lit agent" aria-hidden="true"></i><i class="lit rules" aria-hidden="true"></i><i class="lit you" aria-hidden="true"></i><i class="lit enclave" aria-hidden="true"></i>
-        <i class="bead" aria-hidden="true" data-state=""></i>
-        <div class="packet" id="packet" aria-hidden="true" data-state=""><span class="line">Long ETH <b>$150</b></span><span class="tag">Drafted</span></div>
       </div>
     </div>
   </section>
@@ -1003,7 +997,7 @@
 <script defer src="/vendor/gsap.min.js"></script>
 <script defer src="/vendor/ScrollTrigger.min.js"></script>
 <script defer src="/vendor/motion.min.js"></script>
-<script type="module" src="/js/page.js?v=6"></script>
+<script type="module" src="/js/page.js?v=7"></script>
 
 </body>
 </html>
