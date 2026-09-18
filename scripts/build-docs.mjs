@@ -1,4 +1,5 @@
-// Renders the app's docs and the site's own terms into static pages.
+// Renders the app's docs and the site's own terms, privacy and security pages into static pages,
+// plus the 404 page and the sitemap.
 //
 //   node scripts/build-docs.mjs            reads ../phosphor/docs (PHOSPHOR_DOCS overrides)
 //
@@ -7,7 +8,7 @@
 // side: docs/README.md lists the pages in order under "## Pages", each page is
 // one file whose first line is its title and whose first paragraph is its
 // summary, and links between pages are relative .md links. Every page becomes
-// docs/<slug>/index.html here; content/terms.md becomes terms/index.html. The
+// docs/<slug>/index.html here; content/<slug>.md becomes <slug>/index.html. The
 // output is committed, so the site stays static and needs no build on Vercel.
 import { readFileSync, writeFileSync, mkdirSync, existsSync, rmSync, readdirSync } from 'node:fs';
 import { join, resolve, dirname, basename } from 'node:path';
@@ -101,20 +102,22 @@ const footer = `
         <a href="${repo}">GitHub</a>
         <a href="${repo}/blob/main/LICENSE">License</a>
         <a href="/terms/">Terms</a>
+        <a href="/privacy/">Privacy</a>
+        <a href="/security/">Security</a>
       </span>
     </div>
-    <p class="fine">Phosphor is software you run yourself. Your keys stay on your Mac. It is not a wallet service, an exchange, a broker or an adviser, and nothing in it is financial advice. Trading and transfers carry risk, transactions are final, and you can lose money. By downloading or using Phosphor you accept the <a href="/terms/">terms</a>.</p>
+    <p class="fine">Phosphor is software you run yourself. Your keys stay on your Mac. It is not a wallet service, an exchange, a broker or an adviser, and nothing in it is financial advice. Trading and transfers carry risk, transactions are final, and you can lose money. By downloading or using Phosphor you accept the <a href="/terms/">terms</a>. Questions: <a href="mailto:founder@karimbabasf.com">founder@karimbabasf.com</a>.</p>
   </div>
 </footer>`;
 
-const shell = ({ title, description, url, body, active, kind }) => `<!doctype html>
+const shell = ({ title, description, url, body, active, kind, noindex }) => `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
-<link rel="canonical" href="https://phosphor.karimbabasf.com${url}">
+${noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonical" href="https://phosphor.karimbabasf.com${url}">`}
 <meta name="theme-color" content="#0E0F13">
 <link rel="icon" href="/favicon.ico?v=9" sizes="32x32">
 <link rel="icon" href="/favicon.svg?v=9" type="image/svg+xml">
@@ -215,9 +218,10 @@ ${html}
   write(`docs/${p.slug}/index.html`, shell({ title: `${title}`, description: summary.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1'), url: `/docs/${p.slug}/`, body: article, active: 'docs', kind: 'read' }));
 });
 
-// The terms, from the site's own content folder.
-{
-  const md = readFileSync(join(root, 'content', 'terms.md'), 'utf8');
+// The site's own pages, from the content folder: terms, privacy, security.
+const legal = ['terms', 'privacy', 'security'];
+for (const slug of legal) {
+  const md = readFileSync(join(root, 'content', `${slug}.md`), 'utf8');
   const { title, summary, body } = split(md);
   const html = marked.parse(body);
   const article = `
@@ -232,5 +236,39 @@ ${html}
     </div>
   </article>
 </main>`;
-  write('terms/index.html', shell({ title, description: summary.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1'), url: '/terms/', body: article, active: '', kind: 'read' }));
+  write(`${slug}/index.html`, shell({ title, description: summary.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1'), url: `/${slug}/`, body: article, active: '', kind: 'read' }));
+}
+
+// The page a wrong address lands on. Vercel serves 404.html at the root for any path it has no
+// file for, with the 404 status kept.
+{
+  const article = `
+<main class="docs wrap single">
+  <article class="doc">
+    <header class="doc-head">
+      <h1>Nothing here</h1>
+      <p class="lede">That address is not a page on this site. The pages that exist are below.</p>
+    </header>
+    <div class="prose">
+      <ul>
+        <li><a href="/">The front page</a></li>
+        <li><a href="/docs/">Docs</a>, starting with <a href="/docs/getting-started/">getting started</a></li>
+        <li><a href="/download/mac">Download for Mac</a></li>
+        <li><a href="/terms/">Terms</a>, <a href="/privacy/">privacy</a> and <a href="/security/">security</a></li>
+      </ul>
+    </div>
+  </article>
+</main>`;
+  write('404.html', shell({ title: 'Page not found', description: 'That address is not a page on this site.', url: '/404', body: article, active: '', kind: 'read', noindex: true }));
+}
+
+// The sitemap lists every page this script writes plus the front page, so it cannot drift.
+{
+  const urls = ['/', '/docs/', ...pages.map(p => `/docs/${p.slug}/`), ...legal.map(s => `/${s}/`)];
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls.map(u => `  <url><loc>https://phosphor.karimbabasf.com${u}</loc></url>`).join('\n')}
+</urlset>
+`;
+  write('sitemap.xml', xml);
 }

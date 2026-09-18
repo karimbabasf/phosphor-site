@@ -11,10 +11,12 @@ the load sequence, and Motion 13.3.0 (MIT), which runs the reveals on entering v
 chart's first draw and the proposal in the security diagram. Both are the `dist` files from
 the npm tarballs.
 
-The docs at `/docs/` and the terms at `/terms/` are generated pages. The docs source is
-markdown in the app repo (`../phosphor/docs`, listed by its `README.md`), the terms source is
-`content/terms.md` here, and `scripts/build-docs.mjs` renders both with a vendored
-`marked` (`scripts/vendor/marked.esm.js`, 18.0.13, MIT). The output is committed.
+The docs at `/docs/`, the terms, privacy and security pages at `/terms/`, `/privacy/` and
+`/security/`, the `404.html` page and `sitemap.xml` are generated. The docs source is markdown
+in the app repo (`../phosphor/docs`, listed by its `README.md`), the site's own pages come from
+`content/<slug>.md` here, and `scripts/build-docs.mjs` renders all of it with a vendored
+`marked` (`scripts/vendor/marked.esm.js`, 18.0.13, MIT). The output is committed. `robots.txt`
+is a plain file.
 
 ## Run it
 
@@ -22,12 +24,12 @@ markdown in the app repo (`../phosphor/docs`, listed by its `README.md`), the te
 
 Then open http://localhost:4300. Serving matters: the font and icon paths are absolute.
 
-After a change to the app's docs, or to `content/terms.md`, or to `scripts/page.css`:
+After a change to the app's docs, to anything in `content/`, or to `scripts/page.css`:
 
     node scripts/build-docs.mjs
 
-It reads `../phosphor/docs` (set `PHOSPHOR_DOCS` to point elsewhere) and rewrites `docs/` and
-`terms/`. Commit the output with the change.
+It reads `../phosphor/docs` (set `PHOSPHOR_DOCS` to point elsewhere) and rewrites `docs/`,
+`terms/`, `privacy/`, `security/`, `404.html` and `sitemap.xml`. Commit the output with the change.
 
 ## Test it
 

@@ -3,18 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Troubleshooting</title>
-<meta name="description" content="The situations people actually hit, what the window says in each, and what to do. The rule under all of them: when the app says a move is unconfirmed, do not send it again. Read first.">
-<link rel="canonical" href="https://phosphor.karimbabasf.com/docs/troubleshooting/">
+<title>Security</title>
+<meta name="description" content="Phosphor moves real money on mainnet. This page says how to report a problem privately, what counts, what the app does to fail closed, and what has and has not been done to it. It mirrors SECURITY.md in the repository.">
+<link rel="canonical" href="https://phosphor.karimbabasf.com/security/">
 <meta name="theme-color" content="#0E0F13">
 <link rel="icon" href="/favicon.ico?v=9" sizes="32x32">
 <link rel="icon" href="/favicon.svg?v=9" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=9">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Phosphor">
-<meta property="og:url" content="https://phosphor.karimbabasf.com/docs/troubleshooting/">
-<meta property="og:title" content="Troubleshooting">
-<meta property="og:description" content="The situations people actually hit, what the window says in each, and what to do. The rule under all of them: when the app says a move is unconfirmed, do not send it again. Read first.">
+<meta property="og:url" content="https://phosphor.karimbabasf.com/security/">
+<meta property="og:title" content="Security">
+<meta property="og:description" content="Phosphor moves real money on mainnet. This page says how to report a problem privately, what counts, what the app does to fail closed, and what has and has not been done to it. It mirrors SECURITY.md in the repository.">
 <meta property="og:image" content="https://phosphor.karimbabasf.com/og.png?v=2">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/Sora-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
@@ -192,123 +192,60 @@
     <a href="/#venues">Venues</a>
   </nav>
   <nav class="links" aria-label="Site">
-    <a href="/docs/" aria-current="page">Docs</a>
+    <a href="/docs/">Docs</a>
     <a href="https://github.com/karimbabasf/phosphor">GitHub</a>
     <a class="download" href="/download/mac">Download for Mac</a>
   </nav>
 </div>
 
-<main class="docs wrap">
-  
-<aside class="side">
-  <input type="checkbox" id="pages" class="side-toggle">
-  <label for="pages" class="side-label">Pages</label>
-  <nav aria-label="Docs">
-    <ul><li><a href="/docs/getting-started/">Getting started</a></li><li><a href="/docs/connect-an-agent/">Connect an agent</a></li><li><a href="/docs/money/">Money</a></li><li><a href="/docs/trading/">Trading</a></li><li><a href="/docs/policy/">Policy</a></li><li><a href="/docs/security/">Security</a></li><li><a href="/docs/tools/">Tools</a></li><li><a href="/docs/troubleshooting/" aria-current="page">Troubleshooting</a></li><li><a href="/docs/changelog/">Changelog</a></li></ul>
-    <div class="side-head">For developers</div>
-    <ul><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/architecture.md" target="_blank" rel="noopener">Architecture</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security-model.md" target="_blank" rel="noopener">Security model</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/reference.md" target="_blank" rel="noopener">Reference</a></li></ul>
-  </nav>
-</aside>
+<main class="docs wrap single">
   <article class="doc">
     <header class="doc-head">
-      <h1>Troubleshooting</h1>
-      <p class="lede">The situations people actually hit, what the window says in each, and what to do. The rule under all of them: when the app says a move is unconfirmed, do not send it again. Read first.</p>
-      <div class="doc-meta"><span class="mono">v0.6.0</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/troubleshooting.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <h1>Security</h1>
+      <p class="lede">Phosphor moves real money on mainnet. This page says how to report a problem privately, what counts, what the app does to fail closed, and what has and has not been done to it. It mirrors <a href="https://github.com/karimbabasf/phosphor/blob/main/SECURITY.md" target="_blank" rel="noopener">SECURITY.md</a> in the repository.</p>
     </header>
-    <nav class="onpage" aria-label="On this page"><ul><li><a href="#a-deposit-says-settling-or-not-confirmed">A deposit says Settling or Not confirmed</a></li><li><a href="#hyperliquid-is-not-answering-one-of-our-reads">Hyperliquid is not answering one of our reads</a></li><li><a href="#macos-will-not-open-the-app">macOS will not open the app</a></li><li><a href="#the-agent-does-not-connect">The agent does not connect</a></li><li><a href="#a-proposal-is-waiting-as-needs-the-unlock">A proposal is waiting as Needs the unlock</a></li><li><a href="#a-send-was-refused-for-a-typo">A send was refused for a typo</a></li><li><a href="#something-else">Something else</a></li></ul></nav>
     <div class="prose">
-<h2 id="a-deposit-says-settling-or-not-confirmed">A deposit says Settling or Not confirmed<a class="anchor" href="#a-deposit-says-settling-or-not-confirmed" aria-label="Link to this section">#</a></h2>
-<p>Settling is the normal state between your click and the venue&#39;s answer. The bridge reports
-success the moment its solver fills, and your balance can trail that by a block, or by minutes
-for a Hyperliquid deposit that crosses a bridge first. The app waits for the balance to rise, up
-to ninety seconds inside NEAR Intents and two minutes on Hyperliquid, and the card turns to Done
-when it does.</p>
-<p>Not confirmed means the venue said success and the app could not see the money land: the balance
-had not risen inside the window, or the account could not be read. The card stays up with the
-row&#39;s own sentence and the quote handle, and says &quot;Do not send it again.&quot; Nothing more is signed.
-The app judges the row again on every balance refresh, asks the bridge every ten minutes, and
-Reconcile asks now. Got it files the card without settling anything; the row stays unconfirmed
-in Activity and comes back the moment the venue says something new.</p>
-<p>This state exists because of 2026-09-15. A Hyperliquid funding move was accepted by the bridge,
-the bridge&#39;s relayer ran out of gas on Arbitrum twice, and the app could not read the credit in
-the Hyperliquid account. The row stayed unconfirmed until the balance showed. Meanwhile a timeout
-told the agent the app was down, it proposed the deposit again, and &quot;deposit $10&quot; moved $20.</p>
-<p>Three things changed. A slow answer is now reported as &quot;a proposal may be executing&quot;, never as
-&quot;not running&quot;. Before any intent is signed the app runs five checks (gas on Arbitrum, fee cover,
-venue, balance, deadline) and holds a move it cannot afford, retrying for fifteen minutes; the
-card says Holding and the checks fold open on the receipt. And an unconfirmed row keeps its hash
-and handle, counts against the day&#39;s cap, and refuses a same-session repeat with its id.</p>
-<p>What to do: wait, press Reconcile once, and read the account or the balance before you approve
-anything that looks like the same move. See <a href="/docs/money/#settling">Money</a>.</p>
-<h2 id="hyperliquid-is-not-answering-one-of-our-reads">Hyperliquid is not answering one of our reads<a class="anchor" href="#hyperliquid-is-not-answering-one-of-our-reads" aria-label="Link to this section">#</a></h2>
-<p>The line under the trade strip says &quot;Hyperliquid is not answering one of our reads. Trying
-again.&quot; or &quot;Not connected to Hyperliquid. Trying again.&quot; The app retries on its own. While it
-does, values it could not read show as unknown, never as zero: the Pro tab says &quot;The trading
-venue did not answer, so these are unknown rather than zero.&quot; A plan whose price feed has gone
-stale shows Feed stale and nothing fires until the feed is fresh. Nothing is signed against a
-number the app could not read.</p>
-<p>If the line stays, the venue is the cause, not the wallet. Your positions are held by
-<a href="https://hyperliquid.xyz" target="_blank" rel="noopener">Hyperliquid</a> with their stops and targets on the venue&#39;s own book, so a
-venue the app cannot reach is still holding your exits.</p>
-<h2 id="macos-will-not-open-the-app">macOS will not open the app<a class="anchor" href="#macos-will-not-open-the-app" aria-label="Link to this section">#</a></h2>
-<p>The build is not notarized by Apple, so the first open stops with a warning. Open System
-Settings, then Privacy &amp; Security, scroll down to Security and click Open Anyway. Check the disk
-image&#39;s SHA-256 first, see <a href="/docs/getting-started/#check-the-file">Getting started</a>.</p>
-<p>A second copy of the app refuses to start while one is running: &quot;Phosphor is already running as
-process N and holding 127.0.0.1:4177. Use that window rather than opening a second one.&quot; If the
-message names a control app from an earlier session with no window on it, quit that process as it
-says and start Phosphor again. If it says the port is in use by something that is not Phosphor,
-free the port or set a different one in <code>config.local.json</code>.</p>
-<h2 id="the-agent-does-not-connect">The agent does not connect<a class="anchor" href="#the-agent-does-not-connect" aria-label="Link to this section">#</a></h2>
-<p>The MCP server your agent starts is a thin proxy: every call becomes one request to the app on
-<code>127.0.0.1:4177</code>. Check these in order.</p>
-<ol>
-<li>Phosphor is running. If not, the agent is told &quot;The control app is not running.&quot;</li>
-<li>The registration line is the one the app gave you, from Connect your own or from Phosphor,
-then Copy MCP Config in the menu bar. It carries the app&#39;s data directory, which is where the
-proxy reads the secret the agent&#39;s door needs. Without it the app refuses the call and names
-the file it expected.</li>
-<li>One app, one wallet, one port. A source checkout&#39;s backend cannot start while the installed
-app holds 4177, and the other way round; the loser reports the address is already in use.</li>
-<li>There is room. At most six agents can drive at once; a seventh is told there is no room right
-now. Turn off a session you no longer need.</li>
-<li>For Start your assistant, the <code>claude</code> command must be installed and logged in. The column
-says &quot;Claude Code is not installed on this Mac.&quot; when it is missing, and reports the child&#39;s
-own reason when a start fails. A start that never reports back is called out after twenty
-seconds.</li>
-</ol>
-<p>A proxy started by hand re-reads the app&#39;s secret on every call, so restarting Phosphor does not
-need the agent restarted. See <a href="/docs/connect-an-agent/">Connect an agent</a>.</p>
-<h2 id="a-proposal-is-waiting-as-needs-the-unlock">A proposal is waiting as Needs the unlock<a class="anchor" href="#a-proposal-is-waiting-as-needs-the-unlock" aria-label="Link to this section">#</a></h2>
-<p>The wallet was locked when the agent proposed, or when you clicked. The move was drafted,
-priced and checked against your rules, and is waiting for the key. Unlock with Touch ID or your
-password. Every waiting move is then decided again against the policy as it stands, and lands as
-something to click, small ones included: an unlock is not an approval. If the policy now refuses
-the move, it is refused whether or not there is a key to sign it with. See
-<a href="/docs/getting-started/#the-15-minute-lock">Getting started</a>.</p>
-<h2 id="a-send-was-refused-for-a-typo">A send was refused for a typo<a class="anchor" href="#a-send-was-refused-for-a-typo" aria-label="Link to this section">#</a></h2>
-<p><code>propose_send</code> decodes the address for the place it is going before any quote is asked. An EVM
-address must be forty hex characters and, when it carries capitals, pass its own EIP-55 checksum.
-A Solana address must decode to exactly 32 bytes. A NEAR id must be a valid account id. An
-intents account is an EVM address in lower case or a NEAR id. A dropped or changed character
-fails one of those checks, and the refusal says which.</p>
-<p>Do not let the agent fix the address. Paste it again from the place you got it, read it back to
-the agent character for character, and confirm. A contract address cannot be paid the chain&#39;s own
-coin at all, because a contract without a receive path burns it. The card and the Touch ID
-sentence both name the receiver, so you can check it once more before the click. See
-<a href="/docs/money/#send">Money</a>.</p>
-<h2 id="something-else">Something else<a class="anchor" href="#something-else" aria-label="Link to this section">#</a></h2>
-<p>The Activity list on the Basic and Pro tabs is the audit log in sentences, and your assistant can
-read the raw lines with <code>log_tail</code>. Every refusal names its rule. For a problem that could move,
-expose or lose funds, use private reporting on the
-<a href="https://github.com/karimbabasf/phosphor" target="_blank" rel="noopener">GitHub repository</a>, see
-<a href="/docs/security/#reporting-a-problem">Security</a>. For anything else, open an issue there.</p>
+<h2 id="report-a-vulnerability">Report a vulnerability<a class="anchor" href="#report-a-vulnerability" aria-label="Link to this section">#</a></h2>
+<p>Do not open a public issue for anything that could move, expose or lose funds. Use <a href="https://github.com/karimbabasf/phosphor/security/advisories/new" target="_blank" rel="noopener">GitHub private vulnerability reporting</a>: it is private to the maintainer until an advisory is published. If you cannot use it, open a public issue that asks for a private channel and says nothing technical.</p>
+<p>A useful report carries the version or commit, the configuration that was live (network, gate state, policy), the exact steps, what you expected the policy engine to do, and what it did.</p>
+<h2 id="what-counts">What counts<a class="anchor" href="#what-counts" aria-label="Link to this section">#</a></h2>
+<ul>
+<li>Anything that gets a write executed without the human click the policy required.</li>
+<li>Anything that lets the connected agent reach approval, execution or policy directly.</li>
+<li>Key material leaving the machine, landing in a log, or entering the git tree.</li>
+<li>Forged, dropped or reordered entries in the audit log, or a log that records a human decision when no person clicked.</li>
+<li>A rule (budget, allowlist, threshold, composition limit, kill switch) that can be bypassed or silently skipped.</li>
+<li>A proposal whose displayed facts differ from what gets signed, on any window.</li>
+<li>Prompt injection that reaches a real capability rather than only the agent&#39;s text.</li>
+</ul>
+<p>Out of scope: bugs in third-party protocols, chains, bridges, venues or RPC providers (report those to them); losses caused by your own configuration, your own approval, or a rule that did what it said; anything that needs an attacker who already has your machine, your shell or your key file; and the limits the security model already states as known.</p>
+<h2 id="how-the-app-fails-closed">How the app fails closed<a class="anchor" href="#how-the-app-fails-closed" aria-label="Link to this section">#</a></h2>
+<ul>
+<li>The agent proposes. It cannot approve, execute or change a rule; those paths take a click in the window, and the click carries a token the agent never sees.</li>
+<li>Every write is simulated and checked against your rules before it can be offered to you, and the card names the exact amount, token and address that will be signed.</li>
+<li>Keys live in one encrypted file sealed to your Mac&#39;s Secure Enclave; signing takes Touch ID or your login password.</li>
+<li>The audit log is append-only and hash-chained, so an entry cannot be changed or removed without breaking the chain.</li>
+<li>Updates are signed with a key the author holds, and the app refuses one that does not verify.</li>
+</ul>
+<p>The full trust boundary and its known limits are in <a href="/docs/security/">Security</a> and <a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security-model.md" target="_blank" rel="noopener">security-model.md</a>.</p>
+<h2 id="what-has-been-done-and-what-has-not">What has been done, and what has not<a class="anchor" href="#what-has-been-done-and-what-has-not" aria-label="Link to this section">#</a></h2>
+<ul>
+<li>The code is public under FSL-1.1-MIT, so anyone can read what signs.</li>
+<li>The test suite (unit, injection and lockdown) runs on every commit, and CodeQL scans every push.</li>
+<li>Only the latest commit on <code>main</code> is supported. There are no backports.</li>
+<li>There has been <strong>no third-party audit</strong>. Until one is published here, treat the app as reviewed by its author alone, and size what you put in it accordingly.</li>
+<li>Builds are not yet notarized by Apple, which is why the first open needs Open Anyway. Verify the download instead: the release page lists the SHA-256 of every file.</li>
+</ul>
+<h2 id="verify-a-download">Verify a download<a class="anchor" href="#verify-a-download" aria-label="Link to this section">#</a></h2>
+<pre><code>shasum -a 256 ~/Downloads/Phosphor-macOS-arm64.dmg
+</code></pre>
+<p>The line must match the one on the <a href="https://github.com/karimbabasf/phosphor/releases/latest" target="_blank" rel="noopener">release page</a>. Only download Phosphor from this site or from that page.</p>
+<h2 id="what-to-expect">What to expect<a class="anchor" href="#what-to-expect" aria-label="Link to this section">#</a></h2>
+<p>Best effort, from one person, with no promised timeline. There is no bug bounty and no payment. Please allow 90 days for a fix before publishing, or less if the issue is already being exploited. You are credited in the advisory if you want to be.</p>
+<h2 id="contact">Contact<a class="anchor" href="#contact" aria-label="Link to this section">#</a></h2>
+<p>Private reports through GitHub, as above. Anything else: <a href="mailto:founder@karimbabasf.com">founder@karimbabasf.com</a>.</p>
 
     </div>
-    <nav class="pager" aria-label="Pages">
-      <a class="prev" href="/docs/tools/"><span>Previous</span>Tools</a>
-      <a class="next" href="/docs/changelog/"><span>Next</span>Changelog</a>
-    </nav>
   </article>
 </main>
 

@@ -72,7 +72,8 @@
 
   /* The page: a sidebar of pages and the article, side by side from 900px up. */
   .docs { display: grid; grid-template-columns: 1fr; gap: 32px; padding: 112px 24px 96px; }
-  .docs.single { grid-template-columns: 1fr; justify-items: center; }
+  .docs.single { grid-template-columns: 1fr; }
+  .docs.single .doc { width: 100%; margin-inline: auto; }
   /* On a phone the page list sits behind a Pages button (a checkbox, no script);
      from 900px up it is the sidebar, always open. */
   .side-toggle { position: absolute; opacity: 0; width: 1px; height: 1px; }
@@ -151,7 +152,7 @@
   footer a { color: inherit; text-decoration: none; text-underline-offset: 4px; }
   footer a:hover { text-decoration: underline; }
   footer .spacer { flex: 1; }
-  .foot-links { display: flex; gap: 18px; }
+  .foot-links { display: flex; gap: 18px; flex-wrap: wrap; }
   .fine { margin-top: 22px; max-width: 78ch; font-size: 12px; line-height: 1.55; color: #828890; text-wrap: pretty; }
   .fine a { text-decoration: underline; text-decoration-color: rgba(130, 136, 144, 0.5); }
 
@@ -343,9 +344,11 @@ cannot price is refused rather than assumed to be worth a dollar.</p>
         <a href="https://github.com/karimbabasf/phosphor">GitHub</a>
         <a href="https://github.com/karimbabasf/phosphor/blob/main/LICENSE">License</a>
         <a href="/terms/">Terms</a>
+        <a href="/privacy/">Privacy</a>
+        <a href="/security/">Security</a>
       </span>
     </div>
-    <p class="fine">Phosphor is software you run yourself. Your keys stay on your Mac. It is not a wallet service, an exchange, a broker or an adviser, and nothing in it is financial advice. Trading and transfers carry risk, transactions are final, and you can lose money. By downloading or using Phosphor you accept the <a href="/terms/">terms</a>.</p>
+    <p class="fine">Phosphor is software you run yourself. Your keys stay on your Mac. It is not a wallet service, an exchange, a broker or an adviser, and nothing in it is financial advice. Trading and transfers carry risk, transactions are final, and you can lose money. By downloading or using Phosphor you accept the <a href="/terms/">terms</a>. Questions: <a href="mailto:founder@karimbabasf.com">founder@karimbabasf.com</a>.</p>
   </div>
 </footer>
 </body>

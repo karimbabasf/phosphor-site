@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /download/
+
+Sitemap: https://phosphor.karimbabasf.com/sitemap.xml
