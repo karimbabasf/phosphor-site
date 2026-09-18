@@ -1,17 +1,14 @@
-// No animation library. Everything that moves on this page is one of three
-// things: a Web Animations API tween (opacity, transform, colour), a callback
-// when something enters view (IntersectionObserver), or a number eased over
-// time on requestAnimationFrame (the sheet's scrub and the magnet's glide).
-// The kit below is those three, in the shape the page uses them. With
-// reduced motion on, the page shows everything at rest.
+// Motion is split by job: GSAP with ScrollTrigger owns what is tied to the
+// scroll position and the load sequence, exactly as it did before 2026-09-18.
+// Everything that answers the visitor (reveals in view, the chart's sweep,
+// the flow) runs on the small kit below: a Web Animations API tween and an
+// IntersectionObserver, in the shape the page uses them. Without GSAP, or
+// with reduced motion on, the page shows everything at rest.
 const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const live = !still;
+const live = !still && typeof gsap !== 'undefined';
 if (!live) document.documentElement.classList.remove('js');
+if (live) gsap.registerPlugin(ScrollTrigger);
 const out = 'cubic-bezier(0.23, 1, 0.32, 1)';
-// Penner's curves, as GSAP names them.
-const power2out = 'cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-const power3out = 'cubic-bezier(0.215, 0.61, 0.355, 1)';
-const power4out = 'cubic-bezier(0.165, 0.84, 0.44, 1)';
 const list = (t) => typeof t === 'string' ? [...document.querySelectorAll(t)] : t instanceof Element ? [t] : [...t];
 // animate(targets, { prop: [from, to] | to }, { duration, delay, ease }) in
 // seconds. Once a tween ends its last values are written to the element's
@@ -35,19 +32,6 @@ const stagger = (step, { startDelay = 0 } = {}) => (i) => startDelay + i * step;
 const inView = (target, onEnter, { amount = 0 } = {}) => {
   const io = new IntersectionObserver((entries) => { for (const e of entries) if (e.isIntersecting) onEnter(e.target); }, { threshold: amount });
   for (const el of list(target)) io.observe(el);
-};
-// tween(from, to, duration, ease, onUpdate, onComplete): one number over
-// time, with a kill(). Eases are functions of progress here, not curves.
-const easeOut3 = (t) => 1 - Math.pow(1 - t, 3);
-const tween = (from, to, duration, ease, onUpdate, onComplete) => {
-  let raf = 0; const t0 = performance.now();
-  const frame = (now) => {
-    const t = Math.min(1, (now - t0) / (duration * 1000));
-    onUpdate(from + (to - from) * ease(t));
-    if (t < 1) raf = requestAnimationFrame(frame); else if (onComplete) onComplete();
-  };
-  raf = requestAnimationFrame(frame);
-  return { kill: () => cancelAnimationFrame(raf) };
 };
 
 // The field: vertical hairlines bent by drifting Perlin noise, after reactbits'
@@ -169,9 +153,10 @@ let startField = () => {};
 // which nothing above the fold uses.
 if (live) soraReady.then(() => {
   startField();
-  animate('.field', { opacity: [0, 1] }, { duration: 0.9, delay: 0.15, ease: power2out });
-  animate('.sub', { opacity: [0, 1] }, { duration: 0.5, delay: 0.2, ease: power4out });
-  animate('.nav', { opacity: [0, 1] }, { duration: 0.45, delay: 0.3, ease: power4out });
+  gsap.timeline({ defaults: { ease: 'power4.out' } })
+    .fromTo('.field', { opacity: 0 }, { opacity: 1, duration: 0.9, ease: 'power2.out' }, 0.15)
+    .fromTo('.sub', { opacity: 0 }, { opacity: 1, duration: 0.5 }, 0.2)
+    .fromTo('.nav', { opacity: 0 }, { opacity: 1, duration: 0.45 }, 0.3);
 });
 
 // The lift: the sheet grows from 88 percent to full width while its top edge
@@ -182,43 +167,12 @@ if (live) soraReady.then(() => {
 // comes to rest wherever the finger does, half a second later. The corners
 // stay round while the sheet is a card and square up only over the last
 // fifth, as it docks, so nothing of the hero shows through them at the top.
-let onLift = () => {};
 if (live) {
-  const lift = document.querySelector('.lift');
   const sheet = document.querySelector('.sheet');
   const radius = parseFloat(getComputedStyle(sheet).borderTopLeftRadius);
-  let shown = -1, goal = 0, from = 0, since = 0, raf = 0;
-  const apply = (p) => {
-    if (p === shown) return;
-    shown = p;
-    // translateZ keeps the lift on its own layer, so a scale of the whole
-    // page below the hero is a composite, not a repaint, on every frame.
-    lift.style.transform = `translateZ(0) scale(${(0.88 + 0.12 * p).toFixed(4)})`;
-    const r = radius * (1 - Math.min(1, Math.max(0, (p - 0.8) / 0.2)));
-    sheet.style.borderTopLeftRadius = sheet.style.borderTopRightRadius = `${r.toFixed(2)}px`;
-  };
-  // One frame loop eases what is shown toward the goal, half a second of
-  // power3 catch-up from wherever it is when the goal moves. A scroll event
-  // only moves the goal; it never cancels the frame, because Safari can
-  // deliver a scroll event between every frame request and its callback
-  // while a finger is down, and a loop restarted on each event never runs.
-  const frame = (now) => {
-    const t = Math.min(1, (now - since) / 500);
-    apply(from + (goal - from) * easeOut3(t));
-    raf = t < 1 ? requestAnimationFrame(frame) : 0;
-  };
-  const measure = () => {
-    const top = lift.getBoundingClientRect().top;
-    const p = Math.min(1, Math.max(0, (innerHeight - top) / innerHeight));
-    onLift(top);
-    if (shown < 0) { apply(p); return; }
-    if (p === goal) return;
-    goal = p; from = shown; since = performance.now();
-    if (!raf) raf = requestAnimationFrame(frame);
-  };
-  addEventListener('scroll', measure, { passive: true });
-  addEventListener('resize', measure);
-  measure();
+  gsap.timeline({ scrollTrigger: { trigger: '.lift', start: 'top bottom', end: 'top top', scrub: 0.5 }, defaults: { ease: 'none' } })
+    .fromTo('.lift', { scale: 0.88 }, { scale: 1, duration: 1 }, 0)
+    .fromTo(sheet, { borderTopLeftRadius: radius, borderTopRightRadius: radius }, { borderTopLeftRadius: 0, borderTopRightRadius: 0, duration: 0.2 }, 0.8);
 }
 
 // The hold applies only while the sheet fits the screen; held taller than the
@@ -251,7 +205,8 @@ if (live && matchMedia('(min-width: 1100px)').matches) {
   const park = (to) => {
     if (Math.abs(to - scrollY) < 1) return;
     ours = true;
-    glide = tween(scrollY, to, 0.55, easeOut3, (y) => scrollTo({ top: y, behavior: 'instant' }), () => { glide = null; setTimeout(release, 250); });
+    const pos = { y: scrollY };
+    glide = gsap.to(pos, { y: to, duration: 0.55, ease: 'power3.out', onUpdate: () => scrollTo({ top: pos.y, behavior: 'instant' }), onComplete: () => { glide = null; setTimeout(release, 250); } });
   };
   const settle = () => {
     moving = false;
@@ -470,7 +425,7 @@ const reveal = () => {
   animate('.live', { opacity: [0, 1] }, { duration: 0.4, delay: sweep - 0.1 });
   setTimeout(() => { sweeping = false; if (wanted) { wanted = false; redraw(); } }, (sweep + 0.7) * 1000);
 };
-if (live) { let cued = false; onLift = (top) => { if (!cued && top <= innerHeight * 0.1) { cued = true; reveal(); } }; onLift(document.querySelector('.lift').getBoundingClientRect().top); }
+if (live) ScrollTrigger.create({ trigger: '.lift', start: 'top 10%', once: true, onEnter: reveal });
 head();
 
 // The venue. One request for the daily candles and one for the hourly ones,

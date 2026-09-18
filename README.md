@@ -7,9 +7,11 @@ Static files, no build on Vercel. `index.html` carries its own CSS, `js/page.js`
 in green), `fonts/` holds Sora (Regular and SemiBold), the face the wordmark and the app speak
 in, Manrope for everything after the hero and the bar (the `--face` token in the CSS), and
 Geist Mono for figures and code, subset to Latin. `logos/` holds the venue and token marks
-(their own notices in `logos/LICENSE.md`). No animation library: the kit at the top of
-`js/page.js` is the Web Animations API for tweens, an IntersectionObserver for what enters
-view, and one requestAnimationFrame tween for the sheet's scrub and the magnet's glide.
+(their own notices in `logos/LICENSE.md`). `vendor/` holds GSAP 3.15.0 with ScrollTrigger
+(Standard license), which drives the sheet's lift from the scroll position, the magnet and the
+load sequence. What answers the visitor (reveals in view, the chart's sweep, the flow) runs on the
+kit at the top of `js/page.js`: the Web Animations API for tweens and an IntersectionObserver for
+what enters view.
 
 The docs at `/docs/`, the terms, privacy and security pages at `/terms/`, `/privacy/` and
 `/security/`, the `404.html` page and `sitemap.xml` are generated. The docs source is markdown
