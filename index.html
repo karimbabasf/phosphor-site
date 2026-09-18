@@ -427,31 +427,42 @@
      one panel and no paragraphs: two cells on a hairline, what runs on its own
      on the left and what needs the visitor on the right, and the wall between
      them a shade stronger than the panel's own rules. One road runs through the
-     four stops and crosses the wall once. The proposal rides it, and the visitor
-     releases it with the one button the agent has no way to press. Under each
-     pair of stops, on a rule, the list of what the agent can and cannot do, so
-     each list sits on the side where it is true. Phones stack the cells and
-     read the road top to bottom with each list under its stops; tablets keep
-     the road vertical with the lists beside the stops, and the lists sit
-     beside the road on a phone too, hung off it like the words at each stop,
-     so the road never runs through a list; from 1200px the cells sit side by
-     side and the road runs left to right through the wall. */
+     four stops and crosses the wall once: laid as three stretches between the
+     tiles and a tail after the last, each stopping short of the tile it meets,
+     so the line docks at a stop and never runs through one. The proposal is the
+     app's own card in one line, and it lands under the words of the stop it has
+     reached, over the Approve button at You, the way the card sits over its
+     buttons in the app; the road carries only the signal between stops. Under
+     each pair of stops, on a rule, the list of what the agent can and cannot
+     do, so each list sits on the side where it is true. The two cells are
+     `display: contents` at every width and the panel places their parts: on a
+     phone, one column with the four stops first and both lists after, so the
+     road meets nothing but the wall; from 720px each list sits beside its
+     stops; from 1200px the cells sit side by side and the road runs left to
+     right through the wall. */
 
   .secure { background: var(--ink); padding: 0 24px 88px; overflow: clip; }
   .secure .wrap { border-top: 1px solid var(--rule); padding-top: 72px; }
 
-  .flow { position: relative; display: grid; margin-top: 8px; border: 1px solid var(--rule); border-radius: 20px; overflow: clip; }
+  .flow { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); margin-top: 8px; border: 1px solid var(--rule); border-radius: 20px; overflow: clip; }
+  .side { display: contents; }
 
-  /* A cell: its label, its two stops, its list. The wall is the top rule of the
-     second cell while the cells are stacked. */
-  .side { display: grid; }
-  .side.needs { border-top: 1px solid #363739; }
-  .side > * { padding-left: 20px; padding-right: 20px; }
-  .side-label { padding-top: 20px; font-weight: 600; font-size: 12px; line-height: 1; letter-spacing: 0.08em; text-transform: uppercase; color: #828890; }
+  /* The panel's parts on a phone, top to bottom: the first cell's label and
+     stops, the wall, the second cell's label and stops, then the two lists on
+     their rules. The label sits in the words' column, clear of the road. */
+  .side.auto > .side-label { grid-row: 1; }
+  .side.auto > .stops { grid-row: 2; }
+  .side.needs > .side-label { grid-row: 3; border-top: 1px solid #363739; }
+  .side.needs > .stops { grid-row: 4; }
+  .side.auto > .ledger { grid-row: 5; }
+  .side.needs > .ledger { grid-row: 6; }
+  .side.needs > .side-label, .side.needs > .stops { background: #111216; }
+
+  .side-label { padding: 20px 20px 0 78px; font-weight: 600; font-size: 12px; line-height: 1; letter-spacing: 0.08em; text-transform: uppercase; color: #828890; }
 
   /* The stops, 64px apart on a vertical road, with the same room under the
-     last one: the proposal parks in that gap, under the stop it has reached. */
-  .stops { display: grid; gap: 64px; padding-top: 24px; padding-bottom: 64px; }
+     last one: the card lands in that gap, under the stop it has reached. */
+  .stops { display: grid; gap: 64px; padding: 24px 20px 64px; }
 
   /* A stop: the tile on the road, the title and the role beside it. */
   .node {
@@ -478,19 +489,18 @@
   .node.you .glyph { color: var(--ink); background: var(--green); }
   .node.enclave .glyph { color: var(--green); background: #14261A; }
 
-  /* The road: one hairline through the four tiles, laid by the script from
-     where the tiles are, running off the end and fading: out to the venue.
-     Over it, one lit stretch per stop, from its tile to the next, that grows
-     in step with the proposal in the colour of whoever drove that stretch.
-     The agent's is violet and ends at the rules, which is the claim in the
-     heading drawn. */
+  /* The road: three stretches between the tiles and a tail after the last,
+     laid by the script from where the tiles are, each stopping 8px short of
+     the tile at either end. Over each, a lit copy that grows in step with the
+     proposal in the colour of whoever drove that stretch. The agent's is
+     violet and ends at the rules, which is the claim in the heading drawn. */
   .road, .lit { position: absolute; left: 0; top: 0; width: 1px; height: 1px; pointer-events: none; }
   .road { background: #363739; }
   .lit { background: var(--lit); transform: scaleX(0); transform-origin: top left; }
   .lit.agent { --lit: #B79CFF; }
   .lit.rules { --lit: #ECEEF1; }
   .lit.you, .lit.enclave { --lit: var(--green); }
-  .road, .lit.enclave { mask-image: linear-gradient(to bottom, #000 calc(100% - 44px), transparent); }
+  .road.tail, .lit.enclave { mask-image: linear-gradient(to bottom, #000 calc(100% - 36px), transparent); }
 
   /* The pulse a stop gives when the proposal reaches it, and the button gives
      when it is the visitor's turn. One ring, once. */
@@ -524,43 +534,48 @@
   .approve:not([disabled]):active { transform: scale(0.97); }
   .approve:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
 
-  /* The proposal itself: one line of English, riding the road. Its ink halo
-     keeps the road from touching it. */
+  /* The proposal: the app's card, one line of it. What the agent wrote and
+     the figure, and at the right the state it is in, in the colour of the stop
+     that put it there. The words sit in Sora, the figure in Geist Mono, as in
+     the app. It lands under the words of the stop it has reached. */
   .packet {
     position: absolute;
     z-index: 2;
     left: 0;
     top: 0;
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    gap: 8px;
-    height: 32px;
-    padding: 0 12px 0 10px;
-    border-radius: 999px;
-    background: var(--ink);
-    border: 1px solid #363739;
-    box-shadow: 0 0 0 4px var(--ink);
-    font: 500 12px/1 "Geist Mono", ui-monospace, monospace;
+    gap: 16px;
+    height: 40px;
+    padding: 0 12px;
+    border-radius: 10px;
+    background: #151619;
+    border: 1px solid #262729;
+    font: 500 13px/1 "Sora", sans-serif;
+    letter-spacing: -0.005em;
     color: var(--text);
     white-space: nowrap;
     pointer-events: none;
     will-change: transform;
     transition: border-color 300ms ease;
   }
-  .packet i { width: 6px; height: 6px; border-radius: 50%; background: #B79CFF; transition: background-color 300ms ease; }
-  .packet:not([data-state=""]) i { background: var(--green); }
-  .packet[data-state="signed"] { border-color: var(--green); }
-  .packet[data-state="signed"] .tag { color: var(--green); }
-  .packet .tag { color: var(--text-2); }
-  .packet .tag:empty { display: none; }
+  .packet .line { display: inline-flex; align-items: baseline; gap: 7px; }
+  .packet .line b { font: 500 13px/1 "Geist Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+  .packet .tag { margin-left: auto; font-size: 12px; color: #B79CFF; transition: color 300ms ease; }
+  .packet[data-state="checked"] .tag { color: var(--text-2); }
+  .packet[data-state="waiting"] .tag, .packet[data-state="signed"] .tag { color: var(--green); }
+  .packet[data-state="signed"] { border-color: #1F4A2B; }
 
-  /* Between stops the proposal travels as a signal: the pill folds to its dot,
-     the dot rides the road under the next tile, and the pill opens again there. */
+  /* The card sits over the button at You, the way it does in the app: the
+     button keeps the card's room above it. */
+  .node.you .approve { margin-top: 64px; }
+
+  /* Between stops the proposal travels as a signal: the card fades, the dot
+     rides the stretch to the next tile, and the card opens again under it. */
   .bead { position: absolute; z-index: 2; left: 0; top: 0; width: 8px; height: 8px; border-radius: 50%; background: #B79CFF; box-shadow: 0 0 12px 2px rgba(183, 156, 255, 0.55); opacity: 0; pointer-events: none; will-change: transform; }
   .bead:not([data-state=""]) { background: var(--green); box-shadow: 0 0 12px 2px rgba(63, 255, 108, 0.55); }
 
-  .ledger { border-top: 1px solid var(--rule); padding-top: 22px; padding-bottom: 24px; }
-  .side > .ledger { padding-left: 78px; }
+  .ledger { border-top: 1px solid var(--rule); padding: 22px 20px 24px; }
   .ledger h3 { font-weight: 600; font-size: 15px; letter-spacing: -0.01em; margin-bottom: 12px; }
   .ledger ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
   .ledger li { display: flex; align-items: start; gap: 10px; font-size: 14px; line-height: 1.35; color: var(--text); }
@@ -642,11 +657,13 @@
     .venues { padding: 0 32px 128px; }
     .venues .wrap { padding-top: 96px; }
     footer { padding: 0 32px 32px; }
-    .side { padding: 24px 28px 28px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 40px; }
-    .side > * { padding-left: 0; padding-right: 0; }
-    .side-label { grid-column: 1 / -1; padding-top: 0; margin-bottom: 24px; }
-    .stops { grid-column: 1; padding-top: 0; padding-bottom: 36px; }
-    .side > .ledger { grid-column: 2; border-top: 0; padding: 0; }
+    /* No column gap: the second cell's tone has to reach across the row. */
+    .flow { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .side-label { grid-column: 1 / -1; padding: 24px 28px 0 86px; }
+    .stops { grid-column: 1; padding: 24px 20px 64px 28px; }
+    .side.auto > .ledger { grid-row: 2; }
+    .side.needs > .ledger { grid-row: 4; background: #111216; }
+    .side > .ledger { grid-column: 2; border-top: 0; padding: 24px 28px 28px 20px; }
     .venue-grid { grid-template-columns: 1fr 1fr; gap: 20px; }
     .venue { padding: 32px 32px 28px; }
   }
@@ -657,28 +674,26 @@
   }
 
   /* From 1200px the cells sit side by side and the road runs left to right:
-     the tiles sit on it, the words hang under them, and the proposal parks on
-     the road beside each tile. The cells dissolve into one grid (label, stops,
-     list as its three rows) so the rule over each list is one rule across the
-     panel, and the wall is drawn down the middle with the cell that needs the
-     visitor a shade lighter behind it, the app's own panel tone. 1200px, not
-     the page's 1100, because two stops and the proposal parked beside one of
-     them need 250px each. */
+     the tiles sit on it, the words hang under them, and the card lands under
+     the words. Label, stops and list are the three rows of one grid, so the
+     rule over each list is one rule across the panel; the wall is drawn down
+     the middle, with the cell that needs the visitor a shade lighter behind
+     it, the app's own panel tone. 1200px, not the page's 1100, because a stop
+     needs 240px for its words and the card under them. */
   @media (min-width: 1200px) {
-    .flow { grid-template-columns: 1fr 1fr; grid-template-rows: auto auto 1fr; }
+    .flow { grid-template-columns: 1fr 1fr; grid-template-rows: auto auto 1fr; column-gap: 0; }
     .flow::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: #363739; }
-    .side { display: contents; }
     .side.auto > * { grid-column: 1; }
-    .side.needs > * { grid-column: 2; background: #111216; }
-    .side-label { grid-row: 1; padding: 24px 28px 0; margin: 0; }
-    .stops { grid-row: 2; grid-template-columns: 1fr 1fr; gap: 24px; padding: 24px 28px 28px; }
-    .side > .ledger { grid-row: 3; border-top: 1px solid var(--rule); padding: 22px 28px 28px; }
+    .side.needs > * { grid-column: 2; }
+    /* Two classes deep on purpose: the phone order above is set per cell. */
+    .flow .side > .side-label { grid-row: 1; padding: 24px 28px 0; border-top: 0; }
+    .flow .side > .stops { grid-row: 2; grid-template-columns: 1fr 1fr; gap: 24px; padding: 24px 28px 28px; }
+    .flow .side > .ledger { grid-row: 3; border-top: 1px solid var(--rule); padding: 22px 28px 28px; }
     .node { grid-template-columns: 1fr; row-gap: 0; align-items: start; align-content: start; }
     .node .glyph { grid-row: 1; margin-bottom: 18px; }
     .node h3, .node .role, .approve { grid-column: 1; }
     .node .role { margin-top: 6px; max-width: 34ch; }
-    .approve { margin-top: 14px; }
-    .road, .lit.enclave { mask-image: linear-gradient(to right, #000 calc(100% - 120px), transparent); }
+    .road.tail, .lit.enclave { mask-image: linear-gradient(to right, #000 calc(100% - 120px), transparent); }
   }
 
   /* On a wide screen the head and the window fit one screen under the bar: the
@@ -914,10 +929,10 @@
             </ul>
           </div>
         </div>
-        <i class="road" aria-hidden="true"></i>
+        <i class="road" aria-hidden="true"></i><i class="road" aria-hidden="true"></i><i class="road" aria-hidden="true"></i><i class="road tail" aria-hidden="true"></i>
         <i class="lit agent" aria-hidden="true"></i><i class="lit rules" aria-hidden="true"></i><i class="lit you" aria-hidden="true"></i><i class="lit enclave" aria-hidden="true"></i>
         <i class="bead" aria-hidden="true" data-state=""></i>
-        <div class="packet" id="packet" aria-hidden="true" data-state=""><i></i>Long ETH $150<span class="tag"></span></div>
+        <div class="packet" id="packet" aria-hidden="true" data-state=""><span class="line">Long ETH <b>$150</b></span><span class="tag">Drafted</span></div>
       </div>
     </div>
   </section>
@@ -983,7 +998,7 @@
 <script defer src="/vendor/gsap.min.js"></script>
 <script defer src="/vendor/ScrollTrigger.min.js"></script>
 <script defer src="/vendor/motion.min.js"></script>
-<script type="module" src="/js/page.js?v=5"></script>
+<script type="module" src="/js/page.js?v=6"></script>
 
 </body>
 </html>
