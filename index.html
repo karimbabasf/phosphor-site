@@ -187,7 +187,7 @@
   /* What moves on load or on entering view starts hidden, but only once the
      script is known to be running (the js class on html) and motion is welcome. */
   @media (prefers-reduced-motion: no-preference) {
-    .js .sub, .js .nav, .js .field, .js .live, .js .node, .js .ledger > *, .js .venue { opacity: 0; }
+    .js .sub, .js .nav, .js .field, .js .live, .js .node, .js .ledger, .js .venue { opacity: 0; }
     /* The wordmark's curve is a sine ease-out, not the page's strong one: the
        strong curve has the fade 60 percent done at a sixth of its length, so
        whatever the duration the eye sees a 400 ms pop and a long dead tail.
@@ -423,17 +423,35 @@
 
 
   /* Security: the same ink as the sheet with a rule across the join, so the page
-     after the hero reads as one sheet, not slabs a shade apart. The section is a
-     diagram and two lists, no paragraphs: one road with four stops, drawn as a
-     road. The proposal rides it, and the visitor releases it with the one button
-     the agent has no way to press. Phones read the road top to bottom with the
-     lists under it; tablets keep it vertical with the lists beside it; from
-     1100px it runs left to right and the lists go under it in two columns. */
+     after the hero reads as one sheet, not slabs a shade apart. The section is
+     one panel and no paragraphs: two cells on a hairline, what runs on its own
+     on the left and what needs the visitor on the right, and the wall between
+     them a shade stronger than the panel's own rules. One road runs through the
+     four stops and crosses the wall once. The proposal rides it, and the visitor
+     releases it with the one button the agent has no way to press. Under each
+     pair of stops, on a rule, the list of what the agent can and cannot do, so
+     each list sits on the side where it is true. Phones stack the cells and
+     read the road top to bottom with each list under its stops; tablets keep
+     the road vertical with the lists beside the stops, and the lists sit
+     beside the road on a phone too, hung off it like the words at each stop,
+     so the road never runs through a list; from 1200px the cells sit side by
+     side and the road runs left to right through the wall. */
 
   .secure { background: var(--ink); padding: 0 24px 88px; overflow: clip; }
   .secure .wrap { border-top: 1px solid var(--rule); padding-top: 72px; }
 
-  .flow { position: relative; display: grid; gap: 64px; margin-top: 8px; }
+  .flow { position: relative; display: grid; margin-top: 8px; border: 1px solid var(--rule); border-radius: 20px; overflow: clip; }
+
+  /* A cell: its label, its two stops, its list. The wall is the top rule of the
+     second cell while the cells are stacked. */
+  .side { display: grid; }
+  .side.needs { border-top: 1px solid #363739; }
+  .side > * { padding-left: 20px; padding-right: 20px; }
+  .side-label { padding-top: 20px; font-weight: 600; font-size: 12px; line-height: 1; letter-spacing: 0.08em; text-transform: uppercase; color: #828890; }
+
+  /* The stops, 64px apart on a vertical road, with the same room under the
+     last one: the proposal parks in that gap, under the stop it has reached. */
+  .stops { display: grid; gap: 64px; padding-top: 24px; padding-bottom: 64px; }
 
   /* A stop: the tile on the road, the title and the role beside it. */
   .node {
@@ -467,7 +485,7 @@
      The agent's is violet and ends at the rules, which is the claim in the
      heading drawn. */
   .road, .lit { position: absolute; left: 0; top: 0; width: 1px; height: 1px; pointer-events: none; }
-  .road { background: #2E3034; }
+  .road { background: #363739; }
   .lit { background: var(--lit); transform: scaleX(0); transform-origin: top left; }
   .lit.agent { --lit: #B79CFF; }
   .lit.rules { --lit: #ECEEF1; }
@@ -541,11 +559,12 @@
   .bead { position: absolute; z-index: 2; left: 0; top: 0; width: 8px; height: 8px; border-radius: 50%; background: #B79CFF; box-shadow: 0 0 12px 2px rgba(183, 156, 255, 0.55); opacity: 0; pointer-events: none; will-change: transform; }
   .bead:not([data-state=""]) { background: var(--green); box-shadow: 0 0 12px 2px rgba(63, 255, 108, 0.55); }
 
-  .ledger { display: grid; gap: 24px; margin-top: 48px; }
-  .ledger h3 { font-weight: 600; font-size: 15px; letter-spacing: -0.01em; margin-bottom: 14px; }
-  .ledger ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
-  .ledger li { display: flex; align-items: center; gap: 12px; font-size: 15px; line-height: 1.35; color: var(--text); }
-  .ledger li svg { flex: 0 0 auto; width: 18px; height: 18px; }
+  .ledger { border-top: 1px solid var(--rule); padding-top: 22px; padding-bottom: 24px; }
+  .side > .ledger { padding-left: 78px; }
+  .ledger h3 { font-weight: 600; font-size: 15px; letter-spacing: -0.01em; margin-bottom: 12px; }
+  .ledger ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
+  .ledger li { display: flex; align-items: start; gap: 10px; font-size: 14px; line-height: 1.35; color: var(--text); }
+  .ledger li svg { flex: 0 0 auto; width: 16px; height: 16px; margin-top: 1.5px; }
   .ledger .can li svg { color: var(--green); }
   .ledger .cannot li svg { color: #FF5A6E; }
 
@@ -623,7 +642,11 @@
     .venues { padding: 0 32px 128px; }
     .venues .wrap { padding-top: 96px; }
     footer { padding: 0 32px 32px; }
-    .ledger { grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 56px; }
+    .side { padding: 24px 28px 28px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 40px; }
+    .side > * { padding-left: 0; padding-right: 0; }
+    .side-label { grid-column: 1 / -1; padding-top: 0; margin-bottom: 24px; }
+    .stops { grid-column: 1; padding-top: 0; padding-bottom: 36px; }
+    .side > .ledger { grid-column: 2; border-top: 0; padding: 0; }
     .venue-grid { grid-template-columns: 1fr 1fr; gap: 20px; }
     .venue { padding: 32px 32px 28px; }
   }
@@ -633,19 +656,23 @@
     .flow { margin-top: 16px; }
   }
 
-  /* Tablets: the road stays vertical on the left and the two lists sit beside
-     it, so the width is used and the road is not a strip down an empty page. */
-  @media (min-width: 861px) and (max-width: 1099px) {
-    .secure .wrap { display: grid; grid-template-columns: 1fr 1fr; column-gap: 40px; }
-    .secure .head { grid-column: 1 / -1; }
-    .flow { grid-column: 1; }
-    .ledger { grid-column: 2; grid-template-columns: 1fr; gap: 36px; margin-top: 16px; }
-  }
-
-  /* From 1100px the road runs left to right: the tiles sit on it, the words
-     hang under them, and the proposal parks on the road beside each tile. */
-  @media (min-width: 1100px) {
-    .flow { grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  /* From 1200px the cells sit side by side and the road runs left to right:
+     the tiles sit on it, the words hang under them, and the proposal parks on
+     the road beside each tile. The cells dissolve into one grid (label, stops,
+     list as its three rows) so the rule over each list is one rule across the
+     panel, and the wall is drawn down the middle with the cell that needs the
+     visitor a shade lighter behind it, the app's own panel tone. 1200px, not
+     the page's 1100, because two stops and the proposal parked beside one of
+     them need 250px each. */
+  @media (min-width: 1200px) {
+    .flow { grid-template-columns: 1fr 1fr; grid-template-rows: auto auto 1fr; }
+    .flow::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: #363739; }
+    .side { display: contents; }
+    .side.auto > * { grid-column: 1; }
+    .side.needs > * { grid-column: 2; background: #111216; }
+    .side-label { grid-row: 1; padding: 24px 28px 0; margin: 0; }
+    .stops { grid-row: 2; grid-template-columns: 1fr 1fr; gap: 24px; padding: 24px 28px 28px; }
+    .side > .ledger { grid-row: 3; border-top: 1px solid var(--rule); padding: 22px 28px 28px; }
     .node { grid-template-columns: 1fr; row-gap: 0; align-items: start; align-content: start; }
     .node .glyph { grid-row: 1; margin-bottom: 18px; }
     .node h3, .node .role, .approve { grid-column: 1; }
@@ -836,54 +863,61 @@
       </div>
 
       <div class="flow" aria-label="How a proposal travels: the agent drafts it, your rules check it, you release it, and the Secure Enclave signs it">
-        <!-- The four glyphs are Lucide's terminal, sliders-horizontal, fingerprint and cpu (ISC, notice in logos/LICENSE.md): one family, one stroke. -->
-        <div class="node agent">
-          <span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19h8"/><path d="m4 17 6-6-6-6"/></svg></span>
-          <h3>Your agent</h3>
-          <span class="role">Reads the market and your balances. Writes one line.</span>
+        <div class="side auto">
+          <span class="side-label">Runs on its own</span>
+          <div class="stops">
+            <!-- The four glyphs are Lucide's terminal, sliders-horizontal, fingerprint and cpu (ISC, notice in logos/LICENSE.md): one family, one stroke. -->
+            <div class="node agent">
+              <span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19h8"/><path d="m4 17 6-6-6-6"/></svg></span>
+              <h3>Your agent</h3>
+              <span class="role">Reads the market and your balances. Writes one line.</span>
+            </div>
+            <div class="node rules">
+              <span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 5H3"/><path d="M12 19H3"/><path d="M14 3v4"/><path d="M16 17v4"/><path d="M21 12h-9"/><path d="M21 19h-5"/><path d="M21 5h-7"/><path d="M8 10v4"/><path d="M8 12H3"/></svg></span>
+              <h3>Your rules</h3>
+              <span class="role">Size, the multiple, risk per day. No model in the path.</span>
+            </div>
+          </div>
+          <div class="ledger">
+            <h3>The agent can</h3>
+            <ul class="can">
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Read your balances and the chart</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Draft a trade, a swap or a send</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Mark up the chart</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Talk to you</li>
+            </ul>
+          </div>
         </div>
-        <div class="node rules">
-          <span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 5H3"/><path d="M12 19H3"/><path d="M14 3v4"/><path d="M16 17v4"/><path d="M21 12h-9"/><path d="M21 19h-5"/><path d="M21 5h-7"/><path d="M8 10v4"/><path d="M8 12H3"/></svg></span>
-          <h3>Your rules</h3>
-          <span class="role">Size, the multiple, risk per day. No model in the path.</span>
-        </div>
-        <div class="node you">
-          <span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"/><path d="M14 13.12c0 2.38 0 6.38-1 8.88"/><path d="M17.29 21.02c.12-.6.43-2.3.5-3.02"/><path d="M2 12a10 10 0 0 1 18-6"/><path d="M2 16h.01"/><path d="M21.8 16c.2-2 .131-5.354 0-6"/><path d="M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2"/><path d="M8.65 22c.21-.66.45-1.32.57-2"/><path d="M9 6.8a6 6 0 0 1 9 5.2v2"/></svg></span>
-          <h3>You</h3>
-          <span class="role">One click in the window, then your finger.</span>
-          <button class="approve" type="button" id="approve" disabled>Approve</button>
-        </div>
-        <div class="node enclave">
-          <span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20v2"/><path d="M12 2v2"/><path d="M17 20v2"/><path d="M17 2v2"/><path d="M2 12h2"/><path d="M2 17h2"/><path d="M2 7h2"/><path d="M20 12h2"/><path d="M20 17h2"/><path d="M20 7h2"/><path d="M7 20v2"/><path d="M7 2v2"/><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg></span>
-          <h3>Secure Enclave</h3>
-          <span class="role">The key is sealed to this Mac. It signs once, after you.</span>
+        <div class="side needs">
+          <span class="side-label">Needs you</span>
+          <div class="stops">
+            <div class="node you">
+              <span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"/><path d="M14 13.12c0 2.38 0 6.38-1 8.88"/><path d="M17.29 21.02c.12-.6.43-2.3.5-3.02"/><path d="M2 12a10 10 0 0 1 18-6"/><path d="M2 16h.01"/><path d="M21.8 16c.2-2 .131-5.354 0-6"/><path d="M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2"/><path d="M8.65 22c.21-.66.45-1.32.57-2"/><path d="M9 6.8a6 6 0 0 1 9 5.2v2"/></svg></span>
+              <h3>You</h3>
+              <span class="role">One click in the window, then your finger.</span>
+              <button class="approve" type="button" id="approve" disabled>Approve</button>
+            </div>
+            <div class="node enclave">
+              <span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20v2"/><path d="M12 2v2"/><path d="M17 20v2"/><path d="M17 2v2"/><path d="M2 12h2"/><path d="M2 17h2"/><path d="M2 7h2"/><path d="M20 12h2"/><path d="M20 17h2"/><path d="M20 7h2"/><path d="M7 20v2"/><path d="M7 2v2"/><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg></span>
+              <h3>Secure Enclave</h3>
+              <span class="role">The key is sealed to this Mac. It signs once, after you.</span>
+            </div>
+          </div>
+          <div class="ledger">
+            <h3>The agent cannot</h3>
+            <ul class="cannot">
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17"/></svg>Press Approve</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17"/></svg>See or use the key</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17"/></svg>Send money out without your click</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17"/></svg>Turn the gate off</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17"/></svg>Pay an address it found on its own</li>
+            </ul>
+          </div>
         </div>
         <i class="road" aria-hidden="true"></i>
         <i class="lit agent" aria-hidden="true"></i><i class="lit rules" aria-hidden="true"></i><i class="lit you" aria-hidden="true"></i><i class="lit enclave" aria-hidden="true"></i>
         <i class="bead" aria-hidden="true" data-state=""></i>
         <div class="packet" id="packet" aria-hidden="true" data-state=""><i></i>Long ETH $150<span class="tag"></span></div>
-      </div>
-
-      <div class="ledger">
-        <div>
-          <h3>The agent can</h3>
-          <ul class="can">
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Read your balances and the chart</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Draft a trade, a swap or a send</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Mark up the chart</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Talk to you</li>
-          </ul>
-        </div>
-        <div>
-          <h3>The agent cannot</h3>
-          <ul class="cannot">
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17"/></svg>Press Approve</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17"/></svg>See or use the key</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17"/></svg>Send money out without your click</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17"/></svg>Turn the gate off</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17"/></svg>Pay an address it found on its own</li>
-          </ul>
-        </div>
       </div>
     </div>
   </section>
@@ -949,7 +983,7 @@
 <script defer src="/vendor/gsap.min.js"></script>
 <script defer src="/vendor/ScrollTrigger.min.js"></script>
 <script defer src="/vendor/motion.min.js"></script>
-<script type="module" src="/js/page.js?v=4"></script>
+<script type="module" src="/js/page.js?v=5"></script>
 
 </body>
 </html>

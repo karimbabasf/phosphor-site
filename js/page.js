@@ -200,13 +200,15 @@ if (live && matchMedia('(min-width: 1100px)').matches) {
   for (const ev of ['wheel', 'touchstart', 'pointerdown', 'keydown']) addEventListener(ev, stop, { passive: true });
 }
 
-// Below the window, things reveal as they enter view: the four nodes of the
-// flow in turn, then the two lists, then the two venues.
+// Below the window, things reveal as they enter view: the four stops of the
+// flow in turn, then its two lists, then the two venues.
 if (live) {
   const { animate, inView, stagger } = Motion;
   const rise = (els, delay = 0) => animate(els, { opacity: [0, 1], transform: ['translateY(18px)', 'translateY(0px)'] }, { duration: 0.7, delay, ease: out });
-  inView('.flow', () => { rise(document.querySelectorAll('.node'), stagger(0.09)); }, { amount: 0.3 });
-  inView('.ledger', () => { rise(document.querySelectorAll('.ledger > *'), stagger(0.1)); }, { amount: 0.3 });
+  inView('.flow', () => {
+    rise(document.querySelectorAll('.node'), stagger(0.09));
+    rise(document.querySelectorAll('.ledger'), stagger(0.1, { startDelay: 0.3 }));
+  }, { amount: 0.3 });
   inView('.venue-grid', () => { rise(document.querySelectorAll('.venue'), stagger(0.1)); }, { amount: 0.3 });
 }
 
@@ -478,9 +480,9 @@ const merge = (list, k, cap) => {
 // to the venue. The road is laid from where the tiles are, and each stop owns
 // the lit stretch that leaves it, which grows in step with the proposal in the
 // colour of whoever drove it, so the agent's violet stretch visibly ends at
-// the rules. Under 1100px the road runs top to bottom and the proposal parks
-// on it under each stop; from 1100px it runs left to right and the proposal
-// parks beside each tile. With reduced motion the proposal simply waits at
+// the rules. Under 1200px the road runs top to bottom and the proposal parks
+// on it under each stop; from 1200px it runs left to right through the wall
+// between the two cells and the proposal parks beside each tile. With reduced motion the proposal simply waits at
 // You and the click moves it to the enclave in one step.
 {
   const flow = document.querySelector('.flow');
@@ -493,14 +495,14 @@ const merge = (list, k, cap) => {
   const bead = flow.querySelector('.bead');
   const button = document.getElementById('approve');
   let at = 2, busy = false;
-  const horizontal = () => matchMedia('(min-width: 1100px)').matches;
+  const horizontal = () => matchMedia('(min-width: 1200px)').matches;
   const box = (el) => { const f = flow.getBoundingClientRect(), r = el.getBoundingClientRect(); return { x: r.left - f.left, y: r.top - f.top, w: r.width, h: r.height, cx: r.left - f.left + r.width / 2, cy: r.top - f.top + r.height / 2 }; };
   // The road and its four stretches, as boxes inside the flow: through the
   // tile centres, then on past the last tile to fade out.
   const lay = () => {
     const t = tiles.map(box), f = flow.getBoundingClientRect();
     const last = box(nodes[3]);
-    const end = horizontal() ? f.width + 32 : last.y + last.h + 56;
+    const end = horizontal() ? f.width : last.y + last.h + 56;
     const put = (el, from, to) => {
       if (horizontal()) { el.style.left = `${from}px`; el.style.top = `${t[0].cy - 0.5}px`; el.style.width = `${to - from}px`; el.style.height = '1px'; }
       else { el.style.left = `${t[0].cx - 0.5}px`; el.style.top = `${from}px`; el.style.width = '1px'; el.style.height = `${to - from}px`; }
