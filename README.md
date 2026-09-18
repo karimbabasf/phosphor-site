@@ -5,7 +5,7 @@ The landing page for Phosphor, at https://phosphor.karimbabasf.com
 Static files, no build on Vercel. `index.html` carries its own CSS, `js/page.js` the script,
 `mark.svg` and `mark-green.svg` are the MP cube mark (the same path as the favicon, in ink and
 in green), `fonts/` holds Sora (Regular and SemiBold), the face the wordmark and the app speak
-in, Manrope (on test for everything after the hero, through the `--face` token in the CSS), and
+in, Manrope for everything after the hero and the bar (the `--face` token in the CSS), and
 Geist Mono for figures and code, subset to Latin. `logos/` holds the venue and token marks
 (their own notices in `logos/LICENSE.md`). No animation library: the kit at the top of
 `js/page.js` is the Web Animations API for tweens, an IntersectionObserver for what enters
