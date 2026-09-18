@@ -567,6 +567,18 @@
     transition: transform 160ms var(--ease-out), background-color 240ms ease, border-color 240ms ease, color 240ms ease;
   }
   .approve[disabled] { cursor: default; color: var(--text-2); background: transparent; border-color: #363739; }
+
+  /* While it is the visitor's turn the button breathes: a ring swells off it
+     and fades, and the fill lifts a shade with it, once every 2.6 seconds,
+     slow enough to read as an invitation and not an alarm. The first breath
+     is the ring the button used to give on arrival. It stops the moment the
+     button goes hollow. */
+  @keyframes breathe {
+    0% { box-shadow: 0 0 0 0 var(--ring); background-color: var(--green); }
+    18% { background-color: #63FF87; }
+    42%, 100% { box-shadow: 0 0 0 12px transparent; background-color: var(--green); }
+  }
+  .approve:not([disabled]) { animation: breathe 2.6s var(--ease-out) infinite; }
   @media (hover: hover) and (pointer: fine) {
     .approve:not([disabled]):hover { background: #63FF87; border-color: #63FF87; }
   }
@@ -744,6 +756,7 @@
     .lift { transform: none !important; }
     .sheet { border-radius: 0; }
     .links a, .approve, .venue, .venue-line, .venue-facts, .venue-go svg { transition: none; }
+    .approve { animation: none; }
   }
 </style>
 <script src="/js/fonts.js"></script>
@@ -996,7 +1009,7 @@
 
 </div>
 
-<script type="module" src="/js/page.js?v=8"></script>
+<script type="module" src="/js/page.js?v=9"></script>
 
 </body>
 </html>

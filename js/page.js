@@ -187,21 +187,34 @@ if (live) {
   const lift = document.querySelector('.lift');
   const sheet = document.querySelector('.sheet');
   const radius = parseFloat(getComputedStyle(sheet).borderTopLeftRadius);
-  let shown = -1, glide = null;
+  let shown = -1, goal = 0, from = 0, since = 0, raf = 0;
   const apply = (p) => {
     if (p === shown) return;
     shown = p;
-    lift.style.transform = `scale(${(0.88 + 0.12 * p).toFixed(4)})`;
+    // translateZ keeps the lift on its own layer, so a scale of the whole
+    // page below the hero is a composite, not a repaint, on every frame.
+    lift.style.transform = `translateZ(0) scale(${(0.88 + 0.12 * p).toFixed(4)})`;
     const r = radius * (1 - Math.min(1, Math.max(0, (p - 0.8) / 0.2)));
     sheet.style.borderTopLeftRadius = sheet.style.borderTopRightRadius = `${r.toFixed(2)}px`;
+  };
+  // One frame loop eases what is shown toward the goal, half a second of
+  // power3 catch-up from wherever it is when the goal moves. A scroll event
+  // only moves the goal; it never cancels the frame, because Safari can
+  // deliver a scroll event between every frame request and its callback
+  // while a finger is down, and a loop restarted on each event never runs.
+  const frame = (now) => {
+    const t = Math.min(1, (now - since) / 500);
+    apply(from + (goal - from) * easeOut3(t));
+    raf = t < 1 ? requestAnimationFrame(frame) : 0;
   };
   const measure = () => {
     const top = lift.getBoundingClientRect().top;
     const p = Math.min(1, Math.max(0, (innerHeight - top) / innerHeight));
     onLift(top);
-    if (glide) glide.kill();
     if (shown < 0) { apply(p); return; }
-    glide = tween(shown, p, 0.5, easeOut3, apply, () => { glide = null; });
+    if (p === goal) return;
+    goal = p; from = shown; since = performance.now();
+    if (!raf) raf = requestAnimationFrame(frame);
   };
   addEventListener('scroll', measure, { passive: true });
   addEventListener('resize', measure);
@@ -601,10 +614,8 @@ near.then(async () => {
     at = i;
     ring(tiles[i]);
   };
-  const park = () => {
-    button.disabled = false;
-    ring(button);
-  };
+  // The button breathes on its own (CSS) from the moment it is live.
+  const park = () => { button.disabled = false; };
   const arrive = async () => {
     busy = true;
     button.disabled = true;
