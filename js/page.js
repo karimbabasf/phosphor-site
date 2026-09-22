@@ -207,11 +207,16 @@ if (live && matchMedia('(min-width: 1100px)').matches) {
   let startY = scrollY, lastY = scrollY, moving = false, glide = null, ours = false, timer;
   const release = () => { ours = false; moving = false; lastY = scrollY; };
   const stop = () => { if (glide) { glide.kill(); glide = null; release(); } };
+  // The glide starts from a page at rest, so it eases in as well as out: on
+  // an ease-out alone it left at its top speed, about 900 px/s from a
+  // standstill, and the page lurched the moment it began. The time grows a
+  // little with the distance, so a short settle stays short.
   const park = (to) => {
-    if (Math.abs(to - scrollY) < 1) return;
+    const d = Math.abs(to - scrollY);
+    if (d < 1) return;
     ours = true;
     const pos = { y: scrollY };
-    glide = gsap.to(pos, { y: to, duration: 0.55, ease: 'power3.out', onUpdate: () => scrollTo({ top: pos.y, behavior: 'instant' }), onComplete: () => { glide = null; setTimeout(release, 250); } });
+    glide = gsap.to(pos, { y: to, duration: gsap.utils.clamp(0.45, 0.8, 0.35 + d / 900), ease: 'power2.inOut', onUpdate: () => scrollTo({ top: pos.y, behavior: 'instant' }), onComplete: () => { glide = null; setTimeout(release, 250); } });
   };
   const settle = () => {
     moving = false;
@@ -411,17 +416,27 @@ function head() {
 // screen from the bar), not when the window first peeks in: by then the eye is
 // on the chart and the sheet has stopped moving. About two seconds in all.
 // A live tick that lands mid-sweep waits for the sweep to end.
-let grown = !live, sweeping = false, wanted = false, drawAt = 0, drawTimer = 0;
-const redraw = () => {
-  if (sweeping) { wanted = true; return; }
-  const wait = 200 - (performance.now() - drawAt);
-  if (wait > 0) { if (!drawTimer) drawTimer = setTimeout(() => { drawTimer = 0; redraw(); }, wait); return; }
+// A redraw rebuilds the whole chart and repaints the sheet around it, so a
+// live tick never lands under a moving page either: while the page scrolls,
+// or while the chart is off the screen, the latest tick waits, and it is drawn
+// once the scroll has been still for 150 ms with the chart in view. The socket
+// is open from the first screen on, so before this the ticks rebuilt the chart
+// up to five times a second through the whole lift.
+let grown = !live, sweeping = false, dirty = false, onScreen = false, lastScroll = -1e9, drawAt = 0, drawTimer = 0;
+addEventListener('scroll', () => { lastScroll = performance.now(); }, { passive: true });
+const flush = () => {
+  if (!dirty || sweeping || !onScreen) return;
+  const wait = Math.max(150 - (performance.now() - lastScroll), 200 - (performance.now() - drawAt));
+  if (wait > 0) { if (!drawTimer) drawTimer = setTimeout(() => { drawTimer = 0; flush(); }, wait); return; }
+  dirty = false;
   drawAt = performance.now();
   draw();
 };
+const redraw = () => { dirty = true; flush(); };
+new IntersectionObserver((es) => { for (const e of es) onScreen = e.isIntersecting; flush(); }).observe(host);
 // The observer's first notification carries the host's size, so that is the
 // first draw; a call before it would draw the same chart twice on load.
-new ResizeObserver(() => { if (sweeping) { wanted = true; return; } drawAt = performance.now(); draw(); }).observe(host);
+new ResizeObserver(() => { if (sweeping) { dirty = true; return; } dirty = false; drawAt = performance.now(); draw(); }).observe(host);
 const reveal = () => {
   grown = true; sweeping = true;
   draw();
@@ -431,7 +446,7 @@ const reveal = () => {
   animate(svg.querySelector('[data-line]'), { transform: ['scaleX(0)', 'scaleX(1)'] }, { duration: sweep, ease: 'linear' });
   animate(svg.querySelector('[data-tag]'), { opacity: [0, 1], transform: ['translateX(10px)', 'translateX(0px)'] }, { duration: 0.4, delay: sweep - 0.1, ease: out });
   animate('.live', { opacity: [0, 1] }, { duration: 0.4, delay: sweep - 0.1 });
-  setTimeout(() => { sweeping = false; if (wanted) { wanted = false; redraw(); } }, (sweep + 0.7) * 1000);
+  setTimeout(() => { sweeping = false; flush(); }, (sweep + 0.7) * 1000);
 };
 if (live) ScrollTrigger.create({ trigger: '.lift', start: 'top 10%', once: true, onEnter: reveal });
 head();

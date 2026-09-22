@@ -237,7 +237,12 @@
      end); the top edge is the origin, so it tracks the finger exactly. */
 
   .after { position: relative; z-index: 1; font-family: var(--face); }
-  .lift { transform-origin: 50% 0; }
+  /* The lift keeps its own layer for the page's life. GSAP writes a flat
+     transform at rest and a 3D one while it scrubs, so without the hint the
+     browser rebuilt the sheet's layer every time the lift began and every time
+     it docked, and repainted its tiles at each new size between: a scale
+     change on a layer of its own is the compositor's work, not a repaint. */
+  .lift { transform-origin: 50% 0; will-change: transform; }
 
   /* The sheet's top padding clears the fixed bar (88px tall from 720px up) with
      room to spare, so nothing sits in the bar's veil. The sheet is the hero's own
@@ -753,13 +758,13 @@
 
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
-    .lift { transform: none !important; }
+    .lift { transform: none !important; will-change: auto; }
     .sheet { border-radius: 0; }
     .links a, .approve, .venue, .venue-line, .venue-facts, .venue-go svg { transition: none; }
     .approve { animation: none; }
   }
 </style>
-<script src="/js/fonts.js"></script>
+<script defer src="/js/fonts.js"></script>
 </head>
 <body>
 
@@ -1013,7 +1018,7 @@
 
 <script defer src="/vendor/gsap.min.js"></script>
 <script defer src="/vendor/ScrollTrigger.min.js"></script>
-<script type="module" src="/js/page.js?v=11"></script>
+<script type="module" src="/js/page.js?v=12"></script>
 
 </body>
 </html>
