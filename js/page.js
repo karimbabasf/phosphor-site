@@ -27,10 +27,15 @@ const animate = (targets, keyframes, { duration = 0.3, delay = 0, ease = 'ease' 
   return { finished };
 };
 const stagger = (step, { startDelay = 0 } = {}) => (i) => startDelay + i * step;
-// inView(target, onEnter, { amount }): onEnter each time that share of the
-// element is on screen.
+// inView(target, onEnter, { amount }): onEnter once per element, the first
+// time that share of it is on screen, as Motion's inView did. Firing on every
+// return replayed the reveals and restarted the flow mid-story. The ratio is
+// checked as well because a browser may report a target as intersecting from
+// its first pixel, below the threshold asked for.
 const inView = (target, onEnter, { amount = 0 } = {}) => {
-  const io = new IntersectionObserver((entries) => { for (const e of entries) if (e.isIntersecting) onEnter(e.target); }, { threshold: amount });
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) if (e.isIntersecting && e.intersectionRatio >= amount - 0.001) { io.unobserve(e.target); onEnter(e.target); }
+  }, { threshold: amount });
   for (const el of list(target)) io.observe(el);
 };
 
@@ -230,11 +235,14 @@ if (live && matchMedia('(min-width: 1100px)').matches) {
 }
 
 // Below the window, things reveal as they enter view: the four stops of the
-// flow in turn, then its two lists, then the two venues.
+// flow in turn, then its two lists, then the two venues. The road between the
+// stops fades in where it lies once the stops have landed on it, so it never
+// floats on its own or meets a stop that is still rising.
 if (live) {
   const rise = (els, delay = 0) => animate(els, { opacity: [0, 1], transform: ['translateY(18px)', 'translateY(0px)'] }, { duration: 0.7, delay, ease: out });
   inView('.flow', () => {
     rise(document.querySelectorAll('.node'), stagger(0.09));
+    animate(document.querySelectorAll('.road'), { opacity: [0, 1] }, { duration: 0.5, delay: stagger(0.09, { startDelay: 0.3 }) });
     rise(document.querySelectorAll('.ledger'), stagger(0.1, { startDelay: 0.3 }));
   }, { amount: 0.3 });
   inView('.venue-grid', () => { rise(document.querySelectorAll('.venue'), stagger(0.1)); }, { amount: 0.3 });
@@ -531,14 +539,30 @@ near.then(async () => {
   const lit = [...flow.querySelectorAll('.lit')];
   const button = document.getElementById('approve');
   const GAP = 8, TAIL = 44;
-  let at = 2, busy = false;
+  // With motion the road starts dark and the card hidden: the story plays
+  // from the agent once the flow is in view. At rest (reduced motion) the
+  // card waits at You with the road lit up to it.
+  let at = live ? 0 : 2, busy = false;
+  if (live) card.style.opacity = '0';
   const horizontal = () => matchMedia('(min-width: 1200px)').matches;
-  const box = (el) => { const f = flow.getBoundingClientRect(), r = el.getBoundingClientRect(); return { x: r.left - f.left, y: r.top - f.top, w: r.width, h: r.height, cx: r.left - f.left + r.width / 2, cy: r.top - f.top + r.height / 2 }; };
+  // Where a tile sits inside the panel, from layout offsets: the same origin
+  // the road's absolute positions use (inside the panel's border, which the
+  // client rects counted, so every stretch sat a pixel low and to the right),
+  // and blind to transforms, so a stop still rising in cannot bend the road.
+  const box = (el) => {
+    let x = 0, y = 0;
+    for (let e = el; e && e !== flow; e = e.offsetParent) {
+      x += e.offsetLeft + (e === el ? 0 : e.clientLeft);
+      y += e.offsetTop + (e === el ? 0 : e.clientTop);
+    }
+    const w = el.offsetWidth, h = el.offsetHeight;
+    return { x, y, w, h, cx: x + w / 2, cy: y + h / 2 };
+  };
   // Stretch k runs from just past tile k to just short of tile k + 1, along
   // the road's axis; the tail runs on from the last tile and fades out.
   const stretch = (k) => {
-    const t = tiles.map(box), f = flow.getBoundingClientRect();
-    if (horizontal()) return { from: t[k].x + t[k].w + GAP, to: k < 3 ? t[k + 1].x - GAP : f.width, y: t[k].cy };
+    const t = tiles.map(box);
+    if (horizontal()) return { from: t[k].x + t[k].w + GAP, to: k < 3 ? t[k + 1].x - GAP : flow.clientWidth, y: t[k].cy };
     return { from: t[k].y + t[k].h + GAP, to: k < 3 ? t[k + 1].y - GAP : t[k].y + t[k].h + GAP + TAIL, x: t[0].cx };
   };
   const lay = () => {
@@ -555,9 +579,14 @@ near.then(async () => {
   // switch between the two layouts.
   const light = (k, on) => { lit[k].style.opacity = ''; lit[k].style.transform = on ? 'scale(1)' : 'scaleX(0)'; };
   const relight = () => lit.forEach((_, k) => light(k, k < at));
+  // The light travels a stretch the way a car runs between two stops: it pulls
+  // away and brakes into the next tile, so it lands at the end of its time and
+  // the tile rings as it arrives. On the page's strong ease-out it looked
+  // there a third of the way in and the ring came 400 ms late.
+  const travel = 'cubic-bezier(0.65, 0, 0.35, 1)';
   const grow = (k, duration) => {
     const axis = horizontal() ? 'scaleX' : 'scaleY';
-    return animate(lit[k], { transform: [`${axis}(0)`, `${axis}(1)`] }, { duration, ease: out }).finished;
+    return animate(lit[k], { transform: [`${axis}(0)`, `${axis}(1)`] }, { duration, ease: travel }).finished;
   };
   const ring = (el) => { el.classList.remove('ping'); void el.offsetWidth; el.classList.add('ping'); };
   const wait = (s) => new Promise(r => setTimeout(r, s * 1000));
@@ -584,9 +613,14 @@ near.then(async () => {
     await reach(1);
     await wait(0.6);
     await reach(2);
-    await fade(card, 1, 0.3);
+    // The card arrives live: its button is solid from the card's first frame,
+    // not hollow through the fade and filled after it.
+    button.style.transition = 'none';
     park();
+    void button.offsetWidth;
+    button.style.transition = '';
     busy = false;
+    await fade(card, 1, 0.3);
   };
   const release = async () => {
     if (busy || at !== 2) return;
@@ -627,7 +661,6 @@ near.then(async () => {
     lay();
     relight();
     if (!live) { park(); return; }
-    card.style.opacity = '0';
     inView('.flow', () => { setTimeout(arrive, 500); }, { amount: 0.5 });
   });
 }

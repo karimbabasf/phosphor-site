@@ -202,7 +202,7 @@
   /* What moves on load or on entering view starts hidden, but only once the
      script is known to be running (the js class on html) and motion is welcome. */
   @media (prefers-reduced-motion: no-preference) {
-    .js .sub, .js .nav, .js .field, .js .live, .js .node, .js .ledger, .js .venue { opacity: 0; }
+    .js .sub, .js .nav, .js .field, .js .live, .js .node, .js .road, .js .ledger, .js .venue { opacity: 0; }
     /* The wordmark's curve is a sine ease-out, not the page's strong one: the
        strong curve has the fade 60 percent done at a sixth of its length, so
        whatever the duration the eye sees a 400 ms pop and a long dead tail.
@@ -1011,7 +1011,7 @@
 
 <script defer src="/vendor/gsap.min.js"></script>
 <script defer src="/vendor/ScrollTrigger.min.js"></script>
-<script type="module" src="/js/page.js?v=10"></script>
+<script type="module" src="/js/page.js?v=11"></script>
 
 </body>
 </html>
