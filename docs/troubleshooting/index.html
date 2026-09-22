@@ -213,7 +213,7 @@
     <header class="doc-head">
       <h1>Troubleshooting</h1>
       <p class="lede">The situations people actually hit, what the window says in each, and what to do. The rule under all of them: when the app says a move is unconfirmed, do not send it again. Read first.</p>
-      <div class="doc-meta"><span class="mono">v0.9.0</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/troubleshooting.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.9.1</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/troubleshooting.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
     <nav class="onpage" aria-label="On this page"><ul><li><a href="#a-move-is-late-or-not-confirmed">A move is late, or Not confirmed</a></li><li><a href="#hyperliquid-is-not-answering-one-of-our-reads">Hyperliquid is not answering one of our reads</a></li><li><a href="#macos-will-not-open-the-app">macOS will not open the app</a></li><li><a href="#the-agent-does-not-connect">The agent does not connect</a></li><li><a href="#a-proposal-is-waiting-as-needs-the-unlock">A proposal is waiting as Needs the unlock</a></li><li><a href="#a-send-was-refused-for-a-typo">A send was refused for a typo</a></li><li><a href="#something-else">Something else</a></li></ul></nav>
     <div class="prose">
@@ -255,9 +255,11 @@ number the app could not read.</p>
 <a href="https://hyperliquid.xyz" target="_blank" rel="noopener">Hyperliquid</a> with their stops and targets on the venue&#39;s own book, so a
 venue the app cannot reach is still holding your exits.</p>
 <h2 id="macos-will-not-open-the-app">macOS will not open the app<a class="anchor" href="#macos-will-not-open-the-app" aria-label="Link to this section">#</a></h2>
-<p>The build is not notarized by Apple, so the first open stops with a warning. Open System
-Settings, then Privacy &amp; Security, scroll down to Security and click Open Anyway. Check the disk
-image&#39;s SHA-256 first, see <a href="/docs/getting-started/#check-the-file">Getting started</a>.</p>
+<p>The build is not notarized by Apple, so the first open stops with a warning. Click Done, then
+double-click Open Anyway in the disk image window, which opens System Settings at the Open Anyway
+button, or go to Privacy &amp; Security and scroll down to Security yourself. No button there means
+the refused open was more than about an hour ago: open the app once more and look again. Check
+the disk image&#39;s SHA-256 first, see <a href="/docs/getting-started/#check-the-file">Getting started</a>.</p>
 <p>A second copy of the app refuses to start while one is running: &quot;Phosphor is already running as
 process N and holding 127.0.0.1:4177. Use that window rather than opening a second one.&quot; If the
 message names a control app from an earlier session with no window on it, quit that process as it

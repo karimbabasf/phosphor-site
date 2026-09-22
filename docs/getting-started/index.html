@@ -213,7 +213,7 @@
     <header class="doc-head">
       <h1>Getting started</h1>
       <p class="lede">Phosphor is a Mac app that holds your keys, your venue connections and your rules. An agent reads your money and proposes moves; you approve each one with a click in the window. This page takes you from the download to a wallet that is made, backed up and locked, and shows you the brake.</p>
-      <div class="doc-meta"><span class="mono">v0.9.0</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/getting-started.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.9.1</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/getting-started.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
     <nav class="onpage" aria-label="On this page"><ul><li><a href="#download">Download</a></li><li><a href="#check-the-file">Check the file</a></li><li><a href="#the-gatekeeper-warning">The Gatekeeper warning</a></li><li><a href="#first-open">First open</a></li><li><a href="#create-or-restore-a-wallet">Create or restore a wallet</a></li><li><a href="#the-backup-words">The backup words</a></li><li><a href="#touch-id-and-the-secure-enclave">Touch ID and the Secure Enclave</a></li><li><a href="#the-15-minute-lock">The 15 minute lock</a></li><li><a href="#freeze-everything">Freeze everything</a></li><li><a href="#the-help-menu">The Help menu</a></li><li><a href="#next">Next</a></li></ul></nav>
     <div class="prose">
@@ -228,8 +228,11 @@ the disk image. This line must print the same one:</p>
 </code></pre>
 <p>If the two differ, delete the file and download it again.</p>
 <h2 id="the-gatekeeper-warning">The Gatekeeper warning<a class="anchor" href="#the-gatekeeper-warning" aria-label="Link to this section">#</a></h2>
-<p>The build is not notarized by Apple yet, so the first open stops with a warning. Open System
-Settings, then Privacy &amp; Security, scroll to Security and click Open Anyway. See
+<p>The build is not notarized by Apple yet, so the first open stops with a warning. Click Done, not
+Move to Trash, then double-click Open Anyway in the disk image window: it opens System Settings,
+Privacy &amp; Security, at the Open Anyway button next to Phosphor. Click it. The button appears only
+after a refused open, for about an hour. Without the disk image, open System Settings, then
+Privacy &amp; Security, and scroll to Security. See
 <a href="/docs/troubleshooting/#macos-will-not-open-the-app">Troubleshooting</a> if the app still refuses.
 Notarization needs an Apple Developer account this project does not hold yet; until it does,
 the checksum above is what proves the file is the one on the release page. It is listed as a
