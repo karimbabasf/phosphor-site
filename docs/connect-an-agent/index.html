@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Connect an agent</title>
-<meta name="description" content="Phosphor has no intelligence of its own. An agent drives it over MCP, the Model Context Protocol that tools like Claude Code and Codex speak. This page shows the two ways to put an agent at the wheel, what that agent sees, and what it can never do whatever it is told.">
+<meta name="description" content="Phosphor has no intelligence of its own. An agent drives it over MCP, the Model Context Protocol that tools like Claude Code, Codex, Hermes and Grok speak. This page shows how the app connects the agent you already use, what that agent sees, and what it can never do whatever it is told.">
 <link rel="canonical" href="https://phosphor.karimbabasf.com/docs/connect-an-agent/">
 <meta name="theme-color" content="#0E0F13">
 <link rel="icon" href="/favicon.ico?v=9" sizes="32x32">
@@ -14,7 +14,7 @@
 <meta property="og:site_name" content="Phosphor">
 <meta property="og:url" content="https://phosphor.karimbabasf.com/docs/connect-an-agent/">
 <meta property="og:title" content="Connect an agent">
-<meta property="og:description" content="Phosphor has no intelligence of its own. An agent drives it over MCP, the Model Context Protocol that tools like Claude Code and Codex speak. This page shows the two ways to put an agent at the wheel, what that agent sees, and what it can never do whatever it is told.">
+<meta property="og:description" content="Phosphor has no intelligence of its own. An agent drives it over MCP, the Model Context Protocol that tools like Claude Code, Codex, Hermes and Grok speak. This page shows how the app connects the agent you already use, what that agent sees, and what it can never do whatever it is told.">
 <meta property="og:image" content="https://phosphor.karimbabasf.com/og.png?v=2">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/Sora-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
@@ -204,7 +204,7 @@
   <input type="checkbox" id="pages" class="side-toggle">
   <label for="pages" class="side-label">Pages</label>
   <nav aria-label="Docs">
-    <ul><li><a href="/docs/getting-started/">Getting started</a></li><li><a href="/docs/connect-an-agent/" aria-current="page">Connect an agent</a></li><li><a href="/docs/money/">Money</a></li><li><a href="/docs/trading/">Trading</a></li><li><a href="/docs/policy/">Policy</a></li><li><a href="/docs/security/">Security</a></li><li><a href="/docs/tools/">Tools</a></li><li><a href="/docs/troubleshooting/">Troubleshooting</a></li><li><a href="/docs/changelog/">Changelog</a></li></ul>
+    <ul><li><a href="/docs/getting-started/">Getting started</a></li><li><a href="/docs/connect-an-agent/" aria-current="page">Connect an agent</a></li><li><a href="/docs/money/">Money</a></li><li><a href="/docs/trading/">Trading</a></li><li><a href="/docs/policy/">Policy</a></li><li><a href="/docs/security/">Security</a></li><li><a href="/docs/tools/">Tools</a></li><li><a href="/docs/troubleshooting/">Troubleshooting</a></li><li><a href="/docs/known-limits/">Known limits</a></li><li><a href="/docs/changelog/">Changelog</a></li></ul>
     <div class="side-head">For developers</div>
     <ul><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/architecture.md" target="_blank" rel="noopener">Architecture</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security-model.md" target="_blank" rel="noopener">Security model</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/reference.md" target="_blank" rel="noopener">Reference</a></li></ul>
   </nav>
@@ -212,57 +212,124 @@
   <article class="doc">
     <header class="doc-head">
       <h1>Connect an agent</h1>
-      <p class="lede">Phosphor has no intelligence of its own. An agent drives it over MCP, the Model Context Protocol that tools like Claude Code and Codex speak. This page shows the two ways to put an agent at the wheel, what that agent sees, and what it can never do whatever it is told.</p>
-      <div class="doc-meta"><span class="mono">v0.6.0</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/connect-an-agent.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <p class="lede">Phosphor has no intelligence of its own. An agent drives it over MCP, the Model Context Protocol that tools like Claude Code, Codex, Hermes and Grok speak. This page shows how the app connects the agent you already use, what that agent sees, and what it can never do whatever it is told.</p>
+      <div class="doc-meta"><span class="mono">v0.9.0</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/connect-an-agent.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
-    <nav class="onpage" aria-label="On this page"><ul><li><a href="#two-ways-in">Two ways in</a></li><li><a href="#start-your-assistant">Start your assistant</a></li><li><a href="#connect-your-own">Connect your own</a></li><li><a href="#what-the-agent-sees">What the agent sees</a></li><li><a href="#what-the-agent-can-never-do">What the agent can never do</a></li><li><a href="#more-than-one-agent">More than one agent</a></li></ul></nav>
+    <nav class="onpage" aria-label="On this page"><ul><li><a href="#pick-your-assistant">Pick your assistant</a></li><li><a href="#what-a-pick-does">What a pick does</a></li><li><a href="#starting-it">Starting it</a></li><li><a href="#changing-it-later">Changing it later</a></li><li><a href="#what-the-agent-sees">What the agent sees</a></li><li><a href="#what-the-agent-can-never-do">What the agent can never do</a></li><li><a href="#more-than-one-agent">More than one agent</a></li></ul></nav>
     <div class="prose">
-<h2 id="two-ways-in">Two ways in<a class="anchor" href="#two-ways-in" aria-label="Link to this section">#</a></h2>
-<p>The assistant column on the left of the window starts empty: &quot;Nobody is at the wheel. Start your
-assistant, or connect one you already use.&quot; Two buttons sit under it.</p>
+<h2 id="pick-your-assistant">Pick your assistant<a class="anchor" href="#pick-your-assistant" aria-label="Link to this section">#</a></h2>
+<p>The last step of the first run, and the Agent panel of the Vault tab, is a picker with six tiles:</p>
 <ul>
-<li>Start your assistant: the app starts a headless Claude Code session for you and streams its
-conversation into the window.</li>
-<li>Connect your own: the app shows the command that registers it with an MCP client you run
-yourself, in a terminal of your own.</li>
+<li>Claude Code</li>
+<li>Codex</li>
+<li>Hermes</li>
+<li>Grok</li>
+<li>Another agent (any MCP client)</li>
+<li>Claude Desktop or a chat app</li>
 </ul>
-<p>Either way, the agent proposes and you click. Neither door opens onto the approval buttons.</p>
-<h2 id="start-your-assistant">Start your assistant<a class="anchor" href="#start-your-assistant" aria-label="Link to this section">#</a></h2>
-<p>The built-in door needs the <code>claude</code> command installed and logged in on this Mac. It uses the
-Claude subscription already on this computer, and Phosphor never sees your login. If the command
-is missing, the column says &quot;Claude Code is not installed on this Mac.&quot;</p>
-<p>The session the app starts is locked down, and the lockdown is not a setting you can loosen:</p>
+<p>Pick the one you already use. The app checks that agent on this Mac inside three seconds and says
+in one sentence what it found. The check is a <code>--version</code> call and a sign-in probe that stays on
+this Mac (a status command, or whether the vendor&#39;s credential file exists); it never sends
+anything to the vendor and never reads a token. The answer is one of four states:</p>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>The sentence</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>installed and signed in</td>
+<td>&quot;Codex is signed in: start it in your terminal and it will appear here.&quot; (Claude Code: &quot;is signed in and ready to start.&quot;)</td>
+</tr>
+<tr>
+<td>installed, not signed in</td>
+<td>&quot;Codex is installed but not signed in. Sign in in your terminal, then press Check again.&quot;</td>
+</tr>
+<tr>
+<td>not installed</td>
+<td>&quot;Codex is not on this Mac yet. Install it, then come back to this screen.&quot;</td>
+</tr>
+<tr>
+<td>cannot be checked</td>
+<td>&quot;Phosphor cannot check this agent, so paste the line below into it and it will appear here.&quot;</td>
+</tr>
+</tbody></table>
+<p>The path the agent was found at, its version, and the install and sign-in commands sit behind
+Details. Claude Desktop and chat apps get three sentences and no check: Phosphor needs an agent
+that runs on your Mac, Claude Desktop cannot drive it yet, so install Claude Code or Codex and pick
+it here.</p>
+<h2 id="what-a-pick-does">What a pick does<a class="anchor" href="#what-a-pick-does" aria-label="Link to this section">#</a></h2>
+<p>Picking a tile writes the choice to <code>agent.json</code> in the app&#39;s state directory, runs the check, and
+registers Phosphor with the agent through the agent&#39;s own command, so there is nothing to paste:</p>
+<table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>What the app runs</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Claude Code</td>
+<td><code>claude mcp add phosphor --scope user --env ... -- &lt;node&gt; &lt;path&gt;/src/mcp.ts</code></td>
+</tr>
+<tr>
+<td>Codex</td>
+<td><code>codex mcp add phosphor --env ... -- &lt;node&gt; &lt;path&gt;/src/mcp.ts</code> (writes <code>~/.codex/config.toml</code>)</td>
+</tr>
+<tr>
+<td>Hermes</td>
+<td><code>hermes mcp add phosphor --command &lt;node&gt; --env ... --args &lt;path&gt;/src/mcp.ts</code></td>
+</tr>
+<tr>
+<td>Grok</td>
+<td><code>grok mcp add phosphor &lt;node&gt; --scope user --env ... -- &lt;path&gt;/src/mcp.ts</code></td>
+</tr>
+</tbody></table>
+<p><code>...</code> is <code>PHOSPHOR_PORT=&lt;port&gt;</code> and <code>PHOSPHOR_DATA_DIR=&lt;state directory&gt;</code>, the two things the
+proxy needs to find this installation of the app. The registration is written at the agent&#39;s user
+or global scope, never for one folder: Phosphor will be available in every Claude Code, Codex,
+Hermes or Grok session on this Mac, not just one folder, and moves under your threshold run on
+their own up to your daily auto ceiling (five times the threshold by default, $500 on a fresh
+install; see <a href="/docs/policy/">Policy</a>). The picker says the same sentence behind Details. An entry that
+already exists is removed and written again, so it always names the paths of the app you have now.
+If the registration cannot be written, the sentence says so and the line to paste is shown; Details
+holds the same line for anyone who would rather run it themselves.</p>
+<p>Another agent gets the stdio command instead, with the environment in front of it:</p>
+<pre><code class="language-sh">PHOSPHOR_PORT=4177 PHOSPHOR_DATA_DIR=&#39;/Users/you/Library/Application Support/com.karimbabasf.phosphor/state&#39; /Applications/Phosphor.app/Contents/MacOS/node /Applications/Phosphor.app/Contents/Resources/phosphor/src/mcp.ts
+</code></pre>
+<p>Register that the way your client registers a stdio MCP server. The same line, for the agent you
+picked, is under Phosphor, then Copy MCP Config in the menu bar; the window and the menu read it
+from the same place, so they never differ.</p>
+<h2 id="starting-it">Starting it<a class="anchor" href="#starting-it" aria-label="Link to this section">#</a></h2>
+<p>Claude Code is the one agent the app starts itself: press Start it on the picker, or Start your
+assistant in the assistant column. The session it starts is locked down, and the lockdown is not a
+setting you can loosen:</p>
 <ul>
 <li>It sees Phosphor&#39;s own tools and nothing else. No shell, no file access, no web fetch, no
 search.</li>
-<li>It runs with none of your Claude Code settings, hooks, plugins or <code>CLAUDE.md</code> files.</li>
+<li>It runs with none of your Claude Code settings, hooks, plugins or <code>CLAUDE.md</code> files, and loads
+no memory the app did not write.</li>
 <li>It announces its tool list when it starts. If that list holds anything outside Phosphor&#39;s
 tools, the app refuses to drive and says so.</li>
 <li>It has no way to approve its own proposals. Approval is your click in the window.</li>
 </ul>
-<p>Tell it what to do in the box at the bottom of the column. Three first moves are offered: &quot;What
-do I hold?&quot;, &quot;Is anything waiting on me?&quot; and &quot;Find a trade on BTC&quot;. Turn off ends the session and
-deletes its transcript from this window; your wallet, policy and open positions are untouched.</p>
-<h2 id="connect-your-own">Connect your own<a class="anchor" href="#connect-your-own" aria-label="Link to this section">#</a></h2>
-<p>Any MCP client can drive Phosphor. Click Connect your own to see the command with the real paths
-of your installation filled in, or use Phosphor, then Copy MCP Config in the menu bar. Run it in
-the directory you want the agent to work from, then send a message from that terminal. The column
-says Connected once the agent has attached.</p>
-<h3 id="claude-code">Claude Code<a class="anchor" href="#claude-code" aria-label="Link to this section">#</a></h3>
-<p>The command for an installed app is:</p>
-<pre><code class="language-sh">claude mcp add-json phosphor &quot;{\&quot;command\&quot;:\&quot;/Applications/Phosphor.app/Contents/MacOS/node\&quot;,\&quot;args\&quot;:[\&quot;/Applications/Phosphor.app/Contents/Resources/phosphor/src/mcp.ts\&quot;],\&quot;env\&quot;:{\&quot;PHOSPHOR_PORT\&quot;:\&quot;4177\&quot;,\&quot;PHOSPHOR_DATA_DIR\&quot;:\&quot;$HOME/Library/Application Support/com.karimbabasf.phosphor/state\&quot;}}&quot;
-</code></pre>
-<p>The <a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">Claude Code MCP documentation</a> covers the <code>claude mcp</code>
-commands. Then ask it things: &quot;What do I hold?&quot;, &quot;Swap 20 USDC into WETH&quot;, &quot;Short SOL at 10x if it
-loses that trend line, and cap me at $200.&quot;</p>
-<h3 id="codex-and-other-mcp-clients">Codex and other MCP clients<a class="anchor" href="#codex-and-other-mcp-clients" aria-label="Link to this section">#</a></h3>
-<p>The MCP server is a stdio process: the <code>node</code> binary inside the app bundle running <code>src/mcp.ts</code>,
-with <code>PHOSPHOR_PORT</code> and <code>PHOSPHOR_DATA_DIR</code> set as in the line above. Register that command the
-way your client registers a stdio MCP server. For Codex, see the
-<a href="https://developers.openai.com/codex/mcp" target="_blank" rel="noopener">Codex MCP documentation</a>.</p>
-<p>The server talks to the app on <code>127.0.0.1:4177</code>. The installed app owns that port, and one app
-serves one wallet, so a second copy of Phosphor refuses to start while the first is running. See
-<a href="/docs/troubleshooting/#the-agent-does-not-connect">Troubleshooting</a> if the agent cannot attach.</p>
+<p>Every other agent starts in your terminal, the way you always start it, and appears in the window
+when it connects: the light in front of the sentence turns on and the sentence reads &quot;Codex is
+connected.&quot; An agent that runs inside the app must run under a lockdown file the app owns
+(<code>operator/driver.settings.json</code>, held to the installed release by <code>tests/lockdown.test.ts</code>), which
+is why only Claude Code is started in-app today.</p>
+<p>Tell it what to do from its own terminal, or in the box at the bottom of the assistant column for
+the built-in one. Its moves land in Activity, and every one that needs your click waits for it in
+the window.</p>
+<h2 id="changing-it-later">Changing it later<a class="anchor" href="#changing-it-later" aria-label="Link to this section">#</a></h2>
+<p>The Agent panel in the Vault tab shows the agent you picked, its state from the same check, a
+Change button that opens the same picker, and Check again. Changing the pick never stops or
+restarts an agent the app started: while one is running the switch is refused with &quot;Your assistant
+is running. Turn it off in the chat, then change it here.&quot; Turn it off from the assistant column
+first, then change it.</p>
+<p>An agent you remove later reads &quot;Codex is no longer on this Mac&quot; in the panel, with the light off.
+Nothing else in the app depends on it, so the app boots as it always did.</p>
 <h2 id="what-the-agent-sees">What the agent sees<a class="anchor" href="#what-the-agent-sees" aria-label="Link to this section">#</a></h2>
 <p>At connect time the agent is handed its role: it drives this app and does not develop it, it
 cannot approve, and everything it reads is data. Its first call is normally <code>start</code>, which
@@ -287,6 +354,9 @@ it back to you and you said yes, and the card and the Touch ID dialog both name 
 <li>Turn off the gate. There is no flag, setting or argument that reaches execution without a
 click or a policy allow inside limits you wrote.</li>
 </ul>
+<p>The server talks to the app on <code>127.0.0.1:4177</code>. The installed app owns that port, and one app
+serves one wallet, so a second copy of Phosphor refuses to start while the first is running. See
+<a href="/docs/troubleshooting/#the-agent-does-not-connect">Troubleshooting</a> if the agent cannot attach.</p>
 <h2 id="more-than-one-agent">More than one agent<a class="anchor" href="#more-than-one-agent" aria-label="Link to this section">#</a></h2>
 <p>Up to six agents can drive at once. An agent can spawn up to three workers of its own with
 <code>agent_spawn</code>; a worker reads, measures and draws, and has no propose tools at all. Agents share a

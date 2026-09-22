@@ -204,7 +204,7 @@
   <input type="checkbox" id="pages" class="side-toggle">
   <label for="pages" class="side-label">Pages</label>
   <nav aria-label="Docs">
-    <ul><li><a href="/docs/getting-started/">Getting started</a></li><li><a href="/docs/connect-an-agent/">Connect an agent</a></li><li><a href="/docs/money/">Money</a></li><li><a href="/docs/trading/">Trading</a></li><li><a href="/docs/policy/">Policy</a></li><li><a href="/docs/security/">Security</a></li><li><a href="/docs/tools/">Tools</a></li><li><a href="/docs/troubleshooting/">Troubleshooting</a></li><li><a href="/docs/changelog/" aria-current="page">Changelog</a></li></ul>
+    <ul><li><a href="/docs/getting-started/">Getting started</a></li><li><a href="/docs/connect-an-agent/">Connect an agent</a></li><li><a href="/docs/money/">Money</a></li><li><a href="/docs/trading/">Trading</a></li><li><a href="/docs/policy/">Policy</a></li><li><a href="/docs/security/">Security</a></li><li><a href="/docs/tools/">Tools</a></li><li><a href="/docs/troubleshooting/">Troubleshooting</a></li><li><a href="/docs/known-limits/">Known limits</a></li><li><a href="/docs/changelog/" aria-current="page">Changelog</a></li></ul>
     <div class="side-head">For developers</div>
     <ul><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/architecture.md" target="_blank" rel="noopener">Architecture</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security-model.md" target="_blank" rel="noopener">Security model</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/reference.md" target="_blank" rel="noopener">Reference</a></li></ul>
   </nav>
@@ -213,13 +213,153 @@
     <header class="doc-head">
       <h1>Changelog</h1>
       <p class="lede">What changed in each version of Phosphor, newest first, written from the git history of the <a href="https://github.com/karimbabasf/phosphor" target="_blank" rel="noopener">repository</a>. The top entry is the version these pages describe, and a test fails the suite when it is not the version in <code>package.json</code>. Versions without a git tag say so.</p>
-      <div class="doc-meta"><span class="mono">v0.6.0</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/changelog.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.9.0</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/changelog.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
-    <nav class="onpage" aria-label="On this page"><ul><li><a href="#0-6-0">0.6.0</a></li><li><a href="#0-5-2">0.5.2</a></li><li><a href="#0-5-1">0.5.1</a></li><li><a href="#0-5-0">0.5.0</a></li><li><a href="#0-4-4">0.4.4</a></li><li><a href="#0-4-3">0.4.3</a></li><li><a href="#0-4-2">0.4.2</a></li><li><a href="#0-4-1">0.4.1</a></li><li><a href="#0-4-0">0.4.0</a></li><li><a href="#0-3-0">0.3.0</a></li><li><a href="#0-2-0">0.2.0</a></li><li><a href="#0-1-0">0.1.0</a></li></ul></nav>
+    <nav class="onpage" aria-label="On this page"><ul><li><a href="#0-9-0">0.9.0</a></li><li><a href="#0-8-0">0.8.0</a></li><li><a href="#0-7-0">0.7.0</a></li><li><a href="#0-6-0">0.6.0</a></li><li><a href="#0-5-2">0.5.2</a></li><li><a href="#0-5-1">0.5.1</a></li><li><a href="#0-5-0">0.5.0</a></li><li><a href="#0-4-4">0.4.4</a></li><li><a href="#0-4-3">0.4.3</a></li><li><a href="#0-4-2">0.4.2</a></li><li><a href="#0-4-1">0.4.1</a></li><li><a href="#0-4-0">0.4.0</a></li><li><a href="#0-3-0">0.3.0</a></li><li><a href="#0-2-0">0.2.0</a></li><li><a href="#0-1-0">0.1.0</a></li></ul></nav>
     <div class="prose">
-<h2 id="0-6-0">0.6.0<a class="anchor" href="#0-6-0" aria-label="Link to this section">#</a></h2>
-<p>Released 2026-09-17, the new-user pass. Not tagged at the time of writing.</p>
+<h2 id="0-9-0">0.9.0<a class="anchor" href="#0-9-0" aria-label="Link to this section">#</a></h2>
+<p>Built 2026-09-22, the any token any chain pass. Tagged v0.9.0 on 2026-09-22.</p>
 <ul>
+<li>A swap reaches any coin the venue lists on any chain it lists, not only the majors. The app
+used to know five chains on the spend side while the deposit card already took money on
+thirty five. One chain table now serves both, and it carries the venue&#39;s own name for each
+chain, because the venue spells three of them differently and a guessed spelling prices a
+quote against the wrong chain.</li>
+<li>A payout reaches every chain whose address the app can decode by itself: every EVM chain,
+Solana, Fogo and NEAR. A chain it cannot decode is refused by name, and the refusal says what
+is missing rather than pretending the chain is unknown. An address the app cannot check is an
+address it will not hand money to.</li>
+<li>When one ticker means two different coins on one chain, the app asks instead of choosing. Two
+tiles, a plain line each, and no long identifier on the face of the card. There is one such
+pair on the venue&#39;s list today and its two halves are a hundredfold apart in decimals, so a
+silent pick would have been a silent hundredfold mistake.</li>
+<li>Every move card says what it is worth in dollars, and says &quot;we cannot price this&quot; when the
+venue quotes no price. The dollar figure is the check a person can actually make: a wrong coin
+or a wrong decimals reads as a number that is obviously wrong.</li>
+<li>A card you only have to read no longer looks like a warning. The amber ring belonged to a
+request waiting on you, and it was being painted over receipts, nudges and moves already under
+way. The ask now sits one step above the rail in the assistant&#39;s own colour, and everything
+else sits flat and quiet.</li>
+<li>A card sits in the middle of the conversation instead of down on the composer.</li>
+<li>A receiver you approved before is still known to the app, so a wallet you have paid twice does
+not come back as a stranger.</li>
+<li>Toncoin is Gram. The app calls the coin what the venue calls it.</li>
+<li>The agent says how a trade will fill before it arms one. A resting order and a bar close
+condition make different promises, and the same English asks for both.</li>
+</ul>
+<h2 id="0-8-0">0.8.0<a class="anchor" href="#0-8-0" aria-label="Link to this section">#</a></h2>
+<p>Built 2026-09-20, the ready-for-people pass. Not tagged at the time of writing.</p>
+<!-- lead: the six lines below describe nodes A to F. Keep each one only when that node merged;
+     the wording follows the builder prompt's mission and the definitions file. -->
+<ul>
+<li><p>Swaps settle on the relay as one atomic exchange (<code>token_diff</code>): what you spend and what you
+receive are one signed message, and the money is never a solver&#39;s in between. The 1Click
+transfer path stays behind the <code>swap.rail</code> config switch for a month. The 25 bp 1Click app
+fee disappears with it; the 1 pip protocol fee stays.</p>
+</li>
+<li><p>Hyperliquid deposits and withdrawals agree across the app, the venue and the card, and the
+exit works on a unified account: the app uses the transfer both account modes accept, or
+refuses before any quote and names the most it can send.</p>
+</li>
+<li><p>The connect step is an agent picker: Claude Code, Codex, Hermes, Grok bot, another MCP agent,
+or &quot;I use Claude Desktop or a chat app&quot;. The app checks the one you pick on this Mac, says in
+one sentence whether it can drive, registers it where it keeps a config of its own, and the
+Vault tab&#39;s Agent panel changes it later. The first run&#39;s ask threshold now reaches
+<code>policy.json</code>.</p>
+</li>
+<li><p>One card per money move in the chat, redrawn in place at every stage, with the agent&#39;s reply
+held to three plain sentences; the receipt folds into the move card.</p>
+</li>
+<li><p>The buttons and the screens went through a craft pass at 860 and 400 px; every button has its
+five states, and the pending face never shows beside the rest face.</p>
+</li>
+<li><p>An anxiety score gates every screen and reply: a judge scores each situation as someone who
+has never bought crypto, and a naive-user run drives the flows.</p>
+</li>
+<li><p>Stage words are the app&#39;s own. &quot;The router is working&quot; and the other vendor phases are gone
+from the cards: a move reads Sending it, Deposit seen, On its way, Waiting for the venue to
+credit it, Confirmed, and Finding a match, Settling on NEAR, Settled, checking your balance
+on a swap. One table (<code>src/proposals/view.ts</code>) is the only place a stage is ever printed.</p>
+</li>
+<li><p>The log tail is redacted on the way out. <code>GET /api/log</code> and <code>log_tail</code> never hand out this
+boot&#39;s seat secret or window token, a value filed under a secret&#39;s name, or a PEM block, and
+every transaction hash still comes through. Help, then Copy Log for a Report puts the newest
+two hundred lines on the clipboard, one JSON line each.</p>
+</li>
+<li><p>Help, then Report a Problem opens the bug form with the version and the macOS version already
+filled in; the form asks for the log and names the picker&#39;s agents.</p>
+</li>
+<li><p>The secret sweep (<code>npm run sweep</code>) runs again. It had failed for days on Cargo.lock&#39;s crate
+checksums; a lockfile&#39;s checksum lines and the bridge token list are now named as
+machine-written public formats, a mnemonic must be made of seed words, and every fixture
+value in the tree and the history is excused by exact value with a note on what it is.</p>
+</li>
+<li><p>The docs describe this build: the 46 tools, the stage words, the policy walls of one click,
+where a fresh install keeps its state and its key, the shell and its updater, and a new
+<a href="/docs/known-limits/">Known limits</a> page.</p>
+</li>
+</ul>
+<h2 id="0-7-0">0.7.0<a class="anchor" href="#0-7-0" aria-label="Link to this section">#</a></h2>
+<p>Built 2026-09-19, the live-truth pass; tagged v0.7.0 on 2026-09-19.</p>
+<ul>
+<li>One object for every move. <code>src/proposals/view.ts</code> builds the <code>ProposalView</code> that the card
+draws, the agent reads and <code>/api/state</code> carries: stage, what it is waiting on, elapsed time,
+time since the stage last changed, the typical duration, the settle time, every transaction leg
+and the error. <code>proposal_status</code> returns it. Two copies of that truth disagreeing (a card that
+said &quot;Confirmed at 14:20&quot; while the agent said &quot;still settling&quot;) is the bug this ends.</li>
+<li>Stages use the router&#39;s own words. A move reads <code>KNOWN_DEPOSIT_TX</code>, <code>PENDING_DEPOSIT</code>,
+<code>INCOMPLETE_DEPOSIT</code>, <code>PROCESSING</code>, <code>SUCCESS</code> as 1Click reports them, then <code>crediting</code> while
+the venue credits it, then <code>confirmed</code> at the settle time. &quot;Settling&quot; is gone.</li>
+<li>A late move says so on its own. Eight typical durations after the click (ten minutes at least)
+a move that has not changed flips to <code>stalled</code>, &quot;Late, nothing has changed&quot;, and keeps settling
+forward the moment the venue credits it. Nothing waits forever without a word.</li>
+<li>The card appears the moment the agent proposes. The propose reply answers on the decision with
+the view attached, where it used to hold for up to twenty seconds waiting for settlement.</li>
+<li>The backend no longer freezes as money lands. One deposit used to write hundreds of audit lines
+in a burst and the app answered nothing for up to twenty seconds at the exact moment the human
+asked &quot;all good?&quot;. The settle writes its row before it logs, and a ledger refresh cannot
+re-enter itself.</li>
+<li>Three read-only tools that need no approval: <code>proposals</code> lists recent moves newest first,
+<code>diagnose</code> returns the view plus the move&#39;s own log lines and the router&#39;s and venue&#39;s status,
+<code>show</code> draws a proposal, a transaction, a position or the deposit card in the window. The
+orientation read <code>start</code> now names what is in flight and what is waiting, with amounts.</li>
+<li>The agent answers &quot;all good?&quot; with facts: the stage, what it is waiting on, elapsed against
+typical, the transaction hash. Never a bare &quot;waiting&quot;.</li>
+<li>Policy in one click. The ten-times-per-step rule is gone: a limit moves to what the sentence
+says in one approval. The ask threshold must sit strictly under the hard cap or the change is
+refused (<code>never_asks</code>), a sentence that does not name every figure it moves is refused
+(<code>sentence_mismatch</code>), no click can set a limit above $1,000,000 per transaction or
+$10,000,000 per day or session (<code>above_ceiling</code>), and an accepted change carries before and
+after for every axis.</li>
+<li>The approval card is the move card: the amount that leaves, in mono, the two pockets, the fee,
+the sentence the app wrote, elapsed against typical, then No and Yes after the facts at every
+width. On a rule change the app writes the headline and the arithmetic and quotes the agent&#39;s
+words under them as the agent&#39;s. The dock holds the card it drew until it is answered; newer
+asks wait behind one line.</li>
+<li>The assistant&#39;s activity indicator is the verb and the clock: what it is doing and for how
+long. The beam, the seat light and every looping pulse are deleted. The one thing that breathes
+is the button waiting on a click.</li>
+<li>Every button reserves the width of its waiting word, so &quot;Waiting for Touch ID&quot; never runs out
+of its box. Twenty-six sites.</li>
+<li>A demo money rail walks every stage on a timer, so the live card can be seen without real
+money; nothing of it is reachable on mainnet.</li>
+<li>An eval suite for the agent: 28 scenarios graded on the tool-call trace, the reply and the
+window&#39;s events, in a scripted mode that runs in CI without a model and a live mode that
+drives the real agent.</li>
+<li>Every link the window draws goes through one allowlist, <code>ui/core/links.js</code>, which writes the
+anchor itself; a receipt no longer hides a waiting request, and receipts reach the dock again
+(they had not since 2026-09-15).</li>
+<li>A mode the app does not have refuses to boot: the mode override in the environment is checked
+like the config file, so a typo cannot run live rails with the live checks off. A demo boot
+never resolves the real key file, whatever the environment says.</li>
+</ul>
+<h2 id="0-6-0">0.6.0<a class="anchor" href="#0-6-0" aria-label="Link to this section">#</a></h2>
+<p>Built 2026-09-17, the new-user pass; tagged v0.6.0 on 2026-09-18.</p>
+<ul>
+<li>The terms of use are accepted in the window before anything else opens, once per version of
+the terms; the click is recorded in <code>state/terms.json</code> and in the audit log as
+<code>terms_accepted</code>. <code>POST /api/terms/accept</code> carries the window token like the vault writes.</li>
+<li>A Help menu: Documentation, Report a Problem, Report a Security Issue, Terms of Use, Privacy.</li>
 <li>The chain era leaves: the product is two pockets, the NEAR Intents balance and the Hyperliquid
 collateral, and nothing signs a chain transaction any more.</li>
 <li>One send tool, <code>propose_send</code>, replaces <code>propose_intents_send</code>: where the money lands is
@@ -362,7 +502,7 @@ bridge deposit, each run end to end on Arbitrum Sepolia.</li>
 
     </div>
     <nav class="pager" aria-label="Pages">
-      <a class="prev" href="/docs/troubleshooting/"><span>Previous</span>Troubleshooting</a>
+      <a class="prev" href="/docs/known-limits/"><span>Previous</span>Known limits</a>
       <span></span>
     </nav>
   </article>

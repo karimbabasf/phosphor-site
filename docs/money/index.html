@@ -204,7 +204,7 @@
   <input type="checkbox" id="pages" class="side-toggle">
   <label for="pages" class="side-label">Pages</label>
   <nav aria-label="Docs">
-    <ul><li><a href="/docs/getting-started/">Getting started</a></li><li><a href="/docs/connect-an-agent/">Connect an agent</a></li><li><a href="/docs/money/" aria-current="page">Money</a></li><li><a href="/docs/trading/">Trading</a></li><li><a href="/docs/policy/">Policy</a></li><li><a href="/docs/security/">Security</a></li><li><a href="/docs/tools/">Tools</a></li><li><a href="/docs/troubleshooting/">Troubleshooting</a></li><li><a href="/docs/changelog/">Changelog</a></li></ul>
+    <ul><li><a href="/docs/getting-started/">Getting started</a></li><li><a href="/docs/connect-an-agent/">Connect an agent</a></li><li><a href="/docs/money/" aria-current="page">Money</a></li><li><a href="/docs/trading/">Trading</a></li><li><a href="/docs/policy/">Policy</a></li><li><a href="/docs/security/">Security</a></li><li><a href="/docs/tools/">Tools</a></li><li><a href="/docs/troubleshooting/">Troubleshooting</a></li><li><a href="/docs/known-limits/">Known limits</a></li><li><a href="/docs/changelog/">Changelog</a></li></ul>
     <div class="side-head">For developers</div>
     <ul><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/architecture.md" target="_blank" rel="noopener">Architecture</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security-model.md" target="_blank" rel="noopener">Security model</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/reference.md" target="_blank" rel="noopener">Reference</a></li></ul>
   </nav>
@@ -213,9 +213,9 @@
     <header class="doc-head">
       <h1>Money</h1>
       <p class="lede">Phosphor keeps money in two places, moves it between them, and pays it out to other people. This page walks through every move: where the money lives, deposit, swap, send, funding the trading account and bringing collateral back, what &quot;settling&quot; means, and the fees that make the app refuse a move.</p>
-      <div class="doc-meta"><span class="mono">v0.6.0</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/money.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.9.0</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/money.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
-    <nav class="onpage" aria-label="On this page"><ul><li><a href="#where-money-lives">Where money lives</a></li><li><a href="#deposit">Deposit</a></li><li><a href="#swap">Swap</a></li><li><a href="#send">Send</a></li><li><a href="#fund-the-trading-account">Fund the trading account</a></li><li><a href="#withdraw-from-hyperliquid">Withdraw from Hyperliquid</a></li><li><a href="#settling">Settling</a></li><li><a href="#fees-and-refusals">Fees and refusals</a></li></ul></nav>
+    <nav class="onpage" aria-label="On this page"><ul><li><a href="#where-money-lives">Where money lives</a></li><li><a href="#deposit">Deposit</a></li><li><a href="#swap">Swap</a></li><li><a href="#send">Send</a></li><li><a href="#fund-the-trading-account">Fund the trading account</a></li><li><a href="#withdraw-from-hyperliquid">Withdraw from Hyperliquid</a></li><li><a href="#after-the-click">After the click</a></li><li><a href="#fees-and-refusals">Fees and refusals</a></li></ul></nav>
     <div class="prose">
 <h2 id="where-money-lives">Where money lives<a class="anchor" href="#where-money-lives" aria-label="Link to this section">#</a></h2>
 <p>Money lives in two pockets. The Basic tab&#39;s What you hold lists both, and the Pro tab&#39;s Money
@@ -251,7 +251,9 @@ first six and last four characters. Read the address in the window.</p>
 both legs stay inside NEAR Intents and nothing moves on any chain. Every swap carries a floor,
 the least you will accept, and the app refuses a floor of zero or one more than 20 percent below
 its own quote. Under the click threshold a swap runs on its own; above it, the card shows what
-leaves and what arrives at least, and waits for your click. See <a href="/docs/policy/">Policy</a>.</p>
+leaves and what arrives at least, and waits for your click. See <a href="/docs/policy/">Policy</a>. One
+exception: a swap that spends a coin the app cannot price is valued off what the quote says
+arrives, and a move the app cannot measure always waits for your click, whatever its size.</p>
 <h2 id="send">Send<a class="anchor" href="#send" aria-label="Link to this section">#</a></h2>
 <p>A send is the one way money leaves for somebody else, and it leaves only from the intents
 balance. Your assistant proposes it with <code>propose_send</code> and must say where it lands: on a real
@@ -274,7 +276,7 @@ address in groups of four with Copy and an explorer link, the chain, the token, 
 least, the fee with the bridge&#39;s flat part named, and what the chain says about the address.</p>
 <h3 id="the-touch-id-sentence">The Touch ID sentence<a class="anchor" href="#the-touch-id-sentence" aria-label="Link to this section">#</a></h3>
 <p>On an enclave wallet the click puts up a Touch ID dialog whose sentence the app composes from the
-proposal&#39;s own fields, for example &quot;Approve: Pay 0.01 ETH to 0xd7b2de58...1D4d5050 on Ethereum
+proposal&#39;s own fields, for example &quot;Approve: Pay 0.01 ETH to 0xb583f419...84BB5DB0 on Ethereum
 ($24.40)&quot;. The receiver is shortened to eight characters at each end. Check them against the
 address you gave, then confirm. The agent&#39;s words never reach this dialog.</p>
 <h3 id="the-recipients-book">The recipients book<a class="anchor" href="#the-recipients-book" aria-label="Link to this section">#</a></h3>
@@ -301,17 +303,26 @@ charges, because each withdrawal address is new to it. So 8 USDC back costs abou
 100 USDC about 1.5 percent. Below 5 USDC the withdrawal is refused. The card is headed Bring
 collateral back from trading, and the receipt carries the venue nonce and the balance change on
 both sides, which is what your assistant should quote before it calls the move done.</p>
-<h2 id="settling">Settling<a class="anchor" href="#settling" aria-label="Link to this section">#</a></h2>
-<p>A card says Settling from your click until the venue answers. The bridge reports success the
-moment the solver fills, and your balance can trail that by a block or, for a Hyperliquid
-deposit, by the time the bridge takes. The app waits for the balance to rise, up to ninety
-seconds for the intents balance and two minutes for Hyperliquid.</p>
-<p>If the venue said success and the balance has not shown it, or the account could not be read,
-the row lands as Not confirmed and nothing more is signed. That is the honest state, not a
-failure: the money is on its way. The app judges the row again on every balance refresh and asks
-the bridge again every ten minutes; Reconcile on the card asks now. Never send the same move again
-while a row says Not confirmed. <a href="/docs/troubleshooting/#a-deposit-says-settling-or-not-confirmed">Troubleshooting</a>
-walks through the case that shaped this.</p>
+<h2 id="after-the-click">After the click<a class="anchor" href="#after-the-click" aria-label="Link to this section">#</a></h2>
+<p>One card follows a move from the click to the end, and its stage line changes in place. Every
+stage names what the app is waiting on, with a clock beside it, and the agent reads the same
+line you do.</p>
+<p>A swap goes Signing, Sending it, Finding a match, Settling on NEAR, Settled, checking your
+balance, then Confirmed. Funding the trading account, and bringing collateral back, go Sending
+it, Deposit seen, On its way, Waiting for the venue to credit it, then Confirmed. Confirmed is
+said only once your balance has risen: the bridge reports success the moment its solver fills,
+and the money can trail that by a block, or by the minutes a Hyperliquid deposit takes to cross.
+The app watches the balance for ninety seconds inside NEAR Intents and two minutes on
+Hyperliquid before it says so.</p>
+<p>A move that has not changed for eight times its usual length, and at least ten minutes, reads
+&quot;Late, nothing has changed&quot;. Nothing is over: the app keeps watching, and the card moves on
+the moment the venue credits it. Refunded and Failed are endings, and each names why.</p>
+<p>If the venue said success and the app could not see the money land, the row is Not confirmed
+and nothing more is signed. That is the honest state, not a failure: the money is on its way.
+The app judges the row again on every balance refresh and asks the bridge again every ten
+minutes; Reconcile on the card asks now. Never send the same move again while a row says Not
+confirmed. <a href="/docs/troubleshooting/#a-move-is-late-or-not-confirmed">Troubleshooting</a> walks through
+the case that shaped this.</p>
 <h2 id="fees-and-refusals">Fees and refusals<a class="anchor" href="#fees-and-refusals" aria-label="Link to this section">#</a></h2>
 <p>The app refuses a move that loses too much of itself to fees, and names the fee when it does.</p>
 <ul>

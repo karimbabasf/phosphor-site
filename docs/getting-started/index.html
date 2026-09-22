@@ -204,7 +204,7 @@
   <input type="checkbox" id="pages" class="side-toggle">
   <label for="pages" class="side-label">Pages</label>
   <nav aria-label="Docs">
-    <ul><li><a href="/docs/getting-started/" aria-current="page">Getting started</a></li><li><a href="/docs/connect-an-agent/">Connect an agent</a></li><li><a href="/docs/money/">Money</a></li><li><a href="/docs/trading/">Trading</a></li><li><a href="/docs/policy/">Policy</a></li><li><a href="/docs/security/">Security</a></li><li><a href="/docs/tools/">Tools</a></li><li><a href="/docs/troubleshooting/">Troubleshooting</a></li><li><a href="/docs/changelog/">Changelog</a></li></ul>
+    <ul><li><a href="/docs/getting-started/" aria-current="page">Getting started</a></li><li><a href="/docs/connect-an-agent/">Connect an agent</a></li><li><a href="/docs/money/">Money</a></li><li><a href="/docs/trading/">Trading</a></li><li><a href="/docs/policy/">Policy</a></li><li><a href="/docs/security/">Security</a></li><li><a href="/docs/tools/">Tools</a></li><li><a href="/docs/troubleshooting/">Troubleshooting</a></li><li><a href="/docs/known-limits/">Known limits</a></li><li><a href="/docs/changelog/">Changelog</a></li></ul>
     <div class="side-head">For developers</div>
     <ul><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/architecture.md" target="_blank" rel="noopener">Architecture</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security-model.md" target="_blank" rel="noopener">Security model</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/reference.md" target="_blank" rel="noopener">Reference</a></li></ul>
   </nav>
@@ -213,9 +213,9 @@
     <header class="doc-head">
       <h1>Getting started</h1>
       <p class="lede">Phosphor is a Mac app that holds your keys, your venue connections and your rules. An agent reads your money and proposes moves; you approve each one with a click in the window. This page takes you from the download to a wallet that is made, backed up and locked, and shows you the brake.</p>
-      <div class="doc-meta"><span class="mono">v0.6.0</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/getting-started.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.9.0</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/getting-started.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
-    <nav class="onpage" aria-label="On this page"><ul><li><a href="#download">Download</a></li><li><a href="#check-the-file">Check the file</a></li><li><a href="#the-gatekeeper-warning">The Gatekeeper warning</a></li><li><a href="#first-open">First open</a></li><li><a href="#create-or-restore-a-wallet">Create or restore a wallet</a></li><li><a href="#the-backup-words">The backup words</a></li><li><a href="#touch-id-and-the-secure-enclave">Touch ID and the Secure Enclave</a></li><li><a href="#the-15-minute-lock">The 15 minute lock</a></li><li><a href="#freeze-everything">Freeze everything</a></li><li><a href="#next">Next</a></li></ul></nav>
+    <nav class="onpage" aria-label="On this page"><ul><li><a href="#download">Download</a></li><li><a href="#check-the-file">Check the file</a></li><li><a href="#the-gatekeeper-warning">The Gatekeeper warning</a></li><li><a href="#first-open">First open</a></li><li><a href="#create-or-restore-a-wallet">Create or restore a wallet</a></li><li><a href="#the-backup-words">The backup words</a></li><li><a href="#touch-id-and-the-secure-enclave">Touch ID and the Secure Enclave</a></li><li><a href="#the-15-minute-lock">The 15 minute lock</a></li><li><a href="#freeze-everything">Freeze everything</a></li><li><a href="#the-help-menu">The Help menu</a></li><li><a href="#next">Next</a></li></ul></nav>
     <div class="prose">
 <h2 id="download">Download<a class="anchor" href="#download" aria-label="Link to this section">#</a></h2>
 <p>Download the disk image from <a href="https://phosphor.karimbabasf.com" target="_blank" rel="noopener">phosphor.karimbabasf.com</a>. It needs
@@ -230,11 +230,21 @@ the disk image. This line must print the same one:</p>
 <h2 id="the-gatekeeper-warning">The Gatekeeper warning<a class="anchor" href="#the-gatekeeper-warning" aria-label="Link to this section">#</a></h2>
 <p>The build is not notarized by Apple yet, so the first open stops with a warning. Open System
 Settings, then Privacy &amp; Security, scroll to Security and click Open Anyway. See
-<a href="/docs/troubleshooting/#macos-will-not-open-the-app">Troubleshooting</a> if the app still refuses.</p>
+<a href="/docs/troubleshooting/#macos-will-not-open-the-app">Troubleshooting</a> if the app still refuses.
+Notarization needs an Apple Developer account this project does not hold yet; until it does,
+the checksum above is what proves the file is the one on the release page. It is listed as a
+known gap in <a href="/docs/known-limits/">Known limits</a>.</p>
 <h2 id="first-open">First open<a class="anchor" href="#first-open" aria-label="Link to this section">#</a></h2>
-<p>The window opens on a welcome screen: &quot;Your money stays on this Mac, under a key only you hold.
-Your assistant does the work, and every move waits for your click.&quot; Nothing is uploaded and there
-is no account to make. Click Get started.</p>
+<p>The window opens on the terms: four plain facts (it is alpha and moves real money, your keys are
+yours alone, the venues are not ours, you are 18 or older) and links to the full
+<a href="https://phosphor.karimbabasf.com/terms/" target="_blank" rel="noopener">terms of use</a> and the
+<a href="https://phosphor.karimbabasf.com/privacy/" target="_blank" rel="noopener">privacy page</a>, which open in your browser. Nothing
+else opens until you click Accept and continue. The app records the click (the date and the
+version of the terms) in its own state folder and in the audit log, and asks again only when the
+terms change.</p>
+<p>Then the welcome: &quot;Your money stays on this Mac, under a key only you hold. Your assistant does
+the work, and every move waits for your click.&quot; Nothing is uploaded and there is no account to
+make. Click Get started.</p>
 <p>Every address the app makes is a real address that can hold real money. There is no practice
 mode. Size your first deposit as a test.</p>
 <h2 id="create-or-restore-a-wallet">Create or restore a wallet<a class="anchor" href="#create-or-restore-a-wallet" aria-label="Link to this section">#</a></h2>
@@ -242,15 +252,16 @@ mode. Size your first deposit as a test.</p>
 <h3 id="with-a-secure-enclave">With a Secure Enclave<a class="anchor" href="#with-a-secure-enclave" aria-label="Link to this section">#</a></h3>
 <p>The Secure Enclave is a separate chip inside your Mac that holds keys and never lets them out. On
 a Mac that has one, the first run is short: Create your wallet is one click and one Touch ID.
-There is nothing to write down yet. The app then shows your addresses and asks you to connect an
-assistant, see <a href="/docs/connect-an-agent/">Connect an agent</a>.</p>
+There is nothing to write down yet. The app then shows your addresses and asks which agent you
+use, see <a href="/docs/connect-an-agent/">Connect an agent</a>.</p>
 <h3 id="with-a-password">With a password<a class="anchor" href="#with-a-password" aria-label="Link to this section">#</a></h3>
 <p>Without an enclave, the app asks you to make a new wallet or bring one in with its recovery
 words. Set a password of at least eight characters. Nobody can reset it, not the app and not your
 assistant. The app then shows twelve recovery words once, and asks you to type three of them back
 by their number before it goes on.</p>
-<p>The last screen, Set the ask threshold, shows the click threshold. The shipped default is $100. A
-change to it goes through your assistant and waits for your click, see <a href="/docs/policy/">Policy</a>.</p>
+<p>The last screen, Set the ask threshold, sets the click threshold for this wallet. The shipped
+default is $100. A later change goes through your assistant and waits for your click, see
+<a href="/docs/policy/">Policy</a>.</p>
 <h3 id="a-wallet-from-another-mac">A wallet from another Mac<a class="anchor" href="#a-wallet-from-another-mac" aria-label="Link to this section">#</a></h3>
 <p>A wallet file made on a different Mac cannot be opened here, because its key lives in that Mac&#39;s
 enclave. The window says Made on another Mac and asks for your recovery phrase, twelve or
@@ -294,9 +305,15 @@ says it cancels every working order and disarms every rule, and it asks you to c
 press the button again, whatever its size. The app also cancels every order it placed, ends every
 armed plan, and closes the positions those plans opened when it can reach the venue. Money does
 not leave the app. Check the Trade tab afterwards, see <a href="/docs/trading/">Trading</a>.</p>
+<h2 id="the-help-menu">The Help menu<a class="anchor" href="#the-help-menu" aria-label="Link to this section">#</a></h2>
+<p>Help in the menu bar opens the documentation, a problem report on GitHub with your version and
+macOS version already filled in, the security page, the terms of use and the privacy page, each
+in your browser. Copy Log for a Report, under Report a Problem, puts the newest audit lines on
+the clipboard for the report, with this app&#39;s own secrets already removed. The Phosphor menu
+beside it has Check for Updates and Copy MCP Config.</p>
 <h2 id="next">Next<a class="anchor" href="#next" aria-label="Link to this section">#</a></h2>
 <ul>
-<li><a href="/docs/connect-an-agent/">Connect an agent</a>: start the built-in assistant or connect your own.</li>
+<li><a href="/docs/connect-an-agent/">Connect an agent</a>: pick the agent you already use.</li>
 <li><a href="/docs/money/">Money</a>: deposit, swap, send, and fund the trading account.</li>
 <li><a href="/docs/policy/">Policy</a>: the rules that decide what needs your click.</li>
 </ul>

@@ -3,18 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tools</title>
-<meta name="description" content="Phosphor registers 46 tools for the agent that drives it, and every one is listed here in five groups: read, propose, chart and trade surface, agents, and other. Reads change nothing. Propose tools return a proposal id and a simulation, and cannot approve, refuse or execute anything. Every call, read or write, is written to the audit log. A worker an agent spawns is an analyst: the tools marked lead only are not registered for it at all, so there is nothing to talk it into.">
-<link rel="canonical" href="https://phosphor.karimbabasf.com/docs/tools/">
+<title>Known limits</title>
+<meta name="description" content="What this build does not cover, stated plainly so you can size what you put in it. Each item says what the limit is, what it means for your money, and what closes it. None of them is hidden in the app: the Vault tab, the cards and the audit log say the same things in their own words.">
+<link rel="canonical" href="https://phosphor.karimbabasf.com/docs/known-limits/">
 <meta name="theme-color" content="#0E0F13">
 <link rel="icon" href="/favicon.ico?v=9" sizes="32x32">
 <link rel="icon" href="/favicon.svg?v=9" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=9">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Phosphor">
-<meta property="og:url" content="https://phosphor.karimbabasf.com/docs/tools/">
-<meta property="og:title" content="Tools">
-<meta property="og:description" content="Phosphor registers 46 tools for the agent that drives it, and every one is listed here in five groups: read, propose, chart and trade surface, agents, and other. Reads change nothing. Propose tools return a proposal id and a simulation, and cannot approve, refuse or execute anything. Every call, read or write, is written to the audit log. A worker an agent spawns is an analyst: the tools marked lead only are not registered for it at all, so there is nothing to talk it into.">
+<meta property="og:url" content="https://phosphor.karimbabasf.com/docs/known-limits/">
+<meta property="og:title" content="Known limits">
+<meta property="og:description" content="What this build does not cover, stated plainly so you can size what you put in it. Each item says what the limit is, what it means for your money, and what closes it. None of them is hidden in the app: the Vault tab, the cards and the audit log say the same things in their own words.">
 <meta property="og:image" content="https://phosphor.karimbabasf.com/og.png?v=2">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/Sora-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
@@ -204,264 +204,91 @@
   <input type="checkbox" id="pages" class="side-toggle">
   <label for="pages" class="side-label">Pages</label>
   <nav aria-label="Docs">
-    <ul><li><a href="/docs/getting-started/">Getting started</a></li><li><a href="/docs/connect-an-agent/">Connect an agent</a></li><li><a href="/docs/money/">Money</a></li><li><a href="/docs/trading/">Trading</a></li><li><a href="/docs/policy/">Policy</a></li><li><a href="/docs/security/">Security</a></li><li><a href="/docs/tools/" aria-current="page">Tools</a></li><li><a href="/docs/troubleshooting/">Troubleshooting</a></li><li><a href="/docs/known-limits/">Known limits</a></li><li><a href="/docs/changelog/">Changelog</a></li></ul>
+    <ul><li><a href="/docs/getting-started/">Getting started</a></li><li><a href="/docs/connect-an-agent/">Connect an agent</a></li><li><a href="/docs/money/">Money</a></li><li><a href="/docs/trading/">Trading</a></li><li><a href="/docs/policy/">Policy</a></li><li><a href="/docs/security/">Security</a></li><li><a href="/docs/tools/">Tools</a></li><li><a href="/docs/troubleshooting/">Troubleshooting</a></li><li><a href="/docs/known-limits/" aria-current="page">Known limits</a></li><li><a href="/docs/changelog/">Changelog</a></li></ul>
     <div class="side-head">For developers</div>
     <ul><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/architecture.md" target="_blank" rel="noopener">Architecture</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security-model.md" target="_blank" rel="noopener">Security model</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/reference.md" target="_blank" rel="noopener">Reference</a></li></ul>
   </nav>
 </aside>
   <article class="doc">
     <header class="doc-head">
-      <h1>Tools</h1>
-      <p class="lede">Phosphor registers 46 tools for the agent that drives it, and every one is listed here in five groups: read, propose, chart and trade surface, agents, and other. Reads change nothing. Propose tools return a proposal id and a simulation, and cannot approve, refuse or execute anything. Every call, read or write, is written to the audit log. A worker an agent spawns is an analyst: the tools marked lead only are not registered for it at all, so there is nothing to talk it into.</p>
-      <div class="doc-meta"><span class="mono">v0.9.0</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/tools.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <h1>Known limits</h1>
+      <p class="lede">What this build does not cover, stated plainly so you can size what you put in it. Each item says what the limit is, what it means for your money, and what closes it. None of them is hidden in the app: the Vault tab, the cards and the audit log say the same things in their own words.</p>
+      <div class="doc-meta"><span class="mono">v0.9.0</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/known-limits.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
-    <nav class="onpage" aria-label="On this page"><ul><li><a href="#read">Read</a></li><li><a href="#propose">Propose</a></li><li><a href="#chart-and-trade-surface">Chart and trade surface</a></li><li><a href="#agents">Agents</a></li><li><a href="#other">Other</a></li><li><a href="#what-is-not-here">What is not here</a></li></ul></nav>
+    <nav class="onpage" aria-label="On this page"><ul><li><a href="#alpha-software-that-moves-real-money">Alpha software that moves real money</a></li><li><a href="#the-key-is-in-memory-while-the-vault-is-open">The key is in memory while the vault is open</a></li><li><a href="#a-local-program-that-reads-the-seat-secret-can-propose">A local program that reads the seat secret can propose</a></li><li><a href="#the-app-is-not-notarized-by-apple">The app is not notarized by Apple</a></li><li><a href="#the-venues-are-not-ours">The venues are not ours</a></li><li><a href="#hyperliquid-and-what-a-withdrawal-needs">Hyperliquid, and what a withdrawal needs</a></li><li><a href="#what-the-app-cannot-protect-you-from">What the app cannot protect you from</a></li><li><a href="#where-to-report-a-limit-you-hit">Where to report a limit you hit</a></li></ul></nav>
     <div class="prose">
-<h2 id="read">Read<a class="anchor" href="#read" aria-label="Link to this section">#</a></h2>
-<table>
-<thead>
-<tr>
-<th>Tool</th>
-<th>Does</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>start</code></td>
-<td>Where you are and what you can do: the live state, the click threshold, which tab you are looking at, and the index of every capability with the tool that performs it</td>
-</tr>
-<tr>
-<td><code>wallet</code></td>
-<td>Everything held: one row per balance inside NEAR Intents and one for the Hyperliquid account, with quantity, price, value and share</td>
-</tr>
-<tr>
-<td><code>deposit</code></td>
-<td>Opens the deposit card for one asset on one network and starts watching for the money. The agent gets the first six and last four characters of the address, never the whole. Lead only</td>
-</tr>
-<tr>
-<td><code>composition</code></td>
-<td>Stablecoin composition by issuer and chain: shares, freezable share, unclassified holdings</td>
-</tr>
-<tr>
-<td><code>policy_show</code></td>
-<td>The current policy as plain-English sentences</td>
-</tr>
-<tr>
-<td><code>log_tail</code></td>
-<td>The most recent audit log lines, newest first</td>
-</tr>
-<tr>
-<td><code>proposal_status</code></td>
-<td>Where one money move is right now, as the one object the card in the window draws: the stage and its label, what is being waited on, how long it has been going, the amounts and both pockets, every transaction hash, and an error with a sentence when something went wrong</td>
-</tr>
-<tr>
-<td><code>proposals</code></td>
-<td>Recent money moves, newest first, each the same object <code>proposal_status</code> returns; a kind filter and a limit up to 50. For &quot;show me my last deposit&quot; without asking anyone for an id. Lead only</td>
-</tr>
-<tr>
-<td><code>diagnose</code></td>
-<td>Everything about one money move in one call, for &quot;why is it not there yet&quot;: the view, the row&#39;s own audit lines, and what the router and the venue say about it. Lead only</td>
-</tr>
-<tr>
-<td><code>chart_read</code></td>
-<td>The chart as it stands: product, timeframe, price, indicators, levels, drawings, and what is stale</td>
-</tr>
-<tr>
-<td><code>chart_scan</code></td>
-<td>Several timeframes at once without moving the chart: price, change, range, ATR, trend</td>
-</tr>
-<tr>
-<td><code>chart_snapshot</code></td>
-<td>A small picture of the chart as you see it, beside a one-line digest. Lead only</td>
-</tr>
-<tr>
-<td><code>market_search</code></td>
-<td>Finds a market to chart from anything a person would say (&quot;btc&quot;, &quot;PEPE-USD&quot;)</td>
-</tr>
-<tr>
-<td><code>research</code></td>
-<td>Headlines and summaries about a market from a fixed list of crypto publishers. This read leaves the machine</td>
-</tr>
-<tr>
-<td><code>chain_address</code></td>
-<td>What an address holds and has done on one network, with an explorer link. This read leaves the machine</td>
-</tr>
-<tr>
-<td><code>chain_transactions</code></td>
-<td>The most recent transactions of an address on one network, at most 25</td>
-</tr>
-<tr>
-<td><code>chain_transaction</code></td>
-<td>One transaction by hash: fields, fee, block, confirmations, explorer link</td>
-</tr>
-<tr>
-<td><code>intents_activity</code></td>
-<td>What an account has moved inside NEAR Intents: deposits, withdrawals, swap legs and sends</td>
-</tr>
-<tr>
-<td><code>chart_batch</code></td>
-<td>Many chart questions and drawings in one call: candles, pivots, levels, regime, ATR and more</td>
-</tr>
-<tr>
-<td><code>trade_read</code></td>
-<td>The whole trading situation: account health, positions with liquidation distance, orders, fills, plans</td>
-</tr>
-<tr>
-<td><code>trade_batch</code></td>
-<td>Several trading reads in one round trip: account, positions, orders, fills, plans, market, venue health</td>
-</tr>
-</tbody></table>
-<h2 id="propose">Propose<a class="anchor" href="#propose" aria-label="Link to this section">#</a></h2>
-<p>Every propose tool goes through the policy engine, see <a href="/docs/policy/">Policy</a>. Three of them wait
-for your click at any size; the rest run on their own under the click threshold.</p>
-<table>
-<thead>
-<tr>
-<th>Tool</th>
-<th>Does</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>propose_swap</code></td>
-<td>Swaps one token for another inside NEAR Intents; nothing moves on any chain. Click above the threshold</td>
-</tr>
-<tr>
-<td><code>propose_send</code></td>
-<td>Sends a balance to somebody, paid out on a chain or credited inside NEAR Intents. Always a click, see <a href="/docs/money/#send">Money</a></td>
-</tr>
-<tr>
-<td><code>propose_hl_deposit</code></td>
-<td>Funds the Hyperliquid account from the intents balance. Click above the threshold</td>
-</tr>
-<tr>
-<td><code>propose_hl_withdraw</code></td>
-<td>Brings collateral back from Hyperliquid into the intents balance. Always a click, and refused while any position is open</td>
-</tr>
-<tr>
-<td><code>propose_trade</code></td>
-<td>Arms a plan on Hyperliquid perpetuals, see <a href="/docs/trading/">Trading</a>. Click above the threshold</td>
-</tr>
-<tr>
-<td><code>propose_trade_change</code></td>
-<td>Changes an armed plan: a new stop or target, cancel, or close. One change per call</td>
-</tr>
-<tr>
-<td><code>propose_policy_change</code></td>
-<td>Proposes a change to your rules. Always a click</td>
-</tr>
-</tbody></table>
-<h2 id="chart-and-trade-surface">Chart and trade surface<a class="anchor" href="#chart-and-trade-surface" aria-label="Link to this section">#</a></h2>
-<p>These change what you see and move no money.</p>
-<table>
-<thead>
-<tr>
-<th>Tool</th>
-<th>Does</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>chart_draw</code></td>
-<td>Draws on the chart in one call: view, indicators, levels, marks, lines and zones, or clears its own work. Lead only</td>
-</tr>
-<tr>
-<td><code>chart_layout</code></td>
-<td>Puts one to four charts side by side. Lead only</td>
-</tr>
-<tr>
-<td><code>show</code></td>
-<td>Draws something that already exists as a card in the window: a proposal, a transaction on a named network, an open position, or the deposit card. Moves no money and asks no permission. Lead only</td>
-</tr>
-<tr>
-<td><code>trade_focus</code></td>
-<td>Points the trading surface at one market; the chart follows</td>
-</tr>
-<tr>
-<td><code>trade_highlight</code></td>
-<td>Points at one row or chart object (a position, an order, a plan, a level) and says why, in a note you read beside it</td>
-</tr>
-<tr>
-<td><code>trade_overlay</code></td>
-<td>Turns one chart overlay on or off: entry, liquidation, the plan stop wall, working stops, targets, orders, fills</td>
-</tr>
-<tr>
-<td><code>trade_clear</code></td>
-<td>Removes what the agent put on the trading surface</td>
-</tr>
-<tr>
-<td><code>trade_plan</code></td>
-<td>Draws a plan on the chart as an idea under Waiting. No authority until <code>propose_trade</code> arms it. Lead only</td>
-</tr>
-</tbody></table>
-<h2 id="agents">Agents<a class="anchor" href="#agents" aria-label="Link to this section">#</a></h2>
-<p>Several agents can drive at once, see <a href="/docs/connect-an-agent/#more-than-one-agent">Connect an agent</a>.</p>
-<table>
-<thead>
-<tr>
-<th>Tool</th>
-<th>Does</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>agent_roster</code></td>
-<td>Who else is driving right now: name, role, who spawned them, when they attached, calls made</td>
-</tr>
-<tr>
-<td><code>agent_board</code></td>
-<td>The team board: one-line posts agents write for each other and for you. Data, never authority</td>
-</tr>
-<tr>
-<td><code>agent_post</code></td>
-<td>Writes one line to the board: a claim before starting a piece of work, or a finding</td>
-</tr>
-<tr>
-<td><code>agent_jobs</code></td>
-<td>What the workers this agent spawned have come back with; <code>stop</code> ends one</td>
-</tr>
-<tr>
-<td><code>agent_spawn</code></td>
-<td>Starts a worker on a written brief. A worker reads, measures, draws and posts, and has no propose tools. Three at once at most. Lead only</td>
-</tr>
-</tbody></table>
-<h2 id="other">Other<a class="anchor" href="#other" aria-label="Link to this section">#</a></h2>
-<table>
-<thead>
-<tr>
-<th>Tool</th>
-<th>Does</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>skill</code></td>
-<td>Loads an enabled skill: the operator&#39;s guidance for one kind of work. Guidance and data, never a wider surface</td>
-</tr>
-<tr>
-<td><code>switch</code></td>
-<td>Moves the window between Basic, Pro, Trade and Vault. Every switch is audited. Lead only</td>
-</tr>
-<tr>
-<td><code>watch</code></td>
-<td>Sets which coins the Basic tab tracks, one to four, and saves the choice. Lead only</td>
-</tr>
-<tr>
-<td><code>set_theme</code></td>
-<td>Recolours the window: five named slots on its one dark colourway. Lead only</td>
-</tr>
-<tr>
-<td><code>profile_learned</code></td>
-<td>Records one concept the agent explained to you, so the next session does not explain it again. Lead only</td>
-</tr>
-</tbody></table>
-<h2 id="what-is-not-here">What is not here<a class="anchor" href="#what-is-not-here" aria-label="Link to this section">#</a></h2>
-<p>There is no <code>approve</code>, no <code>refuse</code>, no <code>kill</code>, no <code>dismiss</code> and no <code>execute</code> tool, and a test holds
-the live list to that. No tool reads a private key or the recovery phrase. No tool moves money
-into the wallet: deposits go through the card in the window, see <a href="/docs/money/#deposit">Money</a>. The
-source of truth for this list is <code>src/mcp.ts</code> in the
-<a href="https://github.com/karimbabasf/phosphor" target="_blank" rel="noopener">repository</a>; <a href="/docs/security/">Security</a> says what the
-surface does and does not guarantee.</p>
+<h2 id="alpha-software-that-moves-real-money">Alpha software that moves real money<a class="anchor" href="#alpha-software-that-moves-real-money" aria-label="Link to this section">#</a></h2>
+<p>Every address the app makes is a real address, and every move it makes is a real move on a real
+venue. There is no practice mode. The safety systems are the engineering of one person and have
+not had a third-party audit. Read the <a href="https://github.com/karimbabasf/phosphor/blob/main/DISCLAIMER.md" target="_blank" rel="noopener">disclaimer</a>
+before you fund the wallet, and start with an amount you can afford to lose.</p>
+<p>What closes it: an audit by a third party, which is planned and not done. Nothing internal
+gets called an audit until a third party signs it.</p>
+<h2 id="the-key-is-in-memory-while-the-vault-is-open">The key is in memory while the vault is open<a class="anchor" href="#the-key-is-in-memory-while-the-vault-is-open" aria-label="Link to this section">#</a></h2>
+<p>Your wallet file is sealed on disk, and on a Mac with a Secure Enclave the seal opens only with
+Touch ID. But while the vault is open the unsealed key sits in the app&#39;s memory, because that is
+what signs the moves you approved and the small ones your rules allow. The lock wipes it, and the
+lock comes after fifteen minutes with nobody at the window, when the Mac sleeps, and when you
+close the window.</p>
+<p>What it means: a program that can read the app&#39;s memory while the vault is open has the key.
+On macOS that takes a process running as you with the right to attach to another process, which
+the hardened runtime is there to refuse. Keep the vault open only while you are using it.</p>
+<p>What closes it: a separate signing process or a hardware signer, neither of which ships here.</p>
+<h2 id="a-local-program-that-reads-the-seat-secret-can-propose">A local program that reads the seat secret can propose<a class="anchor" href="#a-local-program-that-reads-the-seat-secret-can-propose" aria-label="Link to this section">#</a></h2>
+<p>The agent&#39;s door into the app is guarded by a secret the app writes into its own data folder at
+every start. A web page cannot read that file. A program already running as you on this Mac can,
+and once it has, it can do what your agent can do: read your balances and propose moves.</p>
+<p>What it means: a move under your click threshold runs without a click. That is the one money
+exposure such a program has, and your rules set its size. If a hostile program running as you is
+something you worry about, lower the threshold or set it to zero: at zero every move waits for
+you. Nothing on this Mac can approve a move: the click needs the window token, which no route
+serves and no program can fetch.</p>
+<p>What closes it: the agent&#39;s door moving onto a socket the operating system can identify the
+caller of. Until then the seat secret is the credential in its place.</p>
+<h2 id="the-app-is-not-notarized-by-apple">The app is not notarized by Apple<a class="anchor" href="#the-app-is-not-notarized-by-apple" aria-label="Link to this section">#</a></h2>
+<p>The download is signed by the build itself, not with an Apple Developer ID, and Apple has not
+notarized it. So the first open stops at a Gatekeeper warning, and you go through System
+Settings, Privacy &amp; Security, Open Anyway. Notarization needs an Apple Developer account this
+project does not hold yet.</p>
+<p>What it means: the checksum on the release page is what proves the file is the one we built.
+Check it before you open the disk image, every time, see
+<a href="/docs/getting-started/#check-the-file">Getting started</a>. Two more things follow from the missing
+Developer ID. The Secure Enclave key is bound to this Mac rather than to Phosphor, so the Vault
+tab says &quot;Any process on this Mac can ask&quot;; a Developer ID build binds it to the app. And a
+signed update still verifies: the updater checks the bundle&#39;s own signature, which does not
+depend on Apple.</p>
+<p>What closes it: an Apple Developer account and a Developer ID certificate in the release
+workflow, which is already written to use them when they are set.</p>
+<h2 id="the-venues-are-not-ours">The venues are not ours<a class="anchor" href="#the-venues-are-not-ours" aria-label="Link to this section">#</a></h2>
+<p>Money inside NEAR Intents is held by the verifier and moved by solvers; money on Hyperliquid is
+held by the venue. The app reads them and signs for them, and it cannot make either of them do
+anything. A bridge that holds a failed deposit refunds it on its own timetable, through its own
+support, and the app can only keep asking and show you the state honestly. A venue outage means
+the app shows unknown, never zero, and signs nothing against a number it could not read.</p>
+<p>What it means: a move the app calls Not confirmed or &quot;Late, nothing has changed&quot; is money in
+the venue&#39;s hands, not lost and not the app&#39;s to recover by itself. Do not send it again.
+<a href="/docs/troubleshooting/#a-move-is-late-or-not-confirmed">Troubleshooting</a> says what to do.</p>
+<h2 id="hyperliquid-and-what-a-withdrawal-needs">Hyperliquid, and what a withdrawal needs<a class="anchor" href="#hyperliquid-and-what-a-withdrawal-needs" aria-label="Link to this section">#</a></h2>
+<p>Collateral leaves Hyperliquid only back into your intents balance, only with your click, and
+only while no position is open. Each withdrawal pays the bridge&#39;s fee and a 1 USDC activation
+fee the venue charges. Below 5 USDC a withdrawal is refused. On a unified Hyperliquid account
+the venue refuses the transfer the older exit used; the app either uses the transfer both
+account modes accept, or refuses before any quote and names the most it can send.</p>
+<h2 id="what-the-app-cannot-protect-you-from">What the app cannot protect you from<a class="anchor" href="#what-the-app-cannot-protect-you-from" aria-label="Link to this section">#</a></h2>
+<p>Your own click. A rule that does what it said, an address you confirmed wrongly, or an amount
+you approved without reading the card is not something the app can undo. The card and the Touch
+ID sentence both name the receiver and the amount so you can read them once more before the
+click; nothing reads them for you.</p>
+<h2 id="where-to-report-a-limit-you-hit">Where to report a limit you hit<a class="anchor" href="#where-to-report-a-limit-you-hit" aria-label="Link to this section">#</a></h2>
+<p>For anything that could move, expose or lose funds, use private reporting on the
+<a href="https://github.com/karimbabasf/phosphor" target="_blank" rel="noopener">GitHub repository</a>, see
+<a href="/docs/security/#reporting-a-problem">Security</a>. For anything else, Help, then Report a Problem in
+the menu bar opens an issue form with the version and your macOS filled in.</p>
 
     </div>
     <nav class="pager" aria-label="Pages">
-      <a class="prev" href="/docs/security/"><span>Previous</span>Security</a>
-      <a class="next" href="/docs/troubleshooting/"><span>Next</span>Troubleshooting</a>
+      <a class="prev" href="/docs/troubleshooting/"><span>Previous</span>Troubleshooting</a>
+      <a class="next" href="/docs/changelog/"><span>Next</span>Changelog</a>
     </nav>
   </article>
 </main>
