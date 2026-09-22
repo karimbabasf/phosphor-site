@@ -20,6 +20,7 @@ const appRoot = resolve(root, process.env.PHOSPHOR_DOCS ? join(process.env.PHOSP
 const src = process.env.PHOSPHOR_DOCS ? resolve(root, process.env.PHOSPHOR_DOCS) : join(appRoot, 'docs');
 const version = JSON.parse(readFileSync(join(appRoot, 'package.json'), 'utf8')).version;
 const repo = 'https://github.com/karimbabasf/phosphor';
+const site = 'https://phosphor.money';
 const today = new Date().toISOString().slice(0, 10);
 
 // The index: the ordered list under "## Pages", and the developer list after it.
@@ -119,17 +120,17 @@ const shell = ({ title, description, url, body, active, kind, noindex }) => `<!d
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
-${noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonical" href="https://phosphor.karimbabasf.com${url}">`}
+${noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonical" href="${site}${url}">`}
 <meta name="theme-color" content="#0E0F13">
 <link rel="icon" href="/favicon.ico?v=9" sizes="32x32">
 <link rel="icon" href="/favicon.svg?v=9" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=9">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Phosphor">
-<meta property="og:url" content="https://phosphor.karimbabasf.com${url}">
+<meta property="og:url" content="${site}${url}">
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(description)}">
-<meta property="og:image" content="https://phosphor.karimbabasf.com/og.png?v=2">
+<meta property="og:image" content="${site}/og.png?v=2">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/Sora-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/Sora-Regular.woff2" as="font" type="font/woff2" crossorigin>
@@ -269,7 +270,7 @@ ${html}
   const urls = ['/', '/docs/', ...pages.map(p => `/docs/${p.slug}/`), ...legal.map(s => `/${s}/`)];
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls.map(u => `  <url><loc>https://phosphor.karimbabasf.com${u}</loc></url>`).join('\n')}
+${urls.map(u => `  <url><loc>${site}${u}</loc></url>`).join('\n')}
 </urlset>
 `;
   write('sitemap.xml', xml);

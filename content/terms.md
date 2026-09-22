@@ -1,10 +1,10 @@
 # Terms of use
 
-The rules for this site and for the Phosphor app. Read them before you download the app, and read the [disclaimer](https://github.com/karimbabasf/phosphor/blob/main/DISCLAIMER.md) before you fund a wallet. Last updated 2026-09-17.
+The rules for this site and for the Phosphor app. Read them before you download the app, and read the [disclaimer](https://github.com/karimbabasf/phosphor/blob/main/DISCLAIMER.md) before you fund a wallet. Last updated 2026-09-22.
 
 ## Who this is between
 
-These terms are between you and Karim Baba, the author of Phosphor ("the author", "I"). They cover the website at phosphor.karimbabasf.com, the Phosphor app you download from it, the source code, and the documentation.
+These terms are between you and Karim Baba, the author of Phosphor ("the author", "I"). They cover the website at phosphor.money (formerly phosphor.karimbabasf.com), the Phosphor app you download from it, the source code, and the documentation.
 
 ## Accepting these terms
 
