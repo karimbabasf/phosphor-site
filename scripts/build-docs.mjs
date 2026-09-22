@@ -86,7 +86,7 @@ const nav = (active) => `
   <nav class="links" aria-label="Site">
     <a href="/docs/"${active === 'docs' ? ' aria-current="page"' : ''}>Docs</a>
     <a href="${repo}">GitHub</a>
-    <a href="https://x.com/karimbabasf">X</a>
+    <a href="https://x.com/usephosphor">X</a>
     <a class="download" href="/download/mac">Download for Mac</a>
   </nav>
 </div>`;
@@ -101,7 +101,7 @@ const footer = `
       <span class="foot-links">
         <a href="/docs/">Docs</a>
         <a href="${repo}">GitHub</a>
-        <a href="https://x.com/karimbabasf">X</a>
+        <a href="https://x.com/usephosphor">X</a>
         <a href="${repo}/blob/main/LICENSE">License</a>
         <a href="/terms/">Terms</a>
         <a href="/privacy/">Privacy</a>
