@@ -215,7 +215,7 @@
     <header class="doc-head">
       <h1>Troubleshooting</h1>
       <p class="lede">The situations people actually hit, what the window says in each, and what to do. The rule under all of them: when the app says a move is unconfirmed, do not send it again. Read first.</p>
-      <div class="doc-meta"><span class="mono">v0.9.2</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/troubleshooting.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.9.3</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/troubleshooting.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
     <nav class="onpage" aria-label="On this page"><ul><li><a href="#a-move-is-late-or-not-confirmed">A move is late, or Not confirmed</a></li><li><a href="#hyperliquid-is-not-answering-one-of-our-reads">Hyperliquid is not answering one of our reads</a></li><li><a href="#macos-will-not-open-the-app">macOS will not open the app</a></li><li><a href="#the-agent-does-not-connect">The agent does not connect</a></li><li><a href="#a-proposal-is-waiting-as-needs-the-unlock">A proposal is waiting as Needs the unlock</a></li><li><a href="#a-send-was-refused-for-a-typo">A send was refused for a typo</a></li><li><a href="#something-else">Something else</a></li></ul></nav>
     <div class="prose">
@@ -262,11 +262,13 @@ double-click Open Anyway in the disk image window, which opens System Settings a
 button, or go to Privacy &amp; Security and scroll down to Security yourself. No button there means
 the refused open was more than about an hour ago: open the app once more and look again. Check
 the disk image&#39;s SHA-256 first, see <a href="/docs/getting-started/#check-the-file">Getting started</a>.</p>
-<p>A second copy of the app refuses to start while one is running: &quot;Phosphor is already running as
-process N and holding 127.0.0.1:4177. Use that window rather than opening a second one.&quot; If the
-message names a control app from an earlier session with no window on it, quit that process as it
-says and start Phosphor again. If it says the port is in use by something that is not Phosphor,
-free the port or set a different one in <code>config.local.json</code>.</p>
+<p>Opening a second copy of the app while one is running, such as the copy in the disk image and the
+copy in Applications, brings the running one forward and closes the new one, with no message. A
+control app left running from an earlier session with no window on it, after a force quit for
+example, is stopped and replaced the next time Phosphor opens. If Phosphor says another Phosphor it
+did not start is running on 127.0.0.1:4177, that is usually one started from a source checkout
+with <code>npm run app</code>: stop it and open Phosphor again. If it says another program is using
+127.0.0.1:4177, quit that program, or set a different port in <code>config.local.json</code>.</p>
 <h2 id="the-agent-does-not-connect">The agent does not connect<a class="anchor" href="#the-agent-does-not-connect" aria-label="Link to this section">#</a></h2>
 <p>The MCP server your agent starts is a thin proxy: every call becomes one request to the app on
 <code>127.0.0.1:4177</code>. Check these in order.</p>
