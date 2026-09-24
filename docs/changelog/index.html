@@ -215,10 +215,41 @@
     <header class="doc-head">
       <h1>Changelog</h1>
       <p class="lede">What changed in each version of Phosphor, newest first, written from the git history of the <a href="https://github.com/karimbabasf/phosphor" target="_blank" rel="noopener">repository</a>. The top entry is the version these pages describe, and a test fails the suite when it is not the version in <code>package.json</code>. Versions without a git tag say so.</p>
-      <div class="doc-meta"><span class="mono">v0.9.3</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/changelog.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.10.0</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/changelog.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
-    <nav class="onpage" aria-label="On this page"><ul><li><a href="#0-9-3">0.9.3</a></li><li><a href="#0-9-2">0.9.2</a></li><li><a href="#0-9-1">0.9.1</a></li><li><a href="#0-9-0">0.9.0</a></li><li><a href="#0-8-0">0.8.0</a></li><li><a href="#0-7-0">0.7.0</a></li><li><a href="#0-6-0">0.6.0</a></li><li><a href="#0-5-2">0.5.2</a></li><li><a href="#0-5-1">0.5.1</a></li><li><a href="#0-5-0">0.5.0</a></li><li><a href="#0-4-4">0.4.4</a></li><li><a href="#0-4-3">0.4.3</a></li><li><a href="#0-4-2">0.4.2</a></li><li><a href="#0-4-1">0.4.1</a></li><li><a href="#0-4-0">0.4.0</a></li><li><a href="#0-3-0">0.3.0</a></li><li><a href="#0-2-0">0.2.0</a></li><li><a href="#0-1-0">0.1.0</a></li></ul></nav>
+    <nav class="onpage" aria-label="On this page"><ul><li><a href="#0-10-0">0.10.0</a></li><li><a href="#0-9-3">0.9.3</a></li><li><a href="#0-9-2">0.9.2</a></li><li><a href="#0-9-1">0.9.1</a></li><li><a href="#0-9-0">0.9.0</a></li><li><a href="#0-8-0">0.8.0</a></li><li><a href="#0-7-0">0.7.0</a></li><li><a href="#0-6-0">0.6.0</a></li><li><a href="#0-5-2">0.5.2</a></li><li><a href="#0-5-1">0.5.1</a></li><li><a href="#0-5-0">0.5.0</a></li><li><a href="#0-4-4">0.4.4</a></li><li><a href="#0-4-3">0.4.3</a></li><li><a href="#0-4-2">0.4.2</a></li><li><a href="#0-4-1">0.4.1</a></li><li><a href="#0-4-0">0.4.0</a></li><li><a href="#0-3-0">0.3.0</a></li><li><a href="#0-2-0">0.2.0</a></li><li><a href="#0-1-0">0.1.0</a></li></ul></nav>
     <div class="prose">
+<h2 id="0-10-0">0.10.0<a class="anchor" href="#0-10-0" aria-label="Link to this section">#</a></h2>
+<p>Built 2026-09-24, the production pass. Tagged v0.10.0 on 2026-09-24.</p>
+<ul>
+<li>Swaps work for every coin 1Click lists, by name, with the exact amount you hold. &quot;All&quot; of a coin
+now means every last unit: a rounding bug made every swap from NEAR ask for a hair more than the
+balance, so those swaps could never run. A coin named without its network is the one you hold,
+or the one that quotes the most.</li>
+<li>A swap asks for its price once, so a small move in the market no longer refuses it and the card
+appears sooner. A swap that fails says so plainly, says when nothing left your balance, and keeps
+watching a signed transfer until it can no longer run.</li>
+<li>Every coin 1Click lists has a price in your balance. A move is judged at the larger of the listed
+price and what the quote says arrives, so a wrong listed price can never make a move look small.</li>
+<li>A new window: warm, soft layers, the conversation on the left and your money on the right.
+Basic shows the chat and your balances in a ring with a tile per coin. Pro is a statement of your
+coins with each coin&#39;s day, your policies as three dials, and your recent moves. Trade holds
+everything for Hyperliquid. Vault holds your agents, your policies and your safety controls.</li>
+<li>A move lives in the chat as one card that changes in place, from working to done, with Approve
+on the card when your click is needed. Nothing covers the conversation any more.</li>
+<li>Replies stream in and the chat follows them to the end. Typing no longer shakes the thread, every
+panel opens and closes smoothly, and switching screens slides.</li>
+<li>Real logos for every coin and every agent, and figures that sit on the line of the text.</li>
+<li>The chat runs the agent you pick in the Vault, Claude Code or Grok, and it talks short and plain.
+It can look things up on the web; after it reads a page, every move in that chat waits for your
+click.</li>
+<li>Hyperliquid: a deposit waits while Arbitrum fees spike instead of risking the money, stop prices
+on coins under $1 are rounded correctly, a plan that ends cancels the rest of its entry, a close
+never takes more than its own plan, and Flatten never reports a position closed while it is open.</li>
+<li>Chart markings, studies and layouts are kept per market across a quit until you or the agent
+clear them. A stop or a liquidation level always has its own label on the price axis.</li>
+<li>When the app cannot start, it says so in its own window with Try again, instead of a system alert.</li>
+</ul>
 <h2 id="0-9-3">0.9.3<a class="anchor" href="#0-9-3" aria-label="Link to this section">#</a></h2>
 <p>Built 2026-09-22, the first-week fixes. Tagged v0.9.3 on 2026-09-22.</p>
 <ul>

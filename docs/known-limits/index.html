@@ -215,7 +215,7 @@
     <header class="doc-head">
       <h1>Known limits</h1>
       <p class="lede">What this build does not cover, stated plainly so you can size what you put in it. Each item says what the limit is, what it means for your money, and what closes it. None of them is hidden in the app: the Vault tab, the cards and the audit log say the same things in their own words.</p>
-      <div class="doc-meta"><span class="mono">v0.9.3</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/known-limits.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.10.0</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/known-limits.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
     <nav class="onpage" aria-label="On this page"><ul><li><a href="#alpha-software-that-moves-real-money">Alpha software that moves real money</a></li><li><a href="#the-key-is-in-memory-while-the-vault-is-open">The key is in memory while the vault is open</a></li><li><a href="#a-local-program-that-reads-the-seat-secret-can-propose">A local program that reads the seat secret can propose</a></li><li><a href="#the-app-is-not-notarized-by-apple">The app is not notarized by Apple</a></li><li><a href="#the-venues-are-not-ours">The venues are not ours</a></li><li><a href="#hyperliquid-and-what-a-withdrawal-needs">Hyperliquid, and what a withdrawal needs</a></li><li><a href="#what-the-app-cannot-protect-you-from">What the app cannot protect you from</a></li><li><a href="#where-to-report-a-limit-you-hit">Where to report a limit you hit</a></li></ul></nav>
     <div class="prose">
@@ -230,8 +230,8 @@ gets called an audit until a third party signs it.</p>
 <p>Your wallet file is sealed on disk, and on a Mac with a Secure Enclave the seal opens only with
 Touch ID. But while the vault is open the unsealed key sits in the app&#39;s memory, because that is
 what signs the moves you approved and the small ones your rules allow. The lock wipes it, and the
-lock comes after fifteen minutes with nobody at the window, when the Mac sleeps, and when you
-close the window.</p>
+lock comes after fifteen minutes with nobody at the window (or the time you set in the Vault
+tab), when the Mac sleeps, when you close the window, and when you press Lock now.</p>
 <p>What it means: a program that can read the app&#39;s memory while the vault is open has the key.
 On macOS that takes a process running as you with the right to attach to another process, which
 the hardened runtime is there to refuse. Keep the vault open only while you are using it.</p>
@@ -242,9 +242,9 @@ every start. A web page cannot read that file. A program already running as you 
 and once it has, it can do what your agent can do: read your balances and propose moves.</p>
 <p>What it means: a move under your click threshold runs without a click. That is the one money
 exposure such a program has, and your rules set its size. If a hostile program running as you is
-something you worry about, lower the threshold or set it to zero: at zero every move waits for
-you. Nothing on this Mac can approve a move: the click needs the window token, which no route
-serves and no program can fetch.</p>
+something you worry about, lower the threshold in the Vault tab, or ask your assistant to set it
+to zero: at zero every move waits for you. Nothing on this Mac can approve a move: the click
+needs the window token, which no route serves and no program can fetch.</p>
 <p>What closes it: the agent&#39;s door moving onto a socket the operating system can identify the
 caller of. Until then the seat secret is the credential in its place.</p>
 <h2 id="the-app-is-not-notarized-by-apple">The app is not notarized by Apple<a class="anchor" href="#the-app-is-not-notarized-by-apple" aria-label="Link to this section">#</a></h2>
@@ -255,8 +255,9 @@ project does not hold yet.</p>
 <p>What it means: the checksum on the release page is what proves the file is the one we built.
 Check it before you open the disk image, every time, see
 <a href="/docs/getting-started/#check-the-file">Getting started</a>. Two more things follow from the missing
-Developer ID. The Secure Enclave key is bound to this Mac rather than to Phosphor, so the Vault
-tab says &quot;Any process on this Mac can ask&quot;; a Developer ID build binds it to the app. And a
+Developer ID. The Secure Enclave key is bound to this Mac rather than to Phosphor, so the Keys row
+in the Vault tab says that other apps on this Mac could ask for the key; a Developer ID build
+binds it to the app. And a
 signed update still verifies: the updater checks the bundle&#39;s own signature, which does not
 depend on Apple.</p>
 <p>What closes it: an Apple Developer account and a Developer ID certificate in the release
@@ -267,7 +268,7 @@ held by the venue. The app reads them and signs for them, and it cannot make eit
 anything. A bridge that holds a failed deposit refunds it on its own timetable, through its own
 support, and the app can only keep asking and show you the state honestly. A venue outage means
 the app shows unknown, never zero, and signs nothing against a number it could not read.</p>
-<p>What it means: a move the app calls Not confirmed or &quot;Late, nothing has changed&quot; is money in
+<p>What it means: a move whose card says Taking longer, or that reads Not confirmed, is money in
 the venue&#39;s hands, not lost and not the app&#39;s to recover by itself. Do not send it again.
 <a href="/docs/troubleshooting/#a-move-is-late-or-not-confirmed">Troubleshooting</a> says what to do.</p>
 <h2 id="hyperliquid-and-what-a-withdrawal-needs">Hyperliquid, and what a withdrawal needs<a class="anchor" href="#hyperliquid-and-what-a-withdrawal-needs" aria-label="Link to this section">#</a></h2>

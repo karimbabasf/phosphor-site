@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tools</title>
-<meta name="description" content="Phosphor registers 46 tools for the agent that drives it, and every one is listed here in five groups: read, propose, chart and trade surface, agents, and other. Reads change nothing. Propose tools return a proposal id and a simulation, and cannot approve, refuse or execute anything. Every call, read or write, is written to the audit log. A worker an agent spawns is an analyst: the tools marked lead only are not registered for it at all, so there is nothing to talk it into.">
+<meta name="description" content="Phosphor registers 48 tools for the agent that drives it, and every one is listed here in five groups: read, propose, chart and trade surface, agents, and other. Reads change nothing. Propose tools return a proposal id and a simulation, and cannot approve, refuse or execute anything. Every call, read or write, is written to the audit log. A worker an agent spawns is an analyst: the tools marked lead only are not registered for it at all, so there is nothing to talk it into. The agent in the chat does not get ten of them: `start`, `composition`, `log_tail`, `set_theme`, `profile_learned` and the five agent tools; its instructions already carry what `start` says.">
 <link rel="canonical" href="https://phosphor.money/docs/tools/">
 <meta name="theme-color" content="#0E0F13">
 <link rel="icon" href="/favicon.ico?v=9" sizes="32x32">
@@ -14,7 +14,7 @@
 <meta property="og:site_name" content="Phosphor">
 <meta property="og:url" content="https://phosphor.money/docs/tools/">
 <meta property="og:title" content="Tools">
-<meta property="og:description" content="Phosphor registers 46 tools for the agent that drives it, and every one is listed here in five groups: read, propose, chart and trade surface, agents, and other. Reads change nothing. Propose tools return a proposal id and a simulation, and cannot approve, refuse or execute anything. Every call, read or write, is written to the audit log. A worker an agent spawns is an analyst: the tools marked lead only are not registered for it at all, so there is nothing to talk it into.">
+<meta property="og:description" content="Phosphor registers 48 tools for the agent that drives it, and every one is listed here in five groups: read, propose, chart and trade surface, agents, and other. Reads change nothing. Propose tools return a proposal id and a simulation, and cannot approve, refuse or execute anything. Every call, read or write, is written to the audit log. A worker an agent spawns is an analyst: the tools marked lead only are not registered for it at all, so there is nothing to talk it into. The agent in the chat does not get ten of them: `start`, `composition`, `log_tail`, `set_theme`, `profile_learned` and the five agent tools; its instructions already carry what `start` says.">
 <meta property="og:image" content="https://phosphor.money/og.png?v=2">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/Sora-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
@@ -214,10 +214,10 @@
   <article class="doc">
     <header class="doc-head">
       <h1>Tools</h1>
-      <p class="lede">Phosphor registers 46 tools for the agent that drives it, and every one is listed here in five groups: read, propose, chart and trade surface, agents, and other. Reads change nothing. Propose tools return a proposal id and a simulation, and cannot approve, refuse or execute anything. Every call, read or write, is written to the audit log. A worker an agent spawns is an analyst: the tools marked lead only are not registered for it at all, so there is nothing to talk it into.</p>
-      <div class="doc-meta"><span class="mono">v0.9.3</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/tools.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <p class="lede">Phosphor registers 48 tools for the agent that drives it, and every one is listed here in five groups: read, propose, chart and trade surface, agents, and other. Reads change nothing. Propose tools return a proposal id and a simulation, and cannot approve, refuse or execute anything. Every call, read or write, is written to the audit log. A worker an agent spawns is an analyst: the tools marked lead only are not registered for it at all, so there is nothing to talk it into. The agent in the chat does not get ten of them: <code>start</code>, <code>composition</code>, <code>log_tail</code>, <code>set_theme</code>, <code>profile_learned</code> and the five agent tools; its instructions already carry what <code>start</code> says.</p>
+      <div class="doc-meta"><span class="mono">v0.10.0</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/tools.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
-    <nav class="onpage" aria-label="On this page"><ul><li><a href="#read">Read</a></li><li><a href="#propose">Propose</a></li><li><a href="#chart-and-trade-surface">Chart and trade surface</a></li><li><a href="#agents">Agents</a></li><li><a href="#other">Other</a></li><li><a href="#what-is-not-here">What is not here</a></li></ul></nav>
+    <nav class="onpage" aria-label="On this page"><ul><li><a href="#read">Read</a></li><li><a href="#propose">Propose</a></li><li><a href="#chart-and-trade-surface">Chart and trade surface</a></li><li><a href="#agents">Agents</a></li><li><a href="#other">Other</a></li><li><a href="#web-search-and-page-reading">Web search and page reading</a></li><li><a href="#what-is-not-here">What is not here</a></li></ul></nav>
     <div class="prose">
 <h2 id="read">Read<a class="anchor" href="#read" aria-label="Link to this section">#</a></h2>
 <table>
@@ -237,7 +237,7 @@
 </tr>
 <tr>
 <td><code>deposit</code></td>
-<td>Opens the deposit card for one asset on one network and starts watching for the money. The agent gets the first six and last four characters of the address, never the whole. Lead only</td>
+<td>Opens the deposit card in the chat for one asset on one network and starts watching for the money. The agent gets the first six and last four characters of the address, never the whole. Lead only</td>
 </tr>
 <tr>
 <td><code>composition</code></td>
@@ -262,6 +262,18 @@
 <tr>
 <td><code>diagnose</code></td>
 <td>Everything about one money move in one call, for &quot;why is it not there yet&quot;: the view, the row&#39;s own audit lines, and what the router and the venue say about it. Lead only</td>
+</tr>
+<tr>
+<td><code>swap_assets</code></td>
+<td>What can be swapped inside your balance, the coins you hold first: name, network, price, what you hold of it, and whether anyone offers a price now. Files nothing</td>
+</tr>
+<tr>
+<td><code>swap_quote</code></td>
+<td>What a swap would get right now: the amount in, the amount out expected, the least you would get, the fee and the time it takes, or a sentence saying why there is no quote. Files nothing</td>
+</tr>
+<tr>
+<td><code>swap_check</code></td>
+<td>One swap read again now: what the swap service says, whether the coin left your balance or came back, and what you hold. For a swap that failed, stalled or looks wrong. Lead only</td>
 </tr>
 <tr>
 <td><code>chart_read</code></td>
@@ -314,7 +326,8 @@
 </tbody></table>
 <h2 id="propose">Propose<a class="anchor" href="#propose" aria-label="Link to this section">#</a></h2>
 <p>Every propose tool goes through the policy engine, see <a href="/docs/policy/">Policy</a>. Three of them wait
-for your click at any size; the rest run on their own under the click threshold.</p>
+for your click at any size; the rest run on their own under the click threshold, except after the
+chat&#39;s agent read a web page.</p>
 <table>
 <thead>
 <tr>
@@ -324,7 +337,7 @@ for your click at any size; the rest run on their own under the click threshold.
 </thead>
 <tbody><tr>
 <td><code>propose_swap</code></td>
-<td>Swaps one token for another inside NEAR Intents; nothing moves on any chain. Click above the threshold</td>
+<td>Swaps one token for another inside NEAR Intents; nothing moves on any chain. Takes &quot;all&quot; or an exact amount, and the app sets the least you will get from its own quote. Click above the threshold</td>
 </tr>
 <tr>
 <td><code>propose_send</code></td>
@@ -362,7 +375,7 @@ for your click at any size; the rest run on their own under the click threshold.
 </thead>
 <tbody><tr>
 <td><code>chart_draw</code></td>
-<td>Draws on the chart in one call: view, indicators, levels, marks, lines and zones, or clears its own work. Lead only</td>
+<td>Draws on the chart in one call: view, indicators, levels, marks, lines and zones, or clears its own work. What it draws stays, across a quit, until it is cleared. Lead only</td>
 </tr>
 <tr>
 <td><code>chart_layout</code></td>
@@ -370,27 +383,27 @@ for your click at any size; the rest run on their own under the click threshold.
 </tr>
 <tr>
 <td><code>show</code></td>
-<td>Draws something that already exists as a card in the window: a proposal, a transaction on a named network, an open position, or the deposit card. Moves no money and asks no permission. Lead only</td>
+<td>Draws something that already exists as a card in the chat: a proposal, a transaction on a named network, an open position, or the deposit card. Moves no money and asks no permission. Lead only</td>
 </tr>
 <tr>
 <td><code>trade_focus</code></td>
-<td>Points the trading surface at one market; the chart follows</td>
+<td>Points the trading surface at one market; the chart follows. Lead only</td>
 </tr>
 <tr>
 <td><code>trade_highlight</code></td>
-<td>Points at one row or chart object (a position, an order, a plan, a level) and says why, in a note you read beside it</td>
+<td>Points at one row or chart object (a position, an order, a plan, a level) and says why, in a note you read beside it. Lead only</td>
 </tr>
 <tr>
 <td><code>trade_overlay</code></td>
-<td>Turns one chart overlay on or off: entry, liquidation, the plan stop wall, working stops, targets, orders, fills</td>
+<td>Turns one chart overlay on or off: entry, liquidation, the plan stop wall, working stops, targets, orders, fills. Lead only</td>
 </tr>
 <tr>
 <td><code>trade_clear</code></td>
-<td>Removes what the agent put on the trading surface</td>
+<td>Removes what the agent put on the trading surface. Lead only</td>
 </tr>
 <tr>
 <td><code>trade_plan</code></td>
-<td>Draws a plan on the chart as an idea under Waiting. No authority until <code>propose_trade</code> arms it. Lead only</td>
+<td>Draws a plan on the chart as an idea under Orders. No authority until <code>propose_trade</code> arms it. Lead only</td>
 </tr>
 </tbody></table>
 <h2 id="agents">Agents<a class="anchor" href="#agents" aria-label="Link to this section">#</a></h2>
@@ -440,10 +453,6 @@ for your click at any size; the rest run on their own under the click threshold.
 <td>Moves the window between Basic, Pro, Trade and Vault. Every switch is audited. Lead only</td>
 </tr>
 <tr>
-<td><code>watch</code></td>
-<td>Sets which coins the Basic tab tracks, one to four, and saves the choice. Lead only</td>
-</tr>
-<tr>
 <td><code>set_theme</code></td>
 <td>Recolours the window: five named slots on its one dark colourway. Lead only</td>
 </tr>
@@ -452,6 +461,12 @@ for your click at any size; the rest run on their own under the click threshold.
 <td>Records one concept the agent explained to you, so the next session does not explain it again. Lead only</td>
 </tr>
 </tbody></table>
+<h2 id="web-search-and-page-reading">Web search and page reading<a class="anchor" href="#web-search-and-page-reading" aria-label="Link to this section">#</a></h2>
+<p>These are not Phosphor tools. The agent in the chat also holds its vendor&#39;s own web search and
+page reading, and nothing else beyond Phosphor&#39;s tools. After it uses either one, every move it
+proposes in that chat waits for your click, whatever the size, see
+<a href="/docs/policy/#after-a-web-page">Policy</a>. An agent in your terminal brings whatever tools its own
+setup gives it, and the app cannot see them.</p>
 <h2 id="what-is-not-here">What is not here<a class="anchor" href="#what-is-not-here" aria-label="Link to this section">#</a></h2>
 <p>There is no <code>approve</code>, no <code>refuse</code>, no <code>kill</code>, no <code>dismiss</code> and no <code>execute</code> tool, and a test holds
 the live list to that. No tool reads a private key or the recovery phrase. No tool moves money

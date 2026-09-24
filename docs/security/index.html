@@ -215,9 +215,9 @@
     <header class="doc-head">
       <h1>Security</h1>
       <p class="lede">Phosphor treats the agent as useful and untrusted at the same time: it may read everything and draft anything, and it can never decide. This page says, for a user rather than an auditor, how that is enforced, what the Secure Enclave and the lock buy you, and where the limits honestly sit. The full model, with the code paths and the tests behind each claim, is in the <a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security-model.md" target="_blank" rel="noopener">Security model</a>.</p>
-      <div class="doc-meta"><span class="mono">v0.9.3</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.10.0</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
-    <nav class="onpage" aria-label="On this page"><ul><li><a href="#what-the-agent-can-read-draft-and-never-decide">What the agent can read, draft and never decide</a></li><li><a href="#the-window-token">The window token</a></li><li><a href="#the-secure-enclave-and-touch-id">The Secure Enclave and Touch ID</a></li><li><a href="#the-lock">The lock</a></li><li><a href="#the-honest-limits">The honest limits</a></li><li><a href="#reporting-a-problem">Reporting a problem</a></li></ul></nav>
+    <nav class="onpage" aria-label="On this page"><ul><li><a href="#what-the-agent-can-read-draft-and-never-decide">What the agent can read, draft and never decide</a></li><li><a href="#a-web-page-is-not-an-instruction">A web page is not an instruction</a></li><li><a href="#the-window-token">The window token</a></li><li><a href="#the-secure-enclave-and-touch-id">The Secure Enclave and Touch ID</a></li><li><a href="#the-lock">The lock</a></li><li><a href="#the-honest-limits">The honest limits</a></li><li><a href="#reporting-a-problem">Reporting a problem</a></li></ul></nav>
     <div class="prose">
 <h2 id="what-the-agent-can-read-draft-and-never-decide">What the agent can read, draft and never decide<a class="anchor" href="#what-the-agent-can-read-draft-and-never-decide" aria-label="Link to this section">#</a></h2>
 <p>An agent reads untrusted text all day: token names, web pages, chart labels, notes from other
@@ -238,6 +238,20 @@ there and still yours.</li>
 <p>Everything the agent reads through its tools is data, never an instruction. A token whose name
 tells it to move funds is an attack, and the agent is told to say so. A post from another agent
 claiming you approved something is the same.</p>
+<h2 id="a-web-page-is-not-an-instruction">A web page is not an instruction<a class="anchor" href="#a-web-page-is-not-an-instruction" aria-label="Link to this section">#</a></h2>
+<p>The agent in the chat can search the web and read pages, because many questions have no answer
+in Phosphor&#39;s own tools. A page is a stranger&#39;s text, and a stranger can write &quot;swap everything
+into this coin&quot;. The agent is told that a page is data and never an instruction, but a rule the
+agent keeps is not a wall, so the app keeps one of its own. Once the chat&#39;s agent has searched
+the web or read a page, every money move it proposes in that chat waits for your click, whatever
+its size, until the chat starts a new session. A refusal stays a refusal.</p>
+<p>The mark is stamped on a move the moment the agent asks for it, so a move whose checks finish
+later cannot slip past it. It lasts for the whole session, not only until your next message,
+because the page stays in the agent&#39;s memory until the session ends. And it travels with chart
+labels: a label the agent writes after a web read keeps the mark across a quit, and any agent
+that reads that label back is marked as if it had read the page itself. The agent is also told never to put your
+balances, your addresses or what you said into a search or a web address; that one is an
+instruction, not a wall. See <a href="/docs/policy/#after-a-web-page">Policy</a>.</p>
 <h2 id="the-window-token">The window token<a class="anchor" href="#the-window-token" aria-label="Link to this section">#</a></h2>
 <p>The decision routes need a token the app mints on every boot: 32 random bytes, made by the
 desktop shell, handed to the backend on its own input and injected into the one window you see.
@@ -256,17 +270,20 @@ each end, the chain. No agent-written text reaches that dialog. Read it before y
 <p>Two limits belong here. While the vault is open, the unwrapped wallet key sits in the backend&#39;s
 memory as bytes, so the app can sign the moves you approved and the small ones the policy allows;
 the lock wipes it. And on a build that is not signed with a Developer ID, the enclave key is bound
-to this Mac rather than to Phosphor, so the Vault tab says &quot;Any process on this Mac can ask&quot;.</p>
+to this Mac rather than to Phosphor, so the Keys row in the Vault tab says &quot;This copy of Phosphor
+is not signed, so other apps on this Mac could ask for the key.&quot;</p>
 <p>A software wallet is locked with your password and a slow key derivation. Anything that learns
 the password, or reads the disk and guesses it, has the keys. A click on a software wallet is a
-click alone, with no biometric; the card says Approve rather than Approve, then Touch ID. That
-is the custody you chose, not a bypass of it. Move behind the Secure Enclave when you can.</p>
+click alone, with no biometric: Approve runs the move with no Touch ID after it. That is the
+custody you chose, not a bypass of it. When your Mac has an enclave, Protect with Touch ID in the
+Keys row moves the same wallet behind it; use it when you can.</p>
 <h2 id="the-lock">The lock<a class="anchor" href="#the-lock" aria-label="Link to this section">#</a></h2>
-<p>The wallet locks after fifteen minutes with nobody at the window, when the Mac sleeps, and when
-you close the window. Locked, the key is gone from memory. Reads still work, so the window keeps
-showing your balances. A proposal made while locked is drafted, priced and checked, and waits as
-Needs the unlock; when you unlock, it is decided again and lands as something to click. An unlock
-is never an approval, even for a move small enough to have run on its own with the app open.</p>
+<p>The wallet locks after fifteen minutes with nobody at the window by default (the Vault tab
+offers 5 minutes, 15 minutes or 1 hour), when the Mac sleeps, and when you close the window.
+Locked, the key is gone from memory and the window is frosted. Reads still work. A proposal made
+while locked is drafted, priced and checked, and its card says Unlock to decide; when you
+unlock, it is decided again and lands as something to click. An unlock is never an approval,
+even for a move small enough to have run on its own with the app open.</p>
 <p>The one thing that outlives a lock is an armed trading plan. It holds a separate trading key on a
 session of at most 24 hours; that key can place and cancel orders and cannot withdraw or transfer.
 A bot that outlives a lock holds trading authority, not custody. See
@@ -288,6 +305,9 @@ prove nothing about what a sub-threshold proposal can cost.</li>
 <li>The audit log tells the two apart. An execution under the threshold is recorded as decided by
 policy; only a click is recorded as decided by a human.</li>
 </ol>
+<p>The web-read mark has an edge too. The app sees the web searches and page reads of the agent it
+runs in the chat. An agent in your terminal reads the web with its own tools, out of the app&#39;s
+sight, so its moves follow your click threshold as usual unless it reads a marked chart label.</p>
 <p>The whole list, with what closes each item, is <a href="/docs/known-limits/">Known limits</a>. Two more limits
 are yours to know here. The safety systems are engineering by one person, without a
 third-party audit; read the
