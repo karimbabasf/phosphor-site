@@ -215,7 +215,7 @@
     <header class="doc-head">
       <h1>Money</h1>
       <p class="lede">Phosphor keeps money in two places, moves it between them, and pays it out to other people. This page walks through every move: where the money lives, deposit, swap, send, funding the trading account and bringing collateral back, what &quot;settling&quot; means, and the fees that make the app refuse a move.</p>
-      <div class="doc-meta"><span class="mono">v0.10.3</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/money.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.10.4</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/money.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
     <nav class="onpage" aria-label="On this page"><ul><li><a href="#where-money-lives">Where money lives</a></li><li><a href="#deposit">Deposit</a></li><li><a href="#swap">Swap</a></li><li><a href="#send">Send</a></li><li><a href="#fund-the-trading-account">Fund the trading account</a></li><li><a href="#withdraw-from-hyperliquid">Withdraw from Hyperliquid</a></li><li><a href="#after-the-click">After the click</a></li><li><a href="#fees-and-refusals">Fees and refusals</a></li></ul></nav>
     <div class="prose">
@@ -337,6 +337,12 @@ seconds inside NEAR Intents and two minutes on Hyperliquid before it says so.</p
 the card says Taking longer, and your assistant reads &quot;Late, nothing has changed&quot;. Nothing is
 over: the app keeps watching, and the card moves on the moment the venue credits it. A refund and
 a failure are endings, and each names why.</p>
+<p>A swap inside NEAR Intents moves nothing until a buyer takes it: the transfer and the fill settle
+together. While it waits the card says &quot;Sent. Waiting for a buyer to take it.&quot; Its signed transfer
+can run for three minutes. Once NEAR&#39;s own clock and this Mac&#39;s are both half a minute past that
+and the transfer never ran, it can never run, and the card says Didn&#39;t go through: nothing left
+your balance. The app reads NEAR&#39;s clock and the transfer&#39;s nonce itself, so it knows this even
+when the swap service does not answer.</p>
 <p>If the venue said success and the app could not see the money land, the row is Not confirmed
 and nothing more is signed. That is the honest state, not a failure: the money is on its way,
 and the card keeps saying the move is working. The app judges the row again on every balance

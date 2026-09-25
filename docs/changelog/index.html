@@ -215,10 +215,31 @@
     <header class="doc-head">
       <h1>Changelog</h1>
       <p class="lede">What changed in each version of Phosphor, newest first, written from the git history of the <a href="https://github.com/karimbabasf/phosphor" target="_blank" rel="noopener">repository</a>. The top entry is the version these pages describe, and a test fails the suite when it is not the version in <code>package.json</code>. Versions without a git tag say so.</p>
-      <div class="doc-meta"><span class="mono">v0.10.3</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/changelog.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.10.4</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/changelog.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
-    <nav class="onpage" aria-label="On this page"><ul><li><a href="#0-10-3">0.10.3</a></li><li><a href="#0-10-2">0.10.2</a></li><li><a href="#0-10-0">0.10.0</a></li><li><a href="#0-9-3">0.9.3</a></li><li><a href="#0-9-2">0.9.2</a></li><li><a href="#0-9-1">0.9.1</a></li><li><a href="#0-9-0">0.9.0</a></li><li><a href="#0-8-0">0.8.0</a></li><li><a href="#0-7-0">0.7.0</a></li><li><a href="#0-6-0">0.6.0</a></li><li><a href="#0-5-2">0.5.2</a></li><li><a href="#0-5-1">0.5.1</a></li><li><a href="#0-5-0">0.5.0</a></li><li><a href="#0-4-4">0.4.4</a></li><li><a href="#0-4-3">0.4.3</a></li><li><a href="#0-4-2">0.4.2</a></li><li><a href="#0-4-1">0.4.1</a></li><li><a href="#0-4-0">0.4.0</a></li><li><a href="#0-3-0">0.3.0</a></li><li><a href="#0-2-0">0.2.0</a></li><li><a href="#0-1-0">0.1.0</a></li></ul></nav>
+    <nav class="onpage" aria-label="On this page"><ul><li><a href="#0-10-4">0.10.4</a></li><li><a href="#0-10-3">0.10.3</a></li><li><a href="#0-10-2">0.10.2</a></li><li><a href="#0-10-0">0.10.0</a></li><li><a href="#0-9-3">0.9.3</a></li><li><a href="#0-9-2">0.9.2</a></li><li><a href="#0-9-1">0.9.1</a></li><li><a href="#0-9-0">0.9.0</a></li><li><a href="#0-8-0">0.8.0</a></li><li><a href="#0-7-0">0.7.0</a></li><li><a href="#0-6-0">0.6.0</a></li><li><a href="#0-5-2">0.5.2</a></li><li><a href="#0-5-1">0.5.1</a></li><li><a href="#0-5-0">0.5.0</a></li><li><a href="#0-4-4">0.4.4</a></li><li><a href="#0-4-3">0.4.3</a></li><li><a href="#0-4-2">0.4.2</a></li><li><a href="#0-4-1">0.4.1</a></li><li><a href="#0-4-0">0.4.0</a></li><li><a href="#0-3-0">0.3.0</a></li><li><a href="#0-2-0">0.2.0</a></li><li><a href="#0-1-0">0.1.0</a></li></ul></nav>
     <div class="prose">
+<h2 id="0-10-4">0.10.4<a class="anchor" href="#0-10-4" aria-label="Link to this section">#</a></h2>
+<p>Built 2026-09-25. Tagged v0.10.4 on 2026-09-25.</p>
+<ul>
+<li>A swap that cannot go through says so about half a minute after its deadline: it didn&#39;t go
+through, and nothing left your balance. Phosphor reads NEAR&#39;s own clock and the signed transfer
+to prove it can never run, instead of waiting up to ten minutes to look again.</li>
+<li>While a swap inside NEAR Intents waits for a buyer, its card says so. It no longer says your
+money is on its way.</li>
+<li>When a move your agent proposed does not go through, the agent tells you in one line and offers
+the next step, without waiting for you to ask. Anything it files in that turn waits for your
+click, whatever your auto-approve limit. A move that went through stays quiet: the card says it.</li>
+<li>Your agent prices every step of a plan of swaps before it files the first. A coin you do not
+hold yet is priced as a preview, and a step with no price stops the plan before anything moves.</li>
+<li>Pro shows the last 24 hours for every coin NEAR Intents lists, not only the seven it knew.
+Prices are read for every listed coin at once, so no request says which coins you hold.</li>
+<li>Coins without a logo of their own show their real picture instead of a letter. Pictures are
+fetched for every listed coin, checked, and kept on your Mac.</li>
+<li>Quitting with Cmd+Q, the menu or the window&#39;s close button shows a Shutting down card with each
+step as it happens: moves noted, wallet locked, Phosphor stopped. The wallet never locks under a
+move that is still being sent.</li>
+</ul>
 <h2 id="0-10-3">0.10.3<a class="anchor" href="#0-10-3" aria-label="Link to this section">#</a></h2>
 <p>Built 2026-09-25. Tagged v0.10.3 on 2026-09-25.</p>
 <ul>

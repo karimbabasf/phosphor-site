@@ -215,7 +215,7 @@
     <header class="doc-head">
       <h1>Policy</h1>
       <p class="lede">Your rules decide what the agent may do on its own, what waits for your click, and what is refused outright. They live in the app as plain sentences, a pure engine enforces them with no model in the path, and no proposal reaches execution without either your click or an allow inside limits you wrote. This page explains the rules, the click threshold, the click that follows a web page, how a rule changes, and why the gate has no off switch.</p>
-      <div class="doc-meta"><span class="mono">v0.10.3</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/policy.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.10.4</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/policy.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
     <nav class="onpage" aria-label="On this page"><ul><li><a href="#the-rules">The rules</a></li><li><a href="#the-click-threshold">The click threshold</a></li><li><a href="#policy-as-sentences">Policy as sentences</a></li><li><a href="#changing-a-rule">Changing a rule</a></li><li><a href="#the-three-verdicts">The three verdicts</a></li><li><a href="#why-the-gate-has-no-off-switch">Why the gate has no off switch</a></li></ul></nav>
     <div class="prose">
@@ -270,6 +270,12 @@ page earlier in this chat, so this one waits for your OK.&quot; A chart label th
 a web read carries the same mark, and an agent that later reads that label is marked too. A move
 that would have been refused is still refused; the mark only turns a move that would have run on
 its own into one that asks. <a href="/docs/security/#a-web-page-is-not-an-instruction">Security</a> says why.</p>
+<h3 id="after-a-move-that-did-not-go-through">After a move that did not go through<a class="anchor" href="#after-a-move-that-did-not-go-through" aria-label="Link to this section">#</a></h3>
+<p>When a move your agent proposed does not go through, the app wakes the agent to tell you in one
+line, without waiting for your next message. Nobody typed that turn, so every money move the agent
+proposes in it waits for your click, whatever its size. Why it asks says: &quot;Your agent asked for
+this on its own after a move did not go through, so it waits for your OK.&quot; The mark ends with that
+turn, and a move that would have been refused is still refused.</p>
 <h2 id="policy-as-sentences">Policy as sentences<a class="anchor" href="#policy-as-sentences" aria-label="Link to this section">#</a></h2>
 <p>The policy is stored as a file but read as English. The sentences are rendered from the file by
 a pure function, so what you read is what the engine enforces, and there is no second version
