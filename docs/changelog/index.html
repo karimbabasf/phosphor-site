@@ -215,10 +215,26 @@
     <header class="doc-head">
       <h1>Changelog</h1>
       <p class="lede">What changed in each version of Phosphor, newest first, written from the git history of the <a href="https://github.com/karimbabasf/phosphor" target="_blank" rel="noopener">repository</a>. The top entry is the version these pages describe, and a test fails the suite when it is not the version in <code>package.json</code>. Versions without a git tag say so.</p>
-      <div class="doc-meta"><span class="mono">v0.10.0</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/changelog.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.10.2</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/changelog.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
-    <nav class="onpage" aria-label="On this page"><ul><li><a href="#0-10-0">0.10.0</a></li><li><a href="#0-9-3">0.9.3</a></li><li><a href="#0-9-2">0.9.2</a></li><li><a href="#0-9-1">0.9.1</a></li><li><a href="#0-9-0">0.9.0</a></li><li><a href="#0-8-0">0.8.0</a></li><li><a href="#0-7-0">0.7.0</a></li><li><a href="#0-6-0">0.6.0</a></li><li><a href="#0-5-2">0.5.2</a></li><li><a href="#0-5-1">0.5.1</a></li><li><a href="#0-5-0">0.5.0</a></li><li><a href="#0-4-4">0.4.4</a></li><li><a href="#0-4-3">0.4.3</a></li><li><a href="#0-4-2">0.4.2</a></li><li><a href="#0-4-1">0.4.1</a></li><li><a href="#0-4-0">0.4.0</a></li><li><a href="#0-3-0">0.3.0</a></li><li><a href="#0-2-0">0.2.0</a></li><li><a href="#0-1-0">0.1.0</a></li></ul></nav>
+    <nav class="onpage" aria-label="On this page"><ul><li><a href="#0-10-2">0.10.2</a></li><li><a href="#0-10-0">0.10.0</a></li><li><a href="#0-9-3">0.9.3</a></li><li><a href="#0-9-2">0.9.2</a></li><li><a href="#0-9-1">0.9.1</a></li><li><a href="#0-9-0">0.9.0</a></li><li><a href="#0-8-0">0.8.0</a></li><li><a href="#0-7-0">0.7.0</a></li><li><a href="#0-6-0">0.6.0</a></li><li><a href="#0-5-2">0.5.2</a></li><li><a href="#0-5-1">0.5.1</a></li><li><a href="#0-5-0">0.5.0</a></li><li><a href="#0-4-4">0.4.4</a></li><li><a href="#0-4-3">0.4.3</a></li><li><a href="#0-4-2">0.4.2</a></li><li><a href="#0-4-1">0.4.1</a></li><li><a href="#0-4-0">0.4.0</a></li><li><a href="#0-3-0">0.3.0</a></li><li><a href="#0-2-0">0.2.0</a></li><li><a href="#0-1-0">0.1.0</a></li></ul></nav>
     <div class="prose">
+<h2 id="0-10-2">0.10.2<a class="anchor" href="#0-10-2" aria-label="Link to this section">#</a></h2>
+<p>Built 2026-09-25. Tagged v0.10.2 on 2026-09-25. It was tagged v0.11.0 first; that tag never became a release.</p>
+<ul>
+<li>Quitting asks first. Cmd+Q, Quit Phosphor and the window&#39;s close button open a small sheet that
+says what a quit would interrupt: a move on its way (it finishes without the app), a plan entry
+resting at Hyperliquid with no stop yet, a plan that only fires while the app is open, or an agent
+mid-reply. Quit is never blocked: &quot;Quit when it lands&quot; waits for a move and then quits by itself,
+a second Cmd+Q quits at once, and a window that does not answer is quit anyway. The window fades
+out as it goes.</li>
+<li>Side charts draw like the main chart: their indicators, the live price line and the price tag
+with its number. Zones are see-through again instead of solid blocks.</li>
+<li>News reaches the web. The news tool matches every word of the question as a whole word, so a
+question about Gram no longer matches Telegram, and when its four feeds have nothing it says so
+and the agent searches the web. Every web search and page the agent reads is in the audit.</li>
+<li>Onboarding, the terms card and the lock screen sit on the same warm ground as the main window.</li>
+</ul>
 <h2 id="0-10-0">0.10.0<a class="anchor" href="#0-10-0" aria-label="Link to this section">#</a></h2>
 <p>Built 2026-09-24, the production pass. Tagged v0.10.0 on 2026-09-24.</p>
 <ul>

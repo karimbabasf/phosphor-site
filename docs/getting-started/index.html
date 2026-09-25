@@ -215,7 +215,7 @@
     <header class="doc-head">
       <h1>Getting started</h1>
       <p class="lede">Phosphor is a Mac app that holds your keys, your venue connections and your rules. An agent reads your money and proposes moves; you approve each one with a click in the window. This page takes you from the download to a wallet that is made, backed up and locked, and shows you the brake.</p>
-      <div class="doc-meta"><span class="mono">v0.10.0</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/getting-started.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.10.2</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/getting-started.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
     <nav class="onpage" aria-label="On this page"><ul><li><a href="#download">Download</a></li><li><a href="#check-the-file">Check the file</a></li><li><a href="#the-gatekeeper-warning">The Gatekeeper warning</a></li><li><a href="#first-open">First open</a></li><li><a href="#create-or-restore-a-wallet">Create or restore a wallet</a></li><li><a href="#the-backup-words">The backup words</a></li><li><a href="#touch-id-and-the-secure-enclave">Touch ID and the Secure Enclave</a></li><li><a href="#the-15-minute-lock">The 15 minute lock</a></li><li><a href="#freeze-everything">Freeze everything</a></li><li><a href="#the-help-menu">The Help menu</a></li><li><a href="#next">Next</a></li></ul></nav>
     <div class="prose">
@@ -229,6 +229,16 @@ the disk image. This line must print the same one:</p>
 <pre><code class="language-sh">shasum -a 256 ~/Downloads/Phosphor-macOS-arm64.dmg
 </code></pre>
 <p>If the two differ, delete the file and download it again.</p>
+<p>The checksum proves your file is the one on the release page. This proves the release page&#39;s
+file was built from the public code. It needs the GitHub CLI (<code>brew install gh</code>):</p>
+<pre><code class="language-sh">gh attestation verify ~/Downloads/Phosphor-macOS-arm64.dmg --repo karimbabasf/phosphor
+</code></pre>
+<p>It passes only for a file that this repository&#39;s release workflow built on GitHub&#39;s machines,
+and it prints the commit it came from, so you can read the exact code you are about to run. The
+record is signed through Sigstore and kept in a public log that this project cannot edit, so
+someone who took over the release page or the site could swap the file and its checksum, but
+not this. What it does not prove: that the code is free of bugs. For that, read
+<a href="/docs/security/">Security</a> and <a href="/docs/known-limits/">Known limits</a>. It covers releases from 0.10.1 on.</p>
 <h2 id="the-gatekeeper-warning">The Gatekeeper warning<a class="anchor" href="#the-gatekeeper-warning" aria-label="Link to this section">#</a></h2>
 <p>The build is not notarized by Apple yet, so the first open stops with a warning. Click Done, not
 Move to Trash, then double-click Open Anyway in the disk image window: it opens System Settings,
