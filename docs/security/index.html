@@ -215,7 +215,7 @@
     <header class="doc-head">
       <h1>Security</h1>
       <p class="lede">Phosphor treats the agent as useful and untrusted at the same time: it may read everything and draft anything, and it can never decide. This page says, for a user rather than an auditor, how that is enforced, what the Secure Enclave and the lock buy you, and where the limits honestly sit. The full model, with the code paths and the tests behind each claim, is in the <a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security-model.md" target="_blank" rel="noopener">Security model</a>.</p>
-      <div class="doc-meta"><span class="mono">v0.10.7</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.10.8</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
     <nav class="onpage" aria-label="On this page"><ul><li><a href="#what-the-agent-can-read-draft-and-never-decide">What the agent can read, draft and never decide</a></li><li><a href="#a-web-page-is-not-an-instruction">A web page is not an instruction</a></li><li><a href="#the-window-token">The window token</a></li><li><a href="#the-secure-enclave-and-touch-id">The Secure Enclave and Touch ID</a></li><li><a href="#the-lock">The lock</a></li><li><a href="#the-honest-limits">The honest limits</a></li><li><a href="#reporting-a-problem">Reporting a problem</a></li></ul></nav>
     <div class="prose">
@@ -266,7 +266,7 @@ keeps the door shut to any web page and to any process that has not been given t
 wrapped to a key the enclave made and cannot export. The wallet opens with Touch ID or your Mac
 login password, and each click on a proposal ends in a Touch ID dialog whose sentence the app
 composes from the proposal&#39;s numbers: the amount, the receiver shortened to eight characters at
-each end, the chain. No agent-written text reaches that dialog. Read it before you confirm.</p>
+each end (a NEAR name whole), the chain. No agent-written text reaches that dialog. Read it before you confirm.</p>
 <p>Two limits belong here. While the vault is open, the unwrapped wallet key sits in the backend&#39;s
 memory as bytes, so the app can sign the moves you approved and the small ones the policy allows;
 the lock wipes it. And on a build that is not signed with a Developer ID, the enclave key is bound

@@ -215,7 +215,7 @@
     <header class="doc-head">
       <h1>Getting started</h1>
       <p class="lede">Phosphor is a Mac app that holds your keys, your venue connections and your rules. An agent reads your money and proposes moves; you approve each one with a click in the window. This page takes you from the download to a wallet that is made, backed up and locked, and shows you the brake.</p>
-      <div class="doc-meta"><span class="mono">v0.10.7</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/getting-started.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.10.8</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/getting-started.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
     <nav class="onpage" aria-label="On this page"><ul><li><a href="#download">Download</a></li><li><a href="#check-the-file">Check the file</a></li><li><a href="#the-gatekeeper-warning">The Gatekeeper warning</a></li><li><a href="#first-open">First open</a></li><li><a href="#create-or-restore-a-wallet">Create or restore a wallet</a></li><li><a href="#the-backup-words">The backup words</a></li><li><a href="#touch-id-and-the-secure-enclave">Touch ID and the Secure Enclave</a></li><li><a href="#the-15-minute-lock">The 15 minute lock</a></li><li><a href="#freeze-everything">Freeze everything</a></li><li><a href="#the-help-menu">The Help menu</a></li><li><a href="#next">Next</a></li></ul></nav>
     <div class="prose">
@@ -301,7 +301,7 @@ data key is wrapped to a key the enclave made and cannot export. Nothing on disk
 without the enclave.</p>
 <p>On an enclave wallet, every click you make on a proposal ends in a Touch ID dialog. The dialog
 is drawn by macOS, and its sentence is composed by the app from the proposal&#39;s own numbers: the
-amount, the receiver shortened to eight characters at each end, and the chain. Read it before you
+amount, the receiver shortened to eight characters at each end (a NEAR name whole), and the chain. Read it before you
 confirm. <a href="/docs/security/">Security</a> says what this does and does not protect against.</p>
 <p>A password wallet says Password in the Keys row: &quot;Locked with your password on this Mac.&quot; On a
 Mac that has an enclave, the row also shows Protect with Touch ID, which moves the same wallet

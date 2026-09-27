@@ -215,7 +215,7 @@
     <header class="doc-head">
       <h1>Money</h1>
       <p class="lede">Phosphor keeps money in two places, moves it between them, and pays it out to other people. This page walks through every move: where the money lives, deposit, swap, send, funding the trading account and bringing collateral back, what &quot;settling&quot; means, and the fees that make the app refuse a move.</p>
-      <div class="doc-meta"><span class="mono">v0.10.7</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/money.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.10.8</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/money.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
     <nav class="onpage" aria-label="On this page"><ul><li><a href="#where-money-lives">Where money lives</a></li><li><a href="#deposit">Deposit</a></li><li><a href="#swap">Swap</a></li><li><a href="#send">Send</a></li><li><a href="#fund-the-trading-account">Fund the trading account</a></li><li><a href="#withdraw-from-hyperliquid">Withdraw from Hyperliquid</a></li><li><a href="#after-the-click">After the click</a></li><li><a href="#fees-and-refusals">Fees and refusals</a></li></ul></nav>
     <div class="prose">
@@ -286,9 +286,9 @@ spends a coin the app cannot price at all, which is valued off what the quote sa
 <h2 id="send">Send<a class="anchor" href="#send" aria-label="Link to this section">#</a></h2>
 <p>A send is the one way money leaves for somebody else, and it leaves only from the intents
 balance. Your assistant proposes it with <code>propose_send</code> and must say where it lands: on a real
-chain (Ethereum, Base, Arbitrum, Solana or NEAR, paid out through the bridge), or inside NEAR
-Intents (credited to another intents account, nothing touches a chain). The two are different
-moves with different fees, and a wrong choice is not reversible.</p>
+chain (every chain the deposit card lists except Zcash and Aleo, paid out through the bridge),
+or inside NEAR Intents (credited to another intents account, nothing touches a chain). The two
+are different moves with different fees, and a wrong choice is not reversible.</p>
 <h3 id="the-read-back">The read-back<a class="anchor" href="#the-read-back" aria-label="Link to this section">#</a></h3>
 <p>Before it proposes, the agent reads the move back to you and waits for your yes: the amount,
 the token, the full address character for character, and where it lands. It may only send to an
@@ -297,6 +297,59 @@ A send the agent has not confirmed cannot be expressed: the tool refuses it.</p>
 <p>The app then decodes the address for the place it is going. A mistyped address is refused before
 any quote (see <a href="/docs/troubleshooting/#a-send-was-refused-for-a-typo">Troubleshooting</a>), and a
 contract cannot be paid the chain&#39;s own coin.</p>
+<h3 id="no-memo-tag-or-comment">No memo, tag or comment<a class="anchor" href="#no-memo-tag-or-comment" aria-label="Link to this section">#</a></h3>
+<p>A payout cannot carry a memo, a destination tag or a comment: the bridge&#39;s quote has no field for
+one. On the XRP Ledger, Stellar and TON an exchange tells one customer&#39;s deposit from another&#39;s by
+that memo, so do not pay an exchange deposit address there. Pay a personal wallet address. The
+card says this on every payout to those three chains, the assistant never asks you for a memo,
+and a memo it tries to attach anyway is refused.</p>
+<p>The app checks the rest with the chain itself, before the price is shown and again right before
+it signs, and refuses the payout when the chain would lose it:</p>
+<table>
+<thead>
+<tr>
+<th>Chain</th>
+<th>Refused</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>XRP Ledger</td>
+<td>an X-address (the tag is inside it); an account that requires a destination tag; an account that takes payments only from senders it authorized (DepositAuth, which every AMM account sets); an account that does not exist yet, paid less than the ledger&#39;s reserve (1 XRP today); any coin but XRP</td>
+</tr>
+<tr>
+<td>Stellar</td>
+<td>an M-address (the memo is inside it); an account that sets <code>config.memo_required</code>; an account that does not exist yet, whatever is paid (a payment cannot create a Stellar account, so its owner funds it first); a token the account has no trustline for; your own NEAR Intents deposit address there, which the bridge shares and tells apart by memo</td>
+</tr>
+<tr>
+<td>TON</td>
+<td>a testnet address. A bounceable (EQ...) or raw (0:...) address is paid as the same account in its non-bounceable form (UQ...), so a new wallet cannot bounce the money back, and the card shows both. A raw address carries no checksum, so the card says a changed character in it would not be caught and names the UQ... form as derived from it: compare that with the receiver&#39;s wallet</td>
+</tr>
+<tr>
+<td>Tron</td>
+<td>TRX to a contract, or to an address Tron would not describe</td>
+</tr>
+<tr>
+<td>Bitcoin Cash</td>
+<td>a legacy 1... or 3... address, which is also a Bitcoin address: use the <code>bitcoincash:q...</code> form</td>
+</tr>
+<tr>
+<td>Dogecoin</td>
+<td>an address starting with 9, which the payout service refuses</td>
+</tr>
+<tr>
+<td>Starknet</td>
+<td>a short address: write all 64 hex characters after <code>0x</code>, leading zeros included</td>
+</tr>
+</tbody></table>
+<p>A chain that does not answer one of those questions is a refusal too, never a guess. Paying your
+own deposit address on any other chain, an EVM chain, Solana or NEAR included, is allowed: the
+money comes back into your balance, less the fees both ways, and the card says so. That payout is
+a deposit, so it obeys what a deposit obeys: it is refused under the bridge&#39;s minimum deposit for
+the token (2 XRP on the XRP Ledger), for a token the bridge does not take on that chain (any token
+on Abstract, where it takes no deposits), while NEAR Intents has paused deposits on that chain,
+and on the XRP Ledger while your deposit address does not exist on the ledger yet. If the bridge
+does not say what your deposit address on the chain is, the payout is refused; try again in a
+minute.</p>
 <h3 id="the-click">The click<a class="anchor" href="#the-click" aria-label="Link to this section">#</a></h3>
 <p>Every send waits for your click, whatever the size. The click threshold applies to swaps, funding
 and trades, which keep money in your own custody; it never applies to money leaving it. The card
@@ -306,8 +359,12 @@ before. Its Details say why it asks and what the chain says about the address.</
 <h3 id="the-touch-id-sentence">The Touch ID sentence<a class="anchor" href="#the-touch-id-sentence" aria-label="Link to this section">#</a></h3>
 <p>On an enclave wallet the click puts up a Touch ID dialog whose sentence the app composes from the
 proposal&#39;s own fields, for example &quot;Approve: Pay 0.01 ETH to 0xb583f419...84BB5DB0 on Ethereum
-($24.40)&quot;. The receiver is shortened to eight characters at each end. Check them against the
-address you gave, then confirm. While the dialog is up the card says Confirm on your Mac. The
+($24.40)&quot;. The receiver is shortened to eight characters at each end, counted after the prefix
+every address of its kind shares (<code>0x</code>, <code>bc1q</code>, <code>bitcoincash:q</code>, <code>addr1q</code>, <code>UQ</code>, <code>r</code>, <code>G</code>, <code>T</code>),
+on every chain a payout lands on. A Cardano address shows sixteen characters at the front, from
+the part of the address that says whose money it is. A NEAR name such as alice.near is shown
+whole, however long, because anyone can register a name that starts and ends the same way. The card puts the same characters in the
+text colour. Check them against the address you gave, then confirm. While the dialog is up the card says Confirm on your Mac. The
 agent&#39;s words never reach this dialog.</p>
 <h3 id="the-recipients-book">The recipients book<a class="anchor" href="#the-recipients-book" aria-label="Link to this section">#</a></h3>
 <p>The app remembers every send you approved, by network and address. A first send shows &quot;First
@@ -373,7 +430,8 @@ route with trouble reported goes ahead, and the card says it may take longer.</p
 <p>The app refuses a move that loses too much of itself to fees, and names the fee when it does.</p>
 <ul>
 <li>A chain payout may lose at most 3 percent between your balance and the chain. The bridge&#39;s flat
-fee counts, so a small payout is refused with the fee named.</li>
+fee counts, so a small payout is refused with the fee named. The flat fee is higher on some
+chains: on 2026-09-26 USDT on Tron needed about $85 and Bitcoin about 0.00074 BTC to clear it.</li>
 <li>A send inside NEAR Intents may lose at most 1 percent.</li>
 <li>A Hyperliquid deposit is refused under 7 USDC and when the fee is above 5 percent.</li>
 <li>A Hyperliquid withdrawal is refused under 5 USDC.</li>
