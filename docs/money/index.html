@@ -215,7 +215,7 @@
     <header class="doc-head">
       <h1>Money</h1>
       <p class="lede">Phosphor keeps money in two places, moves it between them, and pays it out to other people. This page walks through every move: where the money lives, deposit, swap, send, funding the trading account and bringing collateral back, what &quot;settling&quot; means, and the fees that make the app refuse a move.</p>
-      <div class="doc-meta"><span class="mono">v0.10.6</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/money.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.10.7</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/money.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
     <nav class="onpage" aria-label="On this page"><ul><li><a href="#where-money-lives">Where money lives</a></li><li><a href="#deposit">Deposit</a></li><li><a href="#swap">Swap</a></li><li><a href="#send">Send</a></li><li><a href="#fund-the-trading-account">Fund the trading account</a></li><li><a href="#withdraw-from-hyperliquid">Withdraw from Hyperliquid</a></li><li><a href="#after-the-click">After the click</a></li><li><a href="#fees-and-refusals">Fees and refusals</a></li></ul></nav>
     <div class="prose">
@@ -246,6 +246,19 @@ after Copy address. Where the network needs a memo, the card says Memo, required
 <p>Before the first address appears you confirm one line: only the tokens on the list can be sent
 here, and anything else sent to this address is lost. The same holds for the network: USDC sent on
 the wrong network is lost, and the bridge does not refund. Send a small test amount first.</p>
+<h3 id="when-near-intents-pauses-a-network">When NEAR Intents pauses a network<a class="anchor" href="#when-near-intents-pauses-a-network" aria-label="Link to this section">#</a></h3>
+<p>The bridge can still hand out an address for a network that NEAR Intents has stopped crediting.
+So before it shows an address, the app asks two things: whether the swap service will take the
+token you picked in on that network right now (a price check that moves nothing), and what the NEAR
+Intents status page says. A network that is paused shows no address at all. Its tile and row say Paused, and the
+card says why in one sentence, for example &quot;NEAR Intents has paused TON deposits right now, so no
+address is shown. Money sent now may not arrive.&quot;, with View status, which opens the status page
+in your browser. Your assistant&#39;s <code>deposit</code> tool gives the same answer and opens no card. A
+network with trouble reported but still working keeps its address, and the card prints a notice
+above it: the money may take longer than usual. The check runs when an address is about to show
+and again on the card&#39;s own watch while it is open, never on a timer of its own, so an address
+already on screen comes down, with the same sentence, if NEAR Intents pauses the network while you
+look. A paused network shows its address again within twenty seconds of NEAR Intents taking it back.</p>
 <p>The card then watches: Waiting for your deposit, then Arriving when the bridge sees your
 transfer, then Almost there, then &quot;is in your balance&quot; once your balance rises. It checks every
 few seconds for ten minutes, then more slowly, and stops after two hours. Closing the card does
@@ -352,6 +365,11 @@ now. Never send the same move again while it is working, taking longer or not co
 <a href="/docs/troubleshooting/#a-move-is-late-or-not-confirmed">Troubleshooting</a> walks through the case that
 shaped this.</p>
 <h2 id="fees-and-refusals">Fees and refusals<a class="anchor" href="#fees-and-refusals" aria-label="Link to this section">#</a></h2>
+<p>A payout to a chain, a Hyperliquid deposit and a Hyperliquid withdrawal are refused when NEAR
+Intents has paused that route, and the card says so in one sentence, for example &quot;NEAR Intents is
+not taking payouts to TON right now, so nothing was signed and nothing moved.&quot; The app asks when
+the move is proposed and again just before it signs, because a card can wait for your click. A
+route with trouble reported goes ahead, and the card says it may take longer.</p>
 <p>The app refuses a move that loses too much of itself to fees, and names the fee when it does.</p>
 <ul>
 <li>A chain payout may lose at most 3 percent between your balance and the chain. The bridge&#39;s flat

@@ -215,10 +215,29 @@
     <header class="doc-head">
       <h1>Changelog</h1>
       <p class="lede">What changed in each version of Phosphor, newest first, written from the git history of the <a href="https://github.com/karimbabasf/phosphor" target="_blank" rel="noopener">repository</a>. The top entry is the version these pages describe, and a test fails the suite when it is not the version in <code>package.json</code>. Versions without a git tag say so.</p>
-      <div class="doc-meta"><span class="mono">v0.10.6</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/changelog.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.10.7</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/changelog.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
-    <nav class="onpage" aria-label="On this page"><ul><li><a href="#0-10-6">0.10.6</a></li><li><a href="#0-10-5">0.10.5</a></li><li><a href="#0-10-4">0.10.4</a></li><li><a href="#0-10-3">0.10.3</a></li><li><a href="#0-10-2">0.10.2</a></li><li><a href="#0-10-0">0.10.0</a></li><li><a href="#0-9-3">0.9.3</a></li><li><a href="#0-9-2">0.9.2</a></li><li><a href="#0-9-1">0.9.1</a></li><li><a href="#0-9-0">0.9.0</a></li><li><a href="#0-8-0">0.8.0</a></li><li><a href="#0-7-0">0.7.0</a></li><li><a href="#0-6-0">0.6.0</a></li><li><a href="#0-5-2">0.5.2</a></li><li><a href="#0-5-1">0.5.1</a></li><li><a href="#0-5-0">0.5.0</a></li><li><a href="#0-4-4">0.4.4</a></li><li><a href="#0-4-3">0.4.3</a></li><li><a href="#0-4-2">0.4.2</a></li><li><a href="#0-4-1">0.4.1</a></li><li><a href="#0-4-0">0.4.0</a></li><li><a href="#0-3-0">0.3.0</a></li><li><a href="#0-2-0">0.2.0</a></li><li><a href="#0-1-0">0.1.0</a></li></ul></nav>
+    <nav class="onpage" aria-label="On this page"><ul><li><a href="#0-10-7">0.10.7</a></li><li><a href="#0-10-6">0.10.6</a></li><li><a href="#0-10-5">0.10.5</a></li><li><a href="#0-10-4">0.10.4</a></li><li><a href="#0-10-3">0.10.3</a></li><li><a href="#0-10-2">0.10.2</a></li><li><a href="#0-10-0">0.10.0</a></li><li><a href="#0-9-3">0.9.3</a></li><li><a href="#0-9-2">0.9.2</a></li><li><a href="#0-9-1">0.9.1</a></li><li><a href="#0-9-0">0.9.0</a></li><li><a href="#0-8-0">0.8.0</a></li><li><a href="#0-7-0">0.7.0</a></li><li><a href="#0-6-0">0.6.0</a></li><li><a href="#0-5-2">0.5.2</a></li><li><a href="#0-5-1">0.5.1</a></li><li><a href="#0-5-0">0.5.0</a></li><li><a href="#0-4-4">0.4.4</a></li><li><a href="#0-4-3">0.4.3</a></li><li><a href="#0-4-2">0.4.2</a></li><li><a href="#0-4-1">0.4.1</a></li><li><a href="#0-4-0">0.4.0</a></li><li><a href="#0-3-0">0.3.0</a></li><li><a href="#0-2-0">0.2.0</a></li><li><a href="#0-1-0">0.1.0</a></li></ul></nav>
     <div class="prose">
+<h2 id="0-10-7">0.10.7<a class="anchor" href="#0-10-7" aria-label="Link to this section">#</a></h2>
+<p>Built 2026-09-26. Tagged v0.10.7 on 2026-09-26.</p>
+<ul>
+<li>Add money no longer shows an address on a network NEAR Intents has paused, checked for the
+exact token you pick, and an address already on screen comes down if the network pauses while
+the card is open. The network reads Paused, the card says why in one sentence, and View status
+opens the NEAR Intents status page. A network with trouble reported keeps its address, with a
+notice that money may take longer.</li>
+<li>A payout to a chain, a Hyperliquid deposit and a Hyperliquid withdrawal are refused before
+signing when NEAR Intents has paused that route, checked when proposed and again right before
+the key signs. Your assistant&#39;s deposit tool gives the same answer.</li>
+<li>Your assistant can read 35 chains instead of 6: an address&#39;s balance and activity, a
+transaction&#39;s result, and whether the chain is still making blocks. Zcash is the one it cannot
+read yet, because no public source answers without a key.</li>
+<li>Before a payout, the app reads the receiving address on every EVM chain it pays to, not only
+Ethereum, Base and Arbitrum, and tells you when that address has never been used.</li>
+<li>Payouts to Ethereum and Arbitrum run the gas check again. It had been skipped.</li>
+<li>Looking up a NEAR transaction shows its real result again instead of &quot;unknown&quot;.</li>
+</ul>
 <h2 id="0-10-6">0.10.6<a class="anchor" href="#0-10-6" aria-label="Link to this section">#</a></h2>
 <p>Built 2026-09-26. Tagged v0.10.6 on 2026-09-26.</p>
 <ul>
