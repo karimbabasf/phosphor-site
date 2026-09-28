@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Privacy</title>
-<meta name="description" content="Phosphor has no accounts, no sign-up and no server of its own. Nothing you do in the app reaches the author. This page says what stays on your Mac, which services the app talks to in your name and what they can see, and what this website records. Effective 2026-09-18.">
+<meta name="description" content="Phosphor has no accounts, no sign-up and no server of its own. Nothing you do in the app reaches the author. This page says what stays on your Mac, which services the app talks to in your name and what they can see, and what this website records. Effective 2026-09-27.">
 <link rel="canonical" href="https://phosphor.money/privacy/">
 <meta name="theme-color" content="#0E0F13">
 <link rel="icon" href="/favicon.ico?v=9" sizes="32x32">
@@ -14,7 +14,7 @@
 <meta property="og:site_name" content="Phosphor">
 <meta property="og:url" content="https://phosphor.money/privacy/">
 <meta property="og:title" content="Privacy">
-<meta property="og:description" content="Phosphor has no accounts, no sign-up and no server of its own. Nothing you do in the app reaches the author. This page says what stays on your Mac, which services the app talks to in your name and what they can see, and what this website records. Effective 2026-09-18.">
+<meta property="og:description" content="Phosphor has no accounts, no sign-up and no server of its own. Nothing you do in the app reaches the author. This page says what stays on your Mac, which services the app talks to in your name and what they can see, and what this website records. Effective 2026-09-27.">
 <meta property="og:image" content="https://phosphor.money/og.png?v=2">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/Sora-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
@@ -204,11 +204,13 @@
   <article class="doc">
     <header class="doc-head">
       <h1>Privacy</h1>
-      <p class="lede">Phosphor has no accounts, no sign-up and no server of its own. Nothing you do in the app reaches the author. This page says what stays on your Mac, which services the app talks to in your name and what they can see, and what this website records. Effective 2026-09-18.</p>
+      <p class="lede">Phosphor has no accounts, no sign-up and no server of its own. Nothing you do in the app reaches the author. This page says what stays on your Mac, which services the app talks to in your name and what they can see, and what this website records. Effective 2026-09-27.</p>
     </header>
     <div class="prose">
 <h2 id="no-accounts-no-telemetry">No accounts, no telemetry<a class="anchor" href="#no-accounts-no-telemetry" aria-label="Link to this section">#</a></h2>
-<p>The app asks for no account, no email and no name. It sends no analytics, no crash reports and no usage data, and it never contacts a server run by the author. The author cannot see your balances, your addresses, your trades, your rules or your conversations with your agent, and has no way to reset, recover or freeze anything for you.</p>
+<p>The app asks for no account, no email and no name. It sends no analytics, no crash reports and no usage data, and it never contacts a server run by the author. The author cannot see your balances, your rules or your conversations with your agent, and has no way to reset, recover or freeze anything for you. The one exception is the swap label below: it lets anyone, the author included, see which public NEAR Intents swaps came from Phosphor.</p>
+<h2 id="the-swap-label">The swap label<a class="anchor" href="#the-swap-label" aria-label="Link to this section">#</a></h2>
+<p>Since version 0.10.11, every swap Phosphor prices through NEAR Intents&#39; 1Click API carries the label <code>phosphor</code> (the quote&#39;s <code>referral</code> field). The swap itself was already public: NEAR Intents shows every swap, with its amounts, its addresses and its status, on its explorer. The label adds one fact to that public record, that the swap came from Phosphor. The author uses it to count Phosphor&#39;s swaps, volume and wallets from NEAR Intents&#39; own data, so those numbers are not something the app reports about you. The app sends nothing new: the label goes only to NEAR Intents, inside the request it already made. Trades on Hyperliquid carry no label.</p>
 <h2 id="what-stays-on-your-mac">What stays on your Mac<a class="anchor" href="#what-stays-on-your-mac" aria-label="Link to this section">#</a></h2>
 <ul>
 <li><strong>Keys.</strong> Your key file, <code>keys.enc.json</code>, lives under <code>~/.phosphor</code>. It is one encrypted envelope, and the key that opens it is sealed to your Mac&#39;s Secure Enclave, so the file is useless on any other machine. Phosphor keeps no copy. If you lose the file and its backup, nobody can restore it.</li>

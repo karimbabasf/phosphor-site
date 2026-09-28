@@ -1,10 +1,14 @@
 # Privacy
 
-Phosphor has no accounts, no sign-up and no server of its own. Nothing you do in the app reaches the author. This page says what stays on your Mac, which services the app talks to in your name and what they can see, and what this website records. Effective 2026-09-18.
+Phosphor has no accounts, no sign-up and no server of its own. Nothing you do in the app reaches the author. This page says what stays on your Mac, which services the app talks to in your name and what they can see, and what this website records. Effective 2026-09-27.
 
 ## No accounts, no telemetry
 
-The app asks for no account, no email and no name. It sends no analytics, no crash reports and no usage data, and it never contacts a server run by the author. The author cannot see your balances, your addresses, your trades, your rules or your conversations with your agent, and has no way to reset, recover or freeze anything for you.
+The app asks for no account, no email and no name. It sends no analytics, no crash reports and no usage data, and it never contacts a server run by the author. The author cannot see your balances, your rules or your conversations with your agent, and has no way to reset, recover or freeze anything for you. The one exception is the swap label below: it lets anyone, the author included, see which public NEAR Intents swaps came from Phosphor.
+
+## The swap label
+
+Since version 0.10.11, every swap Phosphor prices through NEAR Intents' 1Click API carries the label `phosphor` (the quote's `referral` field). The swap itself was already public: NEAR Intents shows every swap, with its amounts, its addresses and its status, on its explorer. The label adds one fact to that public record, that the swap came from Phosphor. The author uses it to count Phosphor's swaps, volume and wallets from NEAR Intents' own data, so those numbers are not something the app reports about you. The app sends nothing new: the label goes only to NEAR Intents, inside the request it already made. Trades on Hyperliquid carry no label.
 
 ## What stays on your Mac
 
