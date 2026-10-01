@@ -190,6 +190,10 @@
   [data-invite="code"] .when-code { display: block; }
   [data-invite="code"] .when-none { display: none; }
   :root:not([data-invite]) .reload { display: none; }
+  /* With JavaScript off the code is never read, so the page says where it is instead. */
+  @media (scripting: none) {
+    .with-js { display: none; }
+  }
 
   .code-wrap { position: relative; margin-bottom: 46px; }
   .code-card { position: relative; display: flex; align-items: center; gap: 16px; padding: 16px 16px 16px 22px; border: 1px solid var(--rule-2); border-radius: 14px; background: var(--ink-2); overflow: hidden; }
@@ -218,7 +222,7 @@
   .req { font-size: 14px; line-height: 1.4; color: var(--text-3); }
   /* On a phone or a tablet there is nothing to download, as on the front page. */
   .only { display: none; font-size: 15px; line-height: 1.5; color: var(--text-2); }
-  .note { padding-top: 22px; border-top: 1px solid var(--rule); font-size: 15px; line-height: 1.6; color: var(--text-2); text-wrap: pretty; }
+  .note { max-width: 68ch; padding-top: 22px; border-top: 1px solid var(--rule); font-size: 15px; line-height: 1.6; color: var(--text-2); text-wrap: pretty; }
   .when-none .get-row { margin: 0 0 36px; }
 
   @media (hover: hover) and (pointer: fine) {
@@ -280,7 +284,7 @@
           <div class="get-row">
             <a class="get" href="/download/mac">Download for Mac</a>
             <span class="req">For Apple silicon Macs on macOS 13.5 or later.</span>
-            <span class="only">Phosphor runs on a Mac. Open this link there to download it.</span>
+            <span class="only">Phosphor runs on a Mac. Open the message with this link on your Mac, or tap Copy and send the code to yourself.</span>
           </div>
         </div></li>
         <li><div><strong>Paste the code</strong> when Phosphor asks "Have an invite code?" while you set it up. Already using Phosphor? Open Add money and pick "Have an invite code?".</div></li>
@@ -289,9 +293,9 @@
     </div>
     <div class="when-none">
       <header class="doc-head">
-        <h1>No invite code here</h1>
-        <p class="lede">This link has no complete invite code in it. Open it again from the message it came in.</p>
-        <noscript><p class="lede">JavaScript is off, so this page cannot show the code. Your code is the part of the address after the # sign.</p></noscript>
+        <h1 class="with-js">No invite code here</h1>
+        <p class="lede with-js">This link has no complete invite code in it. Open it again from the message it came in.</p>
+        <noscript><h1>Your invite code is in the link</h1><p class="lede">JavaScript is off, so this page cannot show the code. Your code is the part of the address after the # sign.</p></noscript>
       </header>
           <div class="get-row">
             <a class="get" href="/download/mac">Download for Mac</a>
