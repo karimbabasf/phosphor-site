@@ -276,7 +276,7 @@ ${html}
       <ol class="steps">
         <li><div><strong>Download Phosphor</strong> and open it.${download}
         </div></li>
-        <li><div><strong>Paste the code</strong> in the invite field on Phosphor's first screen. Already using Phosphor? Paste it in Add money.</div></li>
+        <li><div><strong>Paste the code</strong> when Phosphor asks "Have an invite code?" while you set it up. Already using Phosphor? Open Add money and pick "Have an invite code?".</div></li>
       </ol>
       <p class="note">Never paste the code into the chat, and keep it to yourself. Phosphor never asks for your recovery phrase to claim a code.</p>
     </div>

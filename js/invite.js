@@ -51,7 +51,7 @@
     let timer = 0;
     const copied = () => {
       button.dataset.copied = '';
-      hint.textContent = "Copied. Paste it in Phosphor's invite field.";
+      hint.textContent = 'Copied. Paste it where Phosphor asks "Have an invite code?".';
       if (!still) wash.animate([
         { clipPath: 'inset(0 100% 0 0)', opacity: 1, easing: 'cubic-bezier(0.23, 1, 0.32, 1)' },
         { clipPath: 'inset(0 0% 0 0)', opacity: 1, offset: 0.45, easing: 'ease' },

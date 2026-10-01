@@ -48,6 +48,8 @@
     .only { display: block; }
   }
   @media (max-width: 560px) {
+    /* The Copied line runs to two lines here; the gap holds both. */
+    .code-wrap { margin-bottom: 68px; }
     .code-card { flex-direction: column; align-items: stretch; gap: 14px; padding: 18px; }
     .code { font-size: 18px; }
     .copy { height: 46px; }
