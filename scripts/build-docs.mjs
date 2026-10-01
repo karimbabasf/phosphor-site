@@ -1,5 +1,5 @@
 // Renders the app's docs and the site's own terms, privacy and security pages into static pages,
-// plus the 404 page and the sitemap.
+// plus the invite page, the 404 page and the sitemap.
 //
 //   node scripts/build-docs.mjs            reads ../phosphor/docs (PHOSPHOR_DOCS overrides)
 //
@@ -14,6 +14,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync, rmSync, readdirSync
 import { join, resolve, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { marked } from './vendor/marked.esm.js';
+import { checkPages } from './check-pages.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const appRoot = resolve(root, process.env.PHOSPHOR_DOCS ? join(process.env.PHOSPHOR_DOCS, '..') : '../phosphor');
@@ -113,11 +114,14 @@ const footer = `
   </div>
 </footer>`;
 
-const shell = ({ title, description, url, body, active, kind, noindex }) => `<!doctype html>
+// A page that can hold an invite code in its address (the invite page, the 404) passes its own
+// script, which goes first, and analytics: false, since Vercel's insights script reports the
+// whole address. check-pages.mjs holds both to that.
+const shell = ({ title, description, url, body, active, kind, noindex, script, analytics = true, style = '' }) => `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+${script ? `<script src="${script}"></script>\n` : ''}<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
 ${noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonical" href="${site}${url}">`}
@@ -135,10 +139,9 @@ ${noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonical" hr
 <link rel="preload" href="/fonts/Sora-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/Sora-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <style>
-${css}
+${css}${style}
 </style>
-<script defer src="/_vercel/insights/script.js"></script>
-</head>
+${analytics ? '<script defer src="/_vercel/insights/script.js"></script>\n' : ''}</head>
 <body class="${kind}">
 ${nav(active)}
 ${body}
@@ -243,8 +246,56 @@ ${html}
   write(`${slug}/index.html`, shell({ title, description: summary.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1'), url: `/${slug}/`, body: article, active: '', kind: 'read' }));
 }
 
+// The invite page. An invite link is /invite#PHOS-...: js/invite.js runs first, takes the code
+// out of the address bar and puts it in #code. With no code, or a broken one, the page says so
+// and still offers the app.
+{
+  const download = `
+          <div class="get-row">
+            <a class="get" href="/download/mac">Download for Mac</a>
+            <span class="req">For Apple silicon Macs on macOS 13.5 or later.</span>
+            <span class="only">Phosphor runs on a Mac. Open this link there to download it.</span>
+          </div>`;
+  const article = `
+<main class="docs wrap single">
+  <article class="doc">
+    <div class="when-code">
+      <header class="doc-head">
+        <h1>Your invite to Phosphor</h1>
+        <p class="lede">This code carries money for your Phosphor wallet. It pays once, to the first wallet that claims it.</p>
+      </header>
+      <div class="code-wrap">
+        <div class="code-card" role="group" aria-label="Your invite code">
+          <span class="wash" aria-hidden="true"></span>
+          <p class="code" id="code" translate="no"></p>
+          <button class="copy" id="copy" type="button" aria-label="Copy the code"><span class="label" aria-hidden="true">Copy</span><span class="done" aria-hidden="true">Copied</span></button>
+        </div>
+        <p class="hint" id="hint" role="status"></p>
+      </div>
+      <ol class="steps">
+        <li><div><strong>Download Phosphor</strong> and open it.${download}
+        </div></li>
+        <li><div><strong>Paste the code</strong> in the invite field on Phosphor's first screen. Already using Phosphor? Paste it in Add money.</div></li>
+      </ol>
+      <p class="note">Never paste the code into the chat, and keep it to yourself. Phosphor never asks for your recovery phrase to claim a code.</p>
+    </div>
+    <div class="when-none">
+      <header class="doc-head">
+        <h1>No invite code here</h1>
+        <p class="lede">This link has no complete invite code in it. Open it again from the message it came in.</p>
+        <noscript><p class="lede">JavaScript is off, so this page cannot show the code. Your code is the part of the address after the # sign.</p></noscript>
+      </header>${download}
+      <p class="note reload">This page takes the code out of the address bar as soon as it reads it, so a reload shows this message.</p>
+    </div>
+  </article>
+</main>`;
+  const style = readFileSync(join(root, 'scripts', 'invite.css'), 'utf8');
+  write('invite/index.html', shell({ title: 'Your Phosphor invite', description: 'Copy your invite code and download Phosphor for Mac.', url: '/invite', body: article, active: '', kind: 'read invite', noindex: true, script: '/js/invite.js?v=1', analytics: false, style }));
+}
+
 // The page a wrong address lands on. Vercel serves 404.html at the root for any path it has no
-// file for, with the 404 status kept.
+// file for, with the 404 status kept, and the address keeps whatever followed #: js/notfound.js
+// passes a mistyped invite link on to the invite page.
 {
   const article = `
 <main class="docs wrap single">
@@ -263,7 +314,7 @@ ${html}
     </div>
   </article>
 </main>`;
-  write('404.html', shell({ title: 'Page not found', description: 'That address is not a page on this site.', url: '/404', body: article, active: '', kind: 'read', noindex: true }));
+  write('404.html', shell({ title: 'Page not found', description: 'That address is not a page on this site.', url: '/404', body: article, active: '', kind: 'read', noindex: true, script: '/js/notfound.js?v=1', analytics: false }));
 }
 
 // The sitemap lists every page this script writes plus the front page, so it cannot drift.
@@ -275,4 +326,11 @@ ${urls.map(u => `  <url><loc>${site}${u}</loc></url>`).join('\n')}
 </urlset>
 `;
   write('sitemap.xml', xml);
+}
+
+// The pages that can hold an invite code load no analytics and no script but their own.
+{
+  const problems = checkPages(root);
+  for (const p of problems) console.error(`check-pages: ${p}`);
+  if (problems.length) process.exit(1);
 }

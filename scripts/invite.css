@@ -1,0 +1,58 @@
+
+  /* The invite page, on top of the reading page: the code with Copy beside it, then two steps.
+     js/invite.js marks the page data-invite="code" before it paints when the address holds a
+     code; otherwise the page says there is none. The Download button in the steps is the page's
+     one green control, so the bar's pill stands down here. */
+  .invite .links .download { display: none; }
+  .when-code { display: none; }
+  [data-invite="code"] .when-code { display: block; }
+  [data-invite="code"] .when-none { display: none; }
+  :root:not([data-invite]) .reload { display: none; }
+
+  .code-wrap { position: relative; margin-bottom: 46px; }
+  .code-card { position: relative; display: flex; align-items: center; gap: 16px; padding: 16px 16px 16px 22px; border: 1px solid var(--rule-2); border-radius: 14px; background: var(--ink-2); overflow: hidden; }
+  .wash { position: absolute; inset: 0; background: rgba(63, 255, 108, 0.09); opacity: 0; pointer-events: none; }
+  /* Geist Mono because the code is read one character at a time. A click selects all of it. */
+  .code { position: relative; flex: 1; min-width: 0; font: 500 clamp(17px, 1.9vw, 21px)/1.45 "Geist Mono", ui-monospace, monospace; letter-spacing: 0.03em; text-wrap: balance; -webkit-user-select: all; user-select: all; }
+  .code::selection { background: var(--green); color: var(--ink); }
+  .copy { position: relative; flex: none; display: inline-grid; place-items: center; min-width: 92px; height: 42px; padding: 0 18px; border: 1px solid var(--rule-2); border-radius: 999px; background: var(--ink); color: var(--text); font: 600 14px/1 "Sora", sans-serif; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: transform 160ms var(--ease-out), border-color 150ms ease, background-color 150ms ease; }
+  .copy > span { grid-area: 1 / 1; transition: opacity 160ms ease, transform 280ms var(--ease-out); }
+  .copy .done { color: var(--green); opacity: 0; transform: translateY(9px); }
+  .copy[data-copied] { border-color: rgba(63, 255, 108, 0.45); }
+  .copy[data-copied] .label { opacity: 0; transform: translateY(-9px); }
+  .copy[data-copied] .done { opacity: 1; transform: none; }
+  .copy:active { transform: scale(0.97); }
+  .copy:focus-visible { outline-offset: 3px; }
+  .hint { position: absolute; top: calc(100% + 14px); left: 22px; right: 0; font-size: 14px; line-height: 1.4; color: var(--text-2); }
+
+  .steps { list-style: none; margin: 0; padding: 0; counter-reset: step; }
+  .steps > li { counter-increment: step; display: grid; grid-template-columns: 34px minmax(0, 1fr); padding: 22px 0; border-top: 1px solid var(--rule); font-size: 17px; line-height: 1.55; color: var(--text-2); text-wrap: pretty; }
+  .steps > li::before { content: counter(step); font: 500 15px/1.75 "Geist Mono", ui-monospace, monospace; color: var(--text-3); }
+  .steps strong { font-weight: 600; color: var(--text); }
+  .get-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; margin-top: 16px; }
+  .get { display: inline-flex; align-items: center; height: 44px; padding: 0 22px; border-radius: 999px; background: var(--green); color: var(--ink); font: 600 15px/1 "Sora", sans-serif; text-decoration: none; white-space: nowrap; -webkit-tap-highlight-color: transparent; transition: transform 160ms var(--ease-out), background-color 150ms ease; }
+  .get:active { transform: scale(0.97); }
+  .get:focus-visible { outline-offset: 3px; }
+  .req { font-size: 14px; line-height: 1.4; color: var(--text-3); }
+  /* On a phone or a tablet there is nothing to download, as on the front page. */
+  .only { display: none; font-size: 15px; line-height: 1.5; color: var(--text-2); }
+  .note { padding-top: 22px; border-top: 1px solid var(--rule); font-size: 15px; line-height: 1.6; color: var(--text-2); text-wrap: pretty; }
+  .when-none .get-row { margin: 0 0 36px; }
+
+  @media (hover: hover) and (pointer: fine) {
+    .copy:hover { border-color: #4A4C50; background: var(--ink-3); }
+    .get:hover { background: #63FF87; }
+  }
+  @media (hover: none) and (pointer: coarse) {
+    .get, .req { display: none; }
+    .only { display: block; }
+  }
+  @media (max-width: 560px) {
+    .code-card { flex-direction: column; align-items: stretch; gap: 14px; padding: 18px; }
+    .code { font-size: 18px; }
+    .copy { height: 46px; }
+    .hint { left: 2px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .copy, .copy > span, .get { transition: none; }
+  }

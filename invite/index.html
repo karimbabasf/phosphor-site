@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script src="/js/notfound.js?v=1"></script>
+<script src="/js/invite.js?v=1"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Page not found</title>
-<meta name="description" content="That address is not a page on this site.">
+<title>Your Phosphor invite</title>
+<meta name="description" content="Copy your invite code and download Phosphor for Mac.">
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#0E0F13">
 <link rel="icon" href="/favicon.ico?v=9" sizes="32x32">
@@ -13,9 +13,9 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=9">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Phosphor">
-<meta property="og:url" content="https://phosphor.money/404">
-<meta property="og:title" content="Page not found">
-<meta property="og:description" content="That address is not a page on this site.">
+<meta property="og:url" content="https://phosphor.money/invite">
+<meta property="og:title" content="Your Phosphor invite">
+<meta property="og:description" content="Copy your invite code and download Phosphor for Mac.">
 <meta property="og:image" content="https://phosphor.money/og.png?v=2">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/Sora-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
@@ -181,9 +181,67 @@
     .links a, .toc a, .anchor { transition: none; }
   }
 
+  /* The invite page, on top of the reading page: the code with Copy beside it, then two steps.
+     js/invite.js marks the page data-invite="code" before it paints when the address holds a
+     code; otherwise the page says there is none. The Download button in the steps is the page's
+     one green control, so the bar's pill stands down here. */
+  .invite .links .download { display: none; }
+  .when-code { display: none; }
+  [data-invite="code"] .when-code { display: block; }
+  [data-invite="code"] .when-none { display: none; }
+  :root:not([data-invite]) .reload { display: none; }
+
+  .code-wrap { position: relative; margin-bottom: 46px; }
+  .code-card { position: relative; display: flex; align-items: center; gap: 16px; padding: 16px 16px 16px 22px; border: 1px solid var(--rule-2); border-radius: 14px; background: var(--ink-2); overflow: hidden; }
+  .wash { position: absolute; inset: 0; background: rgba(63, 255, 108, 0.09); opacity: 0; pointer-events: none; }
+  /* Geist Mono because the code is read one character at a time. A click selects all of it. */
+  .code { position: relative; flex: 1; min-width: 0; font: 500 clamp(17px, 1.9vw, 21px)/1.45 "Geist Mono", ui-monospace, monospace; letter-spacing: 0.03em; text-wrap: balance; -webkit-user-select: all; user-select: all; }
+  .code::selection { background: var(--green); color: var(--ink); }
+  .copy { position: relative; flex: none; display: inline-grid; place-items: center; min-width: 92px; height: 42px; padding: 0 18px; border: 1px solid var(--rule-2); border-radius: 999px; background: var(--ink); color: var(--text); font: 600 14px/1 "Sora", sans-serif; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: transform 160ms var(--ease-out), border-color 150ms ease, background-color 150ms ease; }
+  .copy > span { grid-area: 1 / 1; transition: opacity 160ms ease, transform 280ms var(--ease-out); }
+  .copy .done { color: var(--green); opacity: 0; transform: translateY(9px); }
+  .copy[data-copied] { border-color: rgba(63, 255, 108, 0.45); }
+  .copy[data-copied] .label { opacity: 0; transform: translateY(-9px); }
+  .copy[data-copied] .done { opacity: 1; transform: none; }
+  .copy:active { transform: scale(0.97); }
+  .copy:focus-visible { outline-offset: 3px; }
+  .hint { position: absolute; top: calc(100% + 14px); left: 22px; right: 0; font-size: 14px; line-height: 1.4; color: var(--text-2); }
+
+  .steps { list-style: none; margin: 0; padding: 0; counter-reset: step; }
+  .steps > li { counter-increment: step; display: grid; grid-template-columns: 34px minmax(0, 1fr); padding: 22px 0; border-top: 1px solid var(--rule); font-size: 17px; line-height: 1.55; color: var(--text-2); text-wrap: pretty; }
+  .steps > li::before { content: counter(step); font: 500 15px/1.75 "Geist Mono", ui-monospace, monospace; color: var(--text-3); }
+  .steps strong { font-weight: 600; color: var(--text); }
+  .get-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; margin-top: 16px; }
+  .get { display: inline-flex; align-items: center; height: 44px; padding: 0 22px; border-radius: 999px; background: var(--green); color: var(--ink); font: 600 15px/1 "Sora", sans-serif; text-decoration: none; white-space: nowrap; -webkit-tap-highlight-color: transparent; transition: transform 160ms var(--ease-out), background-color 150ms ease; }
+  .get:active { transform: scale(0.97); }
+  .get:focus-visible { outline-offset: 3px; }
+  .req { font-size: 14px; line-height: 1.4; color: var(--text-3); }
+  /* On a phone or a tablet there is nothing to download, as on the front page. */
+  .only { display: none; font-size: 15px; line-height: 1.5; color: var(--text-2); }
+  .note { padding-top: 22px; border-top: 1px solid var(--rule); font-size: 15px; line-height: 1.6; color: var(--text-2); text-wrap: pretty; }
+  .when-none .get-row { margin: 0 0 36px; }
+
+  @media (hover: hover) and (pointer: fine) {
+    .copy:hover { border-color: #4A4C50; background: var(--ink-3); }
+    .get:hover { background: #63FF87; }
+  }
+  @media (hover: none) and (pointer: coarse) {
+    .get, .req { display: none; }
+    .only { display: block; }
+  }
+  @media (max-width: 560px) {
+    .code-card { flex-direction: column; align-items: stretch; gap: 14px; padding: 18px; }
+    .code { font-size: 18px; }
+    .copy { height: 46px; }
+    .hint { left: 2px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .copy, .copy > span, .get { transition: none; }
+  }
+
 </style>
 </head>
-<body class="read">
+<body class="read invite">
 
 <div class="nav">
   <a class="mark" href="/" aria-label="Phosphor"><img src="/mark-green.svg" alt="" width="27" height="30"></a>
@@ -202,17 +260,43 @@
 
 <main class="docs wrap single">
   <article class="doc">
-    <header class="doc-head">
-      <h1>Nothing here</h1>
-      <p class="lede">That address is not a page on this site. The pages that exist are below.</p>
-    </header>
-    <div class="prose">
-      <ul>
-        <li><a href="/">The front page</a></li>
-        <li><a href="/docs/">Docs</a>, starting with <a href="/docs/getting-started/">getting started</a></li>
-        <li><a href="/download/mac">Download for Mac</a></li>
-        <li><a href="/terms/">Terms</a>, <a href="/privacy/">privacy</a> and <a href="/security/">security</a></li>
-      </ul>
+    <div class="when-code">
+      <header class="doc-head">
+        <h1>Your invite to Phosphor</h1>
+        <p class="lede">This code carries money for your Phosphor wallet. It pays once, to the first wallet that claims it.</p>
+      </header>
+      <div class="code-wrap">
+        <div class="code-card" role="group" aria-label="Your invite code">
+          <span class="wash" aria-hidden="true"></span>
+          <p class="code" id="code" translate="no"></p>
+          <button class="copy" id="copy" type="button" aria-label="Copy the code"><span class="label" aria-hidden="true">Copy</span><span class="done" aria-hidden="true">Copied</span></button>
+        </div>
+        <p class="hint" id="hint" role="status"></p>
+      </div>
+      <ol class="steps">
+        <li><div><strong>Download Phosphor</strong> and open it.
+          <div class="get-row">
+            <a class="get" href="/download/mac">Download for Mac</a>
+            <span class="req">For Apple silicon Macs on macOS 13.5 or later.</span>
+            <span class="only">Phosphor runs on a Mac. Open this link there to download it.</span>
+          </div>
+        </div></li>
+        <li><div><strong>Paste the code</strong> in the invite field on Phosphor's first screen. Already using Phosphor? Paste it in Add money.</div></li>
+      </ol>
+      <p class="note">Never paste the code into the chat, and keep it to yourself. Phosphor never asks for your recovery phrase to claim a code.</p>
+    </div>
+    <div class="when-none">
+      <header class="doc-head">
+        <h1>No invite code here</h1>
+        <p class="lede">This link has no complete invite code in it. Open it again from the message it came in.</p>
+        <noscript><p class="lede">JavaScript is off, so this page cannot show the code. Your code is the part of the address after the # sign.</p></noscript>
+      </header>
+          <div class="get-row">
+            <a class="get" href="/download/mac">Download for Mac</a>
+            <span class="req">For Apple silicon Macs on macOS 13.5 or later.</span>
+            <span class="only">Phosphor runs on a Mac. Open this link there to download it.</span>
+          </div>
+      <p class="note reload">This page takes the code out of the address bar as soon as it reads it, so a reload shows this message.</p>
     </div>
   </article>
 </main>
