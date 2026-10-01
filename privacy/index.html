@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Privacy</title>
-<meta name="description" content="Phosphor has no accounts, no sign-up and no server of its own. Nothing you do in the app reaches the author. This page says what stays on your Mac, which services the app talks to in your name and what they can see, and what this website records. Effective 2026-09-27.">
+<meta name="description" content="Phosphor has no accounts, no sign-up and no server of its own. Nothing you do in the app reaches the author. This page says what stays on your Mac, which services the app talks to in your name and what they can see, and what this website records. Effective 2026-10-01.">
 <link rel="canonical" href="https://phosphor.money/privacy/">
 <meta name="theme-color" content="#0E0F13">
 <link rel="icon" href="/favicon.ico?v=9" sizes="32x32">
@@ -14,7 +14,7 @@
 <meta property="og:site_name" content="Phosphor">
 <meta property="og:url" content="https://phosphor.money/privacy/">
 <meta property="og:title" content="Privacy">
-<meta property="og:description" content="Phosphor has no accounts, no sign-up and no server of its own. Nothing you do in the app reaches the author. This page says what stays on your Mac, which services the app talks to in your name and what they can see, and what this website records. Effective 2026-09-27.">
+<meta property="og:description" content="Phosphor has no accounts, no sign-up and no server of its own. Nothing you do in the app reaches the author. This page says what stays on your Mac, which services the app talks to in your name and what they can see, and what this website records. Effective 2026-10-01.">
 <meta property="og:image" content="https://phosphor.money/og.png?v=2">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/Sora-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
@@ -204,13 +204,20 @@
   <article class="doc">
     <header class="doc-head">
       <h1>Privacy</h1>
-      <p class="lede">Phosphor has no accounts, no sign-up and no server of its own. Nothing you do in the app reaches the author. This page says what stays on your Mac, which services the app talks to in your name and what they can see, and what this website records. Effective 2026-09-27.</p>
+      <p class="lede">Phosphor has no accounts, no sign-up and no server of its own. Nothing you do in the app reaches the author. This page says what stays on your Mac, which services the app talks to in your name and what they can see, and what this website records. Effective 2026-10-01.</p>
     </header>
     <div class="prose">
 <h2 id="no-accounts-no-telemetry">No accounts, no telemetry<a class="anchor" href="#no-accounts-no-telemetry" aria-label="Link to this section">#</a></h2>
-<p>The app asks for no account, no email and no name. It sends no analytics, no crash reports and no usage data, and it never contacts a server run by the author. The author cannot see your balances, your rules or your conversations with your agent, and has no way to reset, recover or freeze anything for you. The one exception is the swap label below: it lets anyone, the author included, see which public NEAR Intents swaps came from Phosphor.</p>
+<p>The app asks for no account, no email and no name. It sends no analytics, no crash reports and no usage data, and it never contacts a server run by the author. The author cannot see your balances, your rules or your conversations with your agent, and has no way to reset, recover or freeze anything for you. Two things below are the exceptions. The swap label lets anyone, the author included, see which public NEAR Intents swaps came from Phosphor. An invite code, once claimed, ties the wallet that claimed it to Phosphor&#39;s invite treasury in public.</p>
 <h2 id="the-swap-label">The swap label<a class="anchor" href="#the-swap-label" aria-label="Link to this section">#</a></h2>
 <p>Since version 0.10.11, every swap Phosphor prices through NEAR Intents&#39; 1Click API carries the label <code>phosphor</code> (the quote&#39;s <code>referral</code> field). The swap itself was already public: NEAR Intents shows every swap, with its amounts, its addresses and its status, on its explorer. The label adds one fact to that public record, that the swap came from Phosphor. The author uses it to count Phosphor&#39;s swaps, volume and wallets from NEAR Intents&#39; own data, so those numbers are not something the app reports about you. The app sends nothing new: the label goes only to NEAR Intents, inside the request it already made. Trades on Hyperliquid carry no label.</p>
+<h2 id="invite-codes">Invite codes<a class="anchor" href="#invite-codes" aria-label="Link to this section">#</a></h2>
+<p>An invite code is a small NEAR Intents account that holds money for a new wallet. Each code is funded from Phosphor&#39;s invite treasury, and the treasury from the author&#39;s own wallet. Claiming a code in the app moves its money into your wallet.</p>
+<ul>
+<li><strong>What becomes public.</strong> The claim is a transfer on NEAR Intents, and every transfer there is public. Anyone can see that your wallet received money from an account the invite treasury funded and, because the author&#39;s wallet funds the treasury, that your wallet is linked to the author&#39;s. The author knows who got each code, so the author can tell which wallet is yours and see its public balance and moves, as anyone who knows an address can.</li>
+<li><strong>Who sees the claim.</strong> The app signs the claim on your Mac, sends it to the NEAR Intents solver relay (chaindefuser.com) and checks it on public NEAR RPC nodes. They see it the way they see every Phosphor read: your IP address, the request and the addresses it concerns. If the relay turns the claim away, the app sends it through NEAR Intents&#39; 1Click API instead, which sees the same.</li>
+<li><strong>The code itself.</strong> The part of an invite link after # never reaches a server, and the invite page sends the code nowhere and loads no analytics. The app uses the code on your Mac to sign the claim and never writes it to a file or a log.</li>
+</ul>
 <h2 id="what-stays-on-your-mac">What stays on your Mac<a class="anchor" href="#what-stays-on-your-mac" aria-label="Link to this section">#</a></h2>
 <ul>
 <li><strong>Keys.</strong> Your key file, <code>keys.enc.json</code>, lives under <code>~/.phosphor</code>. It is one encrypted envelope, and the key that opens it is sealed to your Mac&#39;s Secure Enclave, so the file is useless on any other machine. Phosphor keeps no copy. If you lose the file and its backup, nobody can restore it.</li>
@@ -231,7 +238,7 @@
 <h2 id="your-agent">Your agent<a class="anchor" href="#your-agent" aria-label="Link to this section">#</a></h2>
 <p>Phosphor has no AI inside it. The agent you connect (Claude Code, Codex, or any other MCP client) runs under your own account with its own provider, and everything it reads through Phosphor becomes part of that conversation: balances, prices, proposals, your rules and the sentences you type. Start your assistant runs Claude Code under your Claude account, locked to Phosphor&#39;s tools; the same applies. Read your provider&#39;s privacy policy, because it, not this page, governs that data.</p>
 <h2 id="this-website">This website<a class="anchor" href="#this-website" aria-label="Link to this section">#</a></h2>
-<p>The site is static and hosted on Vercel. It sets no cookies and loads no analytics or tracking scripts. Vercel keeps the ordinary server logs a host keeps (IP address, page requested, browser) to run the service. The live chart on the front page fetches prices from Hyperliquid&#39;s public API directly from your browser, so Hyperliquid sees your IP when you open the page. The download is served from Vercel&#39;s file storage.</p>
+<p>The site is static and hosted on Vercel, and it sets no cookies. Its pages count visits with Vercel Web Analytics, which records the page, the site you came from, your country, region and city, and your browser, operating system and device type. It tells visits apart by a hash of the request, not a cookie, and Vercel discards that hash after 24 hours. The invite page and the page for a wrong address load no analytics, because an invite link carries its code in the address. Vercel keeps the ordinary server logs a host keeps (IP address, page requested, browser) to run the service. The live chart on the front page fetches prices from Hyperliquid&#39;s public API directly from your browser, so Hyperliquid sees your IP when you open the page. The download is served from Vercel&#39;s file storage.</p>
 <h2 id="email-and-reports">Email and reports<a class="anchor" href="#email-and-reports" aria-label="Link to this section">#</a></h2>
 <p>If you write to <a href="mailto:founder@karimbabasf.com">founder@karimbabasf.com</a>, the author keeps the email to answer it and for nothing else. A vulnerability sent through <a href="https://github.com/karimbabasf/phosphor/security/advisories/new" target="_blank" rel="noopener">GitHub private reporting</a> stays private to the maintainer until an advisory is published, and your name appears in it only if you want it to.</p>
 <h2 id="your-rights">Your rights<a class="anchor" href="#your-rights" aria-label="Link to this section">#</a></h2>

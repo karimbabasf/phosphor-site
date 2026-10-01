@@ -1,6 +1,6 @@
 # Terms of use
 
-The rules for this site and for the Phosphor app. Read them before you download the app, and read the [disclaimer](https://github.com/karimbabasf/phosphor/blob/main/DISCLAIMER.md) before you fund a wallet. Last updated 2026-09-22.
+The rules for this site and for the Phosphor app. Read them before you download the app, and read the [disclaimer](https://github.com/karimbabasf/phosphor/blob/main/DISCLAIMER.md) before you fund a wallet. Last updated 2026-10-01.
 
 ## Who this is between
 
@@ -51,6 +51,16 @@ You are responsible for checking this, and for every tax, reporting, securities,
 ## Third parties
 
 Phosphor routes through services the author does not own, run, monitor or vet: NEAR Intents and its 1Click bridge, Hyperliquid, the underlying blockchains, RPC providers, price feeds, and the AI agent you connect (for example Claude Code or Codex). Their terms apply to your use of them. The author is not responsible for their code, availability, fees, slippage, censorship, insolvency, exploits or decisions. Their names and logos belong to their owners and appear here only to say what the app works with.
+
+## Invite codes
+
+The author sometimes gives out invite codes. Each one holds a small amount of USDC that moves into a Phosphor wallet when the code is claimed in the app. These rules apply to every code:
+
+- **One claim per code.** A code pays out once, to the first wallet that claims it.
+- **No purchase needed.** A code costs nothing, and claiming one needs no purchase, deposit or trade.
+- **The author can end it.** The author can end the invite promotion at any time and take back the money in any code that has not been claimed.
+- **Not for sale.** Codes are not for sale, and you may not sell or buy one.
+- **Your taxes.** If what you claim counts as income where you live, reporting it and paying any tax on it is up to you.
 
 ## License and ownership
 

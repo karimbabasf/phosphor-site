@@ -1,14 +1,22 @@
 # Privacy
 
-Phosphor has no accounts, no sign-up and no server of its own. Nothing you do in the app reaches the author. This page says what stays on your Mac, which services the app talks to in your name and what they can see, and what this website records. Effective 2026-09-27.
+Phosphor has no accounts, no sign-up and no server of its own. Nothing you do in the app reaches the author. This page says what stays on your Mac, which services the app talks to in your name and what they can see, and what this website records. Effective 2026-10-01.
 
 ## No accounts, no telemetry
 
-The app asks for no account, no email and no name. It sends no analytics, no crash reports and no usage data, and it never contacts a server run by the author. The author cannot see your balances, your rules or your conversations with your agent, and has no way to reset, recover or freeze anything for you. The one exception is the swap label below: it lets anyone, the author included, see which public NEAR Intents swaps came from Phosphor.
+The app asks for no account, no email and no name. It sends no analytics, no crash reports and no usage data, and it never contacts a server run by the author. The author cannot see your balances, your rules or your conversations with your agent, and has no way to reset, recover or freeze anything for you. Two things below are the exceptions. The swap label lets anyone, the author included, see which public NEAR Intents swaps came from Phosphor. An invite code, once claimed, ties the wallet that claimed it to Phosphor's invite treasury in public.
 
 ## The swap label
 
 Since version 0.10.11, every swap Phosphor prices through NEAR Intents' 1Click API carries the label `phosphor` (the quote's `referral` field). The swap itself was already public: NEAR Intents shows every swap, with its amounts, its addresses and its status, on its explorer. The label adds one fact to that public record, that the swap came from Phosphor. The author uses it to count Phosphor's swaps, volume and wallets from NEAR Intents' own data, so those numbers are not something the app reports about you. The app sends nothing new: the label goes only to NEAR Intents, inside the request it already made. Trades on Hyperliquid carry no label.
+
+## Invite codes
+
+An invite code is a small NEAR Intents account that holds money for a new wallet. Each code is funded from Phosphor's invite treasury, and the treasury from the author's own wallet. Claiming a code in the app moves its money into your wallet.
+
+- **What becomes public.** The claim is a transfer on NEAR Intents, and every transfer there is public. Anyone can see that your wallet received money from an account the invite treasury funded and, because the author's wallet funds the treasury, that your wallet is linked to the author's. The author knows who got each code, so the author can tell which wallet is yours and see its public balance and moves, as anyone who knows an address can.
+- **Who sees the claim.** The app signs the claim on your Mac, sends it to the NEAR Intents solver relay (chaindefuser.com) and checks it on public NEAR RPC nodes. They see it the way they see every Phosphor read: your IP address, the request and the addresses it concerns. If the relay turns the claim away, the app sends it through NEAR Intents' 1Click API instead, which sees the same.
+- **The code itself.** The part of an invite link after # never reaches a server, and the invite page sends the code nowhere and loads no analytics. The app uses the code on your Mac to sign the claim and never writes it to a file or a log.
 
 ## What stays on your Mac
 
@@ -36,7 +44,7 @@ Phosphor has no AI inside it. The agent you connect (Claude Code, Codex, or any 
 
 ## This website
 
-The site is static and hosted on Vercel. It sets no cookies and loads no analytics or tracking scripts. Vercel keeps the ordinary server logs a host keeps (IP address, page requested, browser) to run the service. The live chart on the front page fetches prices from Hyperliquid's public API directly from your browser, so Hyperliquid sees your IP when you open the page. The download is served from Vercel's file storage.
+The site is static and hosted on Vercel, and it sets no cookies. Its pages count visits with Vercel Web Analytics, which records the page, the site you came from, your country, region and city, and your browser, operating system and device type. It tells visits apart by a hash of the request, not a cookie, and Vercel discards that hash after 24 hours. The invite page and the page for a wrong address load no analytics, because an invite link carries its code in the address. Vercel keeps the ordinary server logs a host keeps (IP address, page requested, browser) to run the service. The live chart on the front page fetches prices from Hyperliquid's public API directly from your browser, so Hyperliquid sees your IP when you open the page. The download is served from Vercel's file storage.
 
 ## Email and reports
 
