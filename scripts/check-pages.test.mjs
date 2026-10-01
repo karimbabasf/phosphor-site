@@ -1,5 +1,6 @@
 // The build fails if the invite page or the 404 carries the analytics tag, or loads any script
-// but its own. Run: node --test scripts/
+// but its own, or if any other page loads the analytics tag without js/analytics.js running
+// first. Run: node --test scripts/
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, cpSync, rmSync } from 'node:fs';
@@ -7,16 +8,18 @@ import { tmpdir } from 'node:os';
 import { join, resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
-import { checkPages } from './check-pages.mjs';
+import { checkPages, analyticsPages } from './check-pages.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const TAG = '<script defer src="/_vercel/insights/script.js"></script>';
+const STRIP = '<script defer src="/js/analytics.js?v=1"></script>';
 
-// A copy of the guarded pages and their scripts, changed by `edit`, checked, then removed.
+// A copy of the guarded pages, the front page and their scripts, changed by `edit`, checked,
+// then removed.
 const checkCopy = (edit) => {
   const dir = mkdtempSync(join(tmpdir(), 'phosphor-site-'));
   try {
-    for (const f of ['invite/index.html', '404.html', 'js/invite.js', 'js/notfound.js']) {
+    for (const f of ['invite/index.html', '404.html', 'index.html', 'js/invite.js', 'js/notfound.js', 'js/analytics.js']) {
       mkdirSync(dirname(join(dir, f)), { recursive: true });
       writeFileSync(join(dir, f), readFileSync(join(root, f)));
     }
@@ -29,6 +32,17 @@ const checkCopy = (edit) => {
 
 test('the committed pages pass', () => {
   assert.deepEqual(checkPages(root), []);
+  assert.ok(analyticsPages(root).includes('index.html'));
+  assert.ok(!analyticsPages(root).some(f => f === '404.html' || f.startsWith('invite')));
+});
+
+test('a page with the analytics tag and no hash strip before it fails', () => {
+  const missing = checkCopy((edit) => edit('index.html', (h) => h.replace(`${STRIP}\n`, '')));
+  assert.ok(missing.includes('index.html: loads the insights script without /js/analytics.js before it'), missing.join('\n'));
+  const after = checkCopy((edit) => edit('index.html', (h) => h.replace(`${STRIP}\n${TAG}`, `${TAG}\n${STRIP}`)));
+  assert.ok(after.includes('index.html: loads the insights script without /js/analytics.js before it'), after.join('\n'));
+  const loose = checkCopy((edit) => edit('index.html', (h) => h.replace(STRIP, STRIP.replace('defer', 'async'))));
+  assert.ok(loose.includes('index.html: /js/analytics.js must run before the insights script'), loose.join('\n'));
 });
 
 test('the analytics tag on the invite page fails', () => {

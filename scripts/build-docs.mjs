@@ -116,7 +116,8 @@ const footer = `
 
 // A page that can hold an invite code in its address (the invite page, the 404) passes its own
 // script, which goes first, and analytics: false, since Vercel's insights script reports the
-// whole address. check-pages.mjs holds both to that.
+// whole address. Every other page loads js/analytics.js before that script, which drops the hash
+// from each event. check-pages.mjs holds all three to that.
 const shell = ({ title, description, url, body, active, kind, noindex, script, analytics = true, style = '' }) => `<!doctype html>
 <html lang="en">
 <head>
@@ -141,7 +142,7 @@ ${noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonical" hr
 <style>
 ${css}${style}
 </style>
-${analytics ? '<script defer src="/_vercel/insights/script.js"></script>\n' : ''}</head>
+${analytics ? '<script defer src="/js/analytics.js?v=1"></script>\n<script defer src="/_vercel/insights/script.js"></script>\n' : ''}</head>
 <body class="${kind}">
 ${nav(active)}
 ${body}
