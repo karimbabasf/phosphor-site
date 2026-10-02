@@ -217,8 +217,9 @@ release yourself. It describes version 0.10.13. The rest of the
 gives the detail behind each line.</p>
 <h3 id="who-it-plans-for">Who it plans for<a class="anchor" href="#who-it-plans-for" aria-label="Link to this section">#</a></h3>
 <ul>
-<li><strong>The agent.</strong> It reads text from strangers all day: web pages, news, token names, memos and
-other agents&#39; words. Any of that text can try to talk it into a move. This is the main case.</li>
+<li><strong>The agent.</strong> It reads text from strangers all day: web pages, news, token names, memos, a
+venue&#39;s error text and other agents&#39; words. Any of that text can try to talk it into a move.
+This is the main case.</li>
 <li><strong>A web page</strong> open in your browser, which can try to reach the app on 127.0.0.1.</li>
 <li><strong>Another account on this Mac, or a sandboxed app.</strong></li>
 <li><strong>A program running as you.</strong> It can read your files, so it is only partly kept out.
@@ -269,10 +270,10 @@ window token or a read key only your account can read. Proof: <code>read-gate.te
 <li><strong>A program running as you takes the agent&#39;s door with its secret file.</strong> Its seat counts as
 an agent started outside Phosphor, so every move it proposes waits until you allow it, however
 it names itself. Proof: attacks <code>06-agent-door</code>, <code>15-seat-id-dodge</code>.</li>
-<li><strong>A page, a token name or a memo talks the agent into a small move.</strong> The read marks that agent
-until its session ends, and any agent that reads its words is marked too. Every move a marked
-agent asks for waits for your click. Proof: attacks <code>07-stranger-text</code>, <code>16-mark-laundering</code>;
-<code>stranger-relay.test.ts</code>.</li>
+<li><strong>A page, a token name, a memo or a venue&#39;s error text talks the agent into a small move.</strong> The
+read marks that agent until its session ends, and any agent that reads its words is marked too.
+Every move a marked agent asks for waits for your click. Proof: attacks <code>07-stranger-text</code>,
+<code>16-mark-laundering</code>; <code>stranger-relay.test.ts</code>, <code>venue-words-mark.test.ts</code>.</li>
 <li><strong>A page gets your data sent out in a web address.</strong> A page is read only at an address a search
 returned or you typed. An address that carries your wallet&#39;s address or balances, or points at
 this Mac or your network, is refused. Proof: attacks <code>05-web-gate-addresses</code>,
