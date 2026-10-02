@@ -216,7 +216,7 @@
     <header class="doc-head">
       <h1>Troubleshooting</h1>
       <p class="lede">The situations people actually hit, what the window says in each, and what to do. The rule under all of them: when the app says a move is unconfirmed, do not send it again. Read first.</p>
-      <div class="doc-meta"><span class="mono">v0.10.11</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/troubleshooting.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.10.13</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/troubleshooting.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
     <nav class="onpage" aria-label="On this page"><ul><li><a href="#a-move-is-late-or-not-confirmed">A move is late, or Not confirmed</a></li><li><a href="#hyperliquid-is-not-answering-one-of-our-reads">Hyperliquid is not answering one of our reads</a></li><li><a href="#macos-will-not-open-the-app">macOS will not open the app</a></li><li><a href="#the-agent-does-not-connect">The agent does not connect</a></li><li><a href="#a-move-card-says-unlock-to-decide">A move card says Unlock to decide</a></li><li><a href="#a-send-was-refused-for-a-typo">A send was refused for a typo</a></li><li><a href="#something-else">Something else</a></li></ul></nav>
     <div class="prose">
@@ -264,11 +264,10 @@ against a number the app could not read.</p>
 <a href="https://hyperliquid.xyz" target="_blank" rel="noopener">Hyperliquid</a> with their stops and targets on the venue&#39;s own book, so a
 venue the app cannot reach is still holding your exits.</p>
 <h2 id="macos-will-not-open-the-app">macOS will not open the app<a class="anchor" href="#macos-will-not-open-the-app" aria-label="Link to this section">#</a></h2>
-<p>The build is not notarized by Apple, so the first open stops with a warning. Click Done, then
-double-click Open Anyway in the disk image window, which opens System Settings at the Open Anyway
-button, or go to Privacy &amp; Security and scroll down to Security yourself. No button there means
-the refused open was more than about an hour ago: open the app once more and look again. Check
-the disk image&#39;s SHA-256 first, see <a href="/docs/getting-started/#check-the-file">Getting started</a>.</p>
+<p>Every release is notarized by Apple, so macOS opens it with no warning. A warning that macOS
+cannot verify the app means the file is not one this project released: move it to the Trash and
+download it again from the release page or <a href="https://phosphor.money" target="_blank" rel="noopener">https://phosphor.money</a>, then check the disk image&#39;s
+SHA-256, see <a href="/docs/getting-started/#check-the-file">Getting started</a>.</p>
 <p>Opening a second copy of the app while one is running, such as the copy in the disk image and the
 copy in Applications, brings the running one forward and closes the new one, with no message. A
 control app left running from an earlier session with no window on it, after a force quit for
@@ -309,12 +308,14 @@ not put there. A start that never reports back is called out after twenty second
 <p>A proxy started by hand re-reads the app&#39;s secret on every call, so restarting Phosphor does not
 need the agent restarted. See <a href="/docs/connect-an-agent/">Connect an agent</a>.</p>
 <h2 id="a-move-card-says-unlock-to-decide">A move card says Unlock to decide<a class="anchor" href="#a-move-card-says-unlock-to-decide" aria-label="Link to this section">#</a></h2>
-<p>The wallet was locked when the agent proposed, or when you clicked. The move was drafted,
+<p>The wallet was locked when the agent proposed or, on a password wallet, when you clicked. (On a
+Touch ID wallet a click on a locked wallet asks for Touch ID instead, and opens the wallet for
+that one move.) The move was drafted,
 priced and checked against your rules, and is waiting for the key. Press Unlock on the card, or
 unlock the window, with Touch ID or your password. Every waiting move is then decided again
 against the policy as it stands, and lands as something to click, small ones included: an unlock
 is not an approval. If the policy now refuses the move, it is refused whether or not there is a
-key to sign it with. See <a href="/docs/getting-started/#the-15-minute-lock">Getting started</a>.</p>
+key to sign it with. See <a href="/docs/getting-started/#the-five-minute-lock">Getting started</a>.</p>
 <h2 id="a-send-was-refused-for-a-typo">A send was refused for a typo<a class="anchor" href="#a-send-was-refused-for-a-typo" aria-label="Link to this section">#</a></h2>
 <p><code>propose_send</code> decodes the address for the place it is going before any quote is asked. An EVM
 address must be forty hex characters and, when it carries capitals, pass its own EIP-55 checksum.

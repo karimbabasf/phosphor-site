@@ -216,9 +216,9 @@
     <header class="doc-head">
       <h1>Money</h1>
       <p class="lede">Phosphor keeps money in two places, moves it between them, and pays it out to other people. This page walks through every move: where the money lives, deposit, swap, send, funding the trading account and bringing collateral back, what &quot;settling&quot; means, and the fees that make the app refuse a move.</p>
-      <div class="doc-meta"><span class="mono">v0.10.11</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/money.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.10.13</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/money.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
-    <nav class="onpage" aria-label="On this page"><ul><li><a href="#where-money-lives">Where money lives</a></li><li><a href="#deposit">Deposit</a></li><li><a href="#swap">Swap</a></li><li><a href="#send">Send</a></li><li><a href="#fund-the-trading-account">Fund the trading account</a></li><li><a href="#withdraw-from-hyperliquid">Withdraw from Hyperliquid</a></li><li><a href="#after-the-click">After the click</a></li><li><a href="#fees-and-refusals">Fees and refusals</a></li></ul></nav>
+    <nav class="onpage" aria-label="On this page"><ul><li><a href="#where-money-lives">Where money lives</a></li><li><a href="#deposit">Deposit</a></li><li><a href="#invite-codes">Invite codes</a></li><li><a href="#swap">Swap</a></li><li><a href="#send">Send</a></li><li><a href="#fund-the-trading-account">Fund the trading account</a></li><li><a href="#withdraw-from-hyperliquid">Withdraw from Hyperliquid</a></li><li><a href="#after-the-click">After the click</a></li><li><a href="#fees-and-refusals">Fees and refusals</a></li></ul></nav>
     <div class="prose">
 <h2 id="where-money-lives">Where money lives<a class="anchor" href="#where-money-lives" aria-label="Link to this section">#</a></h2>
 <p>Money lives in two pockets. The Basic tab adds them up: a ring with your total inside it and one
@@ -241,12 +241,21 @@ same card for the network you pick. Or ask your assistant where to send money: i
 draws the card in the chat for one coin on one network and starts watching for the money.</p>
 <p>The card has three steps. Pick the network you are sending on: six quick tiles, then a search
 over every network the bridge credits. Pick the token: the list shows what that network credits
-and the minimum for each. Then read the address. The card draws it only once the wallet is open
-(Touch ID to show the address), checks the QR code by reading it back, and checks the clipboard
+and the minimum for each. Then read the address. The card draws it only once this Mac has opened
+the wallet since the app started; on a Touch ID wallet that has not, Touch ID to show the address
+reads the address and leaves the wallet locked. It checks the QR code by reading it back, and checks the clipboard
 after Copy address. Where the network needs a memo, the card says Memo, required with the address.</p>
 <p>Before the first address appears you confirm one line: only the tokens on the list can be sent
 here, and anything else sent to this address is lost. The same holds for the network: USDC sent on
 the wrong network is lost, and the bridge does not refund. Send a small test amount first.</p>
+<p>Under the network tiles, Have an invite code? opens a field for a Phosphor invite code. A pasted
+code is checked at once, and Use code checks a typed one. A good code says what is waiting
+(&quot;Nice. $5 is waiting for you.&quot;), and Add $5 moves it into your wallet; that can take up to two
+minutes, and the line says when it lands. What the app says about the code sits between the field
+and the key, and scrolls into view when it changes. A code that holds nothing, or cannot pay, keeps
+Use code off until you change the field; if the app could not check it, the key says Try again. A
+claim that did not come through stays said on the closed line until you open it. The deposit card
+has the same line on its first step.</p>
 <h3 id="when-near-intents-pauses-a-network">When NEAR Intents pauses a network<a class="anchor" href="#when-near-intents-pauses-a-network" aria-label="Link to this section">#</a></h3>
 <p>The bridge can still hand out an address for a network that NEAR Intents has stopped crediting.
 So before it shows an address, the app asks two things: whether the swap service will take the
@@ -265,6 +274,149 @@ transfer, then Almost there, then &quot;is in your balance&quot; once your balan
 few seconds for ten minutes, then more slowly, and stops after two hours. Closing the card does
 not stop it, and money sent after it stops still arrives. Your assistant is never given the full
 address, only its first six and last four characters. Read the address in the window.</p>
+<h2 id="invite-codes">Invite codes<a class="anchor" href="#invite-codes" aria-label="Link to this section">#</a></h2>
+<p>An invite code is USDC waiting for a new wallet, usually $5. It looks like
+<code>PHOS-2X9QK-M7RTB-0HVFD-K3WPZ-A8GN4CJ</code> and usually comes as a link,
+<code>https://phosphor.money/invite#PHOS-...</code>. Paste the code or the whole link on the invite step
+after the terms on first open, or under Have an invite code? on the Add money card. The code
+still reads with PHOS left off, with its hyphens turned into dashes or spaces, or in full-width
+letters. The app checks it first and says what is waiting, that it has a typo, or that it has
+nothing left in it. One wrong character, or two neighbours swapped, is caught on this Mac before
+the network is asked anything.</p>
+<p>The money moves only while your wallet exists and is open: on first open, right after you make
+it; later, when you press Add in Add money. It lands as USDC in your NEAR Intents balance and
+Activity shows &quot;Invite: +5 USDC&quot;.
+A claim can take up to two minutes. You can move on, and the app tells you when it lands.</p>
+<p>Each code is a key, and the key&#39;s address is an account inside NEAR Intents that holds the
+money. Claiming signs one transfer with the code&#39;s key: everything the code holds, to your
+wallet&#39;s address. On the solver relay route your address is inside the signed message, so nobody
+between this Mac and NEAR Intents can send the money anywhere else. On the 1Click route below,
+the code signs a transfer to a 1Click address instead, and the money reaches you only if 1Click
+delivers it. Either way your own wallet key signs nothing. A transfer on the relay route pays no
+fee, so a $5 code lands as exactly 5.00 USDC. The app calls a claim done only on NEAR
+Intents&#39; own record: the code&#39;s one-time number (its nonce) spent, which NEAR Intents writes in
+the same step that moves the money. Your balance rising is shown, never taken as proof, because a
+deposit landing at the same moment would look the same.</p>
+<p>If the solver relay turns the claim away because it asks for authorization or a quote, the app
+sends it through 1Click instead. That route costs about 0.25 percent, so a $5 code lands as about
+$4.99. The first claim that takes this route was checked at the full $5; after that, until the
+app restarts, the check says the smaller figure. If 1Click refunds it, the refund goes back to
+the code, and the claim ends only once the refund shows there.</p>
+<p>Before a claim on the solver relay is signed, the app rehearses it: the same transfer, signed to
+expire one millisecond after a recent NEAR block and checked by NEAR Intents at that block. The
+NEAR RPC that answers the check is someone else&#39;s computer, so it only ever sees that copy, which
+no later block can run; the claim itself goes to the solver relay alone. A claim on the 1Click
+route is not rehearsed: its signed transfer goes to 1Click. Every signature is written down
+before it leaves this Mac. A claim that fails moves nothing: the money stays on the code, and you
+can add it again from Add money. If you had moved on, the note on Basic stays until you close it.
+An RPC that lies about the time could stretch the copy&#39;s life by up to two minutes, and even then
+the money can only land in your wallet; the app finds it there the next time it opens. If the app
+quits in the middle of a claim, it finishes the check the next time it opens.
+A code pays once; a second claim says &quot;This code has nothing left in it. Ask whoever sent it for
+a new one.&quot;</p>
+<p>Never paste a code into the chat. What you type there goes to your assistant and its model
+provider, so the chat takes the code out of the box, leaves your other words, and opens the
+invite field instead. The app&#39;s backend turns
+such a message away too, before the assistant sees it, and writes none of it to the log or the
+conversation. Both know a code with PHOS in front in almost every spelling the invite field reads,
+and a code with PHOS left off when spaces or dashes split it into its groups. A code you changed
+by hand can still get through, say one with a character missing, its zeros and ones typed as O, I
+or L, or one with no PHOS in front and a wrong character or odd spacing, so paste codes into the
+invite field only. Phosphor never asks for your recovery phrase to claim a code. A page or an
+app that does is not Phosphor.</p>
+<h3 id="issuing-invite-codes">Issuing invite codes<a class="anchor" href="#issuing-invite-codes" aria-label="Link to this section">#</a></h3>
+<p>This part is for whoever hands out the invites. Run it in your own Terminal, never through an
+agent: an agent session would keep every live code in its transcripts and send them to its
+model provider. The script refuses piped input, asks for its passphrase with echo off, and shows
+the links on the terminal only, never on stdout. Refusing piped input stops a run by accident; a
+program that pretends to be a terminal gets past it and can read what the terminal shows. The
+passphrase is what keeps the file shut, so type it only in your own Terminal.</p>
+<p>The money sits in three places. Your wallet is never touched by any of this. The treasury, T,
+holds only the batch you are about to issue. Each code holds its $5 until someone claims it or
+you take it back.</p>
+<pre><code>npm run invite -- treasury
+</code></pre>
+<p>makes T, writes its key to <code>~/.phosphor-invites/invites.enc.json</code>, and only then prints T&#39;s
+address. The file is mode 0600 and encrypted (AES-256-GCM, its key made by scrypt from a
+passphrase of at least 20 characters that you type on every run and that is stored nowhere).
+Run <code>treasury</code> again to see the address and what T holds; it never makes a second T. The file
+is the only copy of T&#39;s key. Lose it and whatever sits in T is gone, while people can still
+claim the codes they hold, so keep T near zero between batches. <code>--file &lt;path&gt;</code> or
+<code>PHOSPHOR_INVITES_FILE</code> picks another file, never one inside the repo.</p>
+<p>Fund T with the app&#39;s normal Send, so you read the receiver on the card before you click. That
+send pays 1Click about 0.25 percent, so send count x amount / 0.9975 plus a cent: $50.14 for
+ten $5 codes.</p>
+<pre><code>npm run invite -- issue --count 10 --amount 5 --label &quot;SF builders&quot;
+</code></pre>
+<p>checks that T holds enough and asks you to type yes. Then it writes the codes to the file,
+marked pending, before anything is signed, so a crash from that moment loses nothing. It builds
+one payload from T with one transfer per code (ten at most) and rehearses it: the same transfers,
+signed so the signature expires one millisecond after a recent NEAR block, and simulated at that
+block. The NEAR RPC that answers the simulation is someone else&#39;s computer. No later block can
+run a rehearsal as long as the block&#39;s time is true, and the script refuses a block stamped less
+than a second behind this Mac&#39;s clock, so with this clock right the RPC never holds bytes that
+could move money. A Mac clock running fast is the one thing that check cannot see, so every
+account a rehearsal pays is one you meant to pay: T, the address you typed for a withdraw, or
+codes whose keys are already in the file. Only then is the real payload signed, once, written to the
+file, and sent to the solver relay. The script waits until NEAR
+Intents shows the payload&#39;s one-time number (its nonce) spent, reads every code back, marks it
+open, and prints the links once. Give one link to one person, and never post them.</p>
+<p>If the relay does not answer, the same signed bytes go out once more; nothing is ever signed
+twice. If the run stops before the end (a quit, no network), <code>issue --resume</code> finishes that
+batch, and no new batch starts until it does. If the relay turns a batch away there is no
+fallback: the script waits until the signed payload has expired on NEAR&#39;s own clock, about two
+minutes, and then marks the codes void. T still holds the money.</p>
+<p><code>--simulate-only</code> is the rehearsal alone: it shows what NEAR Intents would say, and nothing is
+sent. A dry run of <code>issue</code> writes its codes to the file as void before it signs, so a reclaim
+could take back anything that ever reached them, and <code>status</code> lists it as a dry run; it takes the
+file&#39;s lock like any write. If NEAR&#39;s final block looks less than a second behind this Mac&#39;s
+clock (an honest one trails by about 2.6 s, so a clock running slow shows this), or the RPC does
+not answer, a command stops before it signs anything that can run, and says so. A batch then waits for
+<code>issue --resume</code>.</p>
+<pre><code>npm run invite -- status
+</code></pre>
+<p>shows what T holds and every batch: each code&#39;s address, amount and state (pending, open,
+claimed, reclaimed, or void for a batch that never ran or a dry run). It never shows a code.</p>
+<pre><code>npm run invite -- reclaim [--label &quot;SF builders&quot;] [--address &lt;code address&gt;]
+</code></pre>
+<p>pays each open code&#39;s balance back to T, signed with that code&#39;s own key, and marks it
+reclaimed. A code that already holds under a cent is marked claimed. After a reclaim the app
+says of that code &quot;This code has nothing left in it. Ask whoever sent it for a new one.&quot; With no
+flag it takes every open code,
+after you type yes.</p>
+<pre><code>npm run invite -- withdraw --to &lt;address&gt;
+</code></pre>
+<p>sends everything T holds to the address you pass. Copy it from Receive in the app, which shows
+only an address it decrypted and checked, and when asked, type back its first six and last six
+characters as Receive shows them (a NEAR name, the whole name). A program that swapped your
+clipboard for a look-alike would have to match both ends, not just the last six.
+The script never reads the wallet&#39;s key file: its header is plain text that any program running
+as you could edit. A withdraw waits while a batch is pending.</p>
+<p><code>reclaim</code> and <code>withdraw</code> take <code>--simulate-only</code> too. None of these commands has a Plan B: if the
+relay refuses one, it stops and says so.</p>
+<h3 id="checking-the-claim-routes-with-your-own-money">Checking the claim routes with your own money<a class="anchor" href="#checking-the-claim-routes-with-your-own-money" aria-label="Link to this section">#</a></h3>
+<p><code>scripts/invite-proof.ts</code> runs the whole money path on throwaway accounts, so anyone can check
+both claim routes before trusting them:</p>
+<pre><code>node scripts/invite-proof.ts init --file ~/invite-proof.json
+node scripts/invite-proof.ts run --file ~/invite-proof.json
+node scripts/invite-proof.ts sweep --file ~/invite-proof.json --to &lt;your address&gt;
+</code></pre>
+<p><code>init</code> makes a throwaway treasury and a throwaway receiver and prints both addresses. Send $1 to
+the treasury. <code>run</code> waits for it (30 minutes; <code>--wait-minutes</code> changes that), issues two $0.10
+codes in one payload, and claims both into the receiver with the app&#39;s own claim code: the first
+through the solver relay with no quote, the second through 1Click. To reach 1Click it turns the
+relay away itself, before anything is sent, the way the relay would if it began to enforce its
+key, and the claim falls back on its own. It writes down what NEAR Intents says about each step:
+the intent hashes, <code>is_nonce_used</code>, every balance before and after, and the relay&#39;s
+<code>get_status</code> answer, then prints that report (<code>report</code> prints it again). It never prints a key
+or a code. <code>sweep</code> sends every cent left on the throwaway accounts to your address, and
+<code>release-code</code> issues one $5 code and prints it once, to try a real claim in the app.</p>
+<p>If a route turns $0.10 away as too small, start a new proof file and pass <code>run --amount 0.50</code>.
+1Click gets the partner key in <code>PHOSPHOR_1CLICK_API_KEY</code> when one is set, as the app does;
+without one it runs on 1Click&#39;s public fee tier.</p>
+<p>The proof file holds its keys in the clear, because the script runs without a passphrase prompt.
+It is mode 0600 and must sit outside the repo. Put in only what you are ready to lose, sweep it,
+then delete it.</p>
 <h2 id="swap">Swap<a class="anchor" href="#swap" aria-label="Link to this section">#</a></h2>
 <p>A swap changes what your intents balance holds. Your assistant proposes it with <code>propose_swap</code>:
 both legs stay inside NEAR Intents and nothing moves on any chain. Any coin the swap service lists
@@ -276,7 +428,9 @@ Before it proposes, your assistant can ask what can be swapped and what a swap w
 is refused before any price is asked. The app asks for a price once per swap and sets the floor,
 the least you will get, one percent under that quote. A floor you name yourself is kept, but a
 floor of zero, or one more than 20 percent below the app&#39;s quote, is refused. Under the click
-threshold a swap runs on its own, unless your assistant read a web page earlier in that chat;
+threshold a swap runs on its own, unless your assistant read text from outside Phosphor (a web
+page, the news, a chain read) earlier in that session, was started outside Phosphor and is not
+allowed yet, or the swap spends a coin the app cannot price;
 above it, the card shows what you pay and what you get at least, and waits for your click. See
 <a href="/docs/policy/#the-click-threshold">Policy</a>.</p>
 <p>Every coin the swap service lists has a price in your balance. A swap that spends a coin priced
@@ -291,10 +445,12 @@ chain (every chain the deposit card lists except Zcash and Aleo, paid out throug
 or inside NEAR Intents (credited to another intents account, nothing touches a chain). The two
 are different moves with different fees, and a wrong choice is not reversible.</p>
 <h3 id="the-read-back">The read-back<a class="anchor" href="#the-read-back" aria-label="Link to this section">#</a></h3>
-<p>Before it proposes, the agent reads the move back to you and waits for your yes: the amount,
-the token, the full address character for character, and where it lands. It may only send to an
-address you typed or pasted in the conversation, never one from a tool result, a page or a file.
-A send the agent has not confirmed cannot be expressed: the tool refuses it.</p>
+<p>Before it proposes, the agent is told to read the move back to you and wait for your yes: the
+amount, the token, the full address character for character, and where it lands. It is told to
+send only to an address you gave it in the conversation, never one from a tool result, a page or
+a file. Those are instructions to your assistant, not checks: the app cannot tell where an
+address came from. The card and the Touch ID dialog show the address in full, and your click is
+the check.</p>
 <p>The app then decodes the address for the place it is going. A mistyped address is refused before
 any quote (see <a href="/docs/troubleshooting/#a-send-was-refused-for-a-typo">Troubleshooting</a>), and a
 contract cannot be paid the chain&#39;s own coin.</p>
@@ -375,7 +531,9 @@ agent attaches to a receiver is kept as data and never drawn as a name.</p>
 <h2 id="fund-the-trading-account">Fund the trading account<a class="anchor" href="#fund-the-trading-account" aria-label="Link to this section">#</a></h2>
 <p><code>propose_hl_deposit</code> moves USDC from your intents balance into your Hyperliquid account so a plan
 has collateral. One signed intent, nothing sent on any chain, and the account credited is your
-own. The card is titled Fund trading. Under the click threshold it runs on its own.</p>
+own. The card is titled Fund trading. Under the click threshold it runs on its own, with the same
+exceptions as a swap: an assistant that read outside text, or one started outside Phosphor and
+not allowed yet, waits for your click.</p>
 <p>The fee is almost flat, about $0.32 plus 0.25 percent, so it is about 3.4 percent on $10 and
 about 0.3 percent on $1,000. The app refuses any deposit whose fee is above 5 percent, which is
 why a deposit under 7 USDC is refused, and it refuses a quote that would land less than 5 USDC.
@@ -437,6 +595,13 @@ chains: on 2026-09-26 USDT on Tron needed about $85 and Bitcoin about 0.00074 BT
 <li>A Hyperliquid deposit is refused under 7 USDC and when the fee is above 5 percent.</li>
 <li>A Hyperliquid withdrawal is refused under 5 USDC.</li>
 <li>A swap floor more than 20 percent below the app&#39;s quote is refused as no floor at all.</li>
+<li>A swap may give up at most 3 percent of its value to fees and price, by the swap service&#39;s own
+dollar figures for both sides. When the swap service gives no dollar figure for a coin there is
+nothing to measure by, and no cap applies. A quote whose request carries a fee, a field or a
+value the app did not ask for is refused before anything is signed.</li>
+<li>A move runs with the coins its card was priced with. If the swap service&#39;s coin list names a
+different coin, or counts one in different decimals, when you click, nothing is signed and you
+ask again for a fresh quote.</li>
 </ul>
 <p>Every amount the policy reads is priced by the app, never supplied by the agent. A token the app
 cannot price is never assumed to be worth a dollar: a swap that spends one is valued off its quote
