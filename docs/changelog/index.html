@@ -286,9 +286,12 @@ not allowed gave itself), or that read the raw log. A small move that waits for 
 its agent was started outside Phosphor, says why on its card, and a cancelled card&#39;s Details say
 when you said no. A concept your agent records after reading outside text stays on your Mac and
 is not handed to later agents.</li>
-<li>An agent that reads a venue&#39;s own words (an error from 1Click, the solver relay, Hyperliquid or a
-chain&#39;s node, a refund reason, the NEAR Intents status page) waits for your click on every move
-after that, the way it does after reading a web page.</li>
+<li>An agent that reads a venue&#39;s own words that Phosphor does not know (an error from 1Click, the
+solver relay, Hyperliquid or a chain&#39;s node, a refund reason, the NEAR Intents status page) waits
+for your click on every move after that, the way it does after reading a web page. An ordinary
+refusal Phosphor knows (too little margin, an order under the minimum, a price too far out, an
+amount under a route&#39;s minimum) reaches the agent in Phosphor&#39;s own words instead and changes
+nothing; the card still shows the venue&#39;s words.</li>
 <li>A second agent that repeats a move is told which move it repeats, never where that move was paid.
 An agent that reads how a move is going sees the first six and last four characters of the
 address 1Click made for it; the card in the window shows it whole.</li>
@@ -365,7 +368,8 @@ only version tags, and the Release workflow has a dry run that builds, signs and
 publishes nothing. A release stops unless the payload&#39;s own files match the tagged source and
 every program inside carries only the committed entitlements, checked before signing and again
 on the disk image and the update. The compiled programs and the installed packages are not
-compared.</li>
+compared. The release notes give the disk image and the update archive each their own command
+and the exact line it prints.</li>
 <li>For whoever hands out invite codes: <code>npm run invite</code> makes a treasury, funds up to ten codes with
 one signature, shows their links once on the terminal, takes unused codes back, withdraws to an
 address you confirm by its first six and last six characters, and shows where every code stands
@@ -400,7 +404,15 @@ history and every pull request head, and checks every installed package&#39;s re
 <li>For people who build Phosphor: <code>npm run attack</code> plays a hostile program on your Mac against the
 app <code>npm run app:build</code> made and proves each defence holds, 26 cases including the three serious
 findings of this release&#39;s audit; <code>-- --app &lt;Phosphor.app&gt;</code> adds the checks that need a signed
-build. <code>scripts/xpc-attack.sh</code> compiles again, and ip-address is 10.7.2 (four advisories closed).</li>
+build. <code>scripts/xpc-attack.sh</code> compiles again, and ip-address is 10.7.2 (four advisories closed).
+It runs unattended on a Developer ID build: it never runs a changed copy of a notarized app,
+times out any caller that hangs, and says who refused each stranger (the service, launchd or
+macOS). Its screen-lock check locks only the shell it started, which also hears that signal
+addressed to its own process id; <code>--real-screen-lock</code> posts macOS&#39;s own notice, which every app
+receives. It leaves nothing outside its scratch: WebKit state stays in the throwaway home,
+launched copies leave no LaunchServices record, and passing cases leave no temp folders. The
+task-list check finds the claude CLI the way the app does, and skips with the reason when there
+is none.</li>
 </ul>
 <h2 id="0-10-12">0.10.12<a class="anchor" href="#0-10-12" aria-label="Link to this section">#</a></h2>
 <p>Built 2026-09-30. Tagged v0.10.12 on 2026-09-30.</p>

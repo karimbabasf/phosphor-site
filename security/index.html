@@ -279,8 +279,10 @@ an agent started outside Phosphor, so every move it proposes waits until you all
 it names itself. Proof: attacks <code>06-agent-door</code>, <code>15-seat-id-dodge</code>.</li>
 <li><strong>A page, a token name, a memo or a venue&#39;s error text talks the agent into a small move.</strong> The
 read marks that agent until its session ends, and any agent that reads its words is marked too.
-Every move a marked agent asks for waits for your click. Proof: attacks <code>07-stranger-text</code>,
-<code>16-mark-laundering</code>; <code>stranger-relay.test.ts</code>, <code>venue-words-mark.test.ts</code>.</li>
+Every move a marked agent asks for waits for your click. A venue refusal the app knows reaches
+the agent as the app&#39;s own sentence, built from its numbers alone, and marks nothing. Proof:
+attacks <code>07-stranger-text</code>, <code>16-mark-laundering</code>; <code>stranger-relay.test.ts</code>,
+<code>venue-words-mark.test.ts</code>, <code>venue-refusals.test.ts</code>.</li>
 <li><strong>A page gets your data sent out in a web address.</strong> A page is read only at an address a search
 returned or you typed. An address that carries your wallet&#39;s address or balances, or points at
 this Mac or your network, is refused. Proof: attacks <code>05-web-gate-addresses</code>,

@@ -261,13 +261,16 @@ labels: a label the agent writes after a web read keeps the mark across a quit, 
 that reads that label back is marked as if it had read the page itself. Plan notes and highlight
 notes carry it the same way, and so do Phosphor&#39;s own reads that hand over a stranger&#39;s words:
 news headlines, the token names and memos in the chain reads, and a venue&#39;s own words on a move
-(an error from 1Click, the solver relay, Hyperliquid or a chain&#39;s node, a refund reason, the NEAR
-Intents status page&#39;s title), in a read, a reply or a refusal. So does what one agent hands
+that Phosphor does not know (an error from 1Click, the solver relay, Hyperliquid or a chain&#39;s node,
+a refund reason or status word off the venue&#39;s list, an account or token name a venue echoed back,
+the NEAR Intents status page&#39;s title), in a read, a reply or a refusal. So does what one agent hands
 another through Phosphor: a board post or a worker&#39;s report written after such a read marks the
 agent that reads it, a worker started by a marked agent starts marked, and the raw audit log
 (<code>log_tail</code>) marks whoever reads it. A concept the agent records as
 one you learned (<code>profile_learned</code>) after such a read is kept on your Mac and never handed to a
-later agent.</p>
+later agent. An ordinary refusal Phosphor knows, matched whole with only its numbers changing,
+reaches the agent in Phosphor&#39;s own sentence instead and marks nothing; the window keeps the
+venue&#39;s exact words.</p>
 <p>An agent you start outside Phosphor (in your terminal, in another app) reads with its own tools,
 where Phosphor cannot look, so it starts marked: the window asks once whether to allow it, and
 until you do, every move it proposes waits for your click. See
@@ -400,7 +403,11 @@ Enclave service) or the installed packages:</p>
 runs the app this checkout builds (<code>npm run app:build</code> makes the ad-hoc bundle it boots), plays the
 hostile local process against each defence on a throwaway data dir and home, prints a table, and
 exits non-zero on any that does not hold. Add <code>-- --app &lt;Phosphor.app&gt;</code> to include the checks that
-need a Developer ID build.</p>
+need a Developer ID build. No check changes the bundle it is handed, so a notarized build raises no
+&quot;damaged&quot; alert and the run needs nobody at the keyboard; a check that cannot run says SKIP and
+why. The screen-lock check posts the lock signal to the one shell it started; <code>-- --real-screen-lock</code>
+posts macOS&#39;s own instead, which every app on the Mac receives. The apps it starts keep their
+window and WebKit state in the throwaway home, not in the installed app&#39;s <code>~/Library</code>.</p>
 <h2 id="the-lock">The lock<a class="anchor" href="#the-lock" aria-label="Link to this section">#</a></h2>
 <p>The wallet locks after five minutes with nobody at the window by default (the Vault tab
 offers 5 minutes, 15 minutes or 1 hour), when the Mac wakes from a sleep of more than a minute,
@@ -444,8 +451,8 @@ policy; only a click is recorded as decided by a human.</li>
 <p>The web-read mark has an edge too. The app sees the web searches and page reads of the agent it
 runs in the chat. An agent in your terminal reads the web with its own tools, out of the app&#39;s
 sight, so once you allow it, its moves follow your click threshold as usual unless it reads outside
-text through Phosphor (the news, a chain read, a venue&#39;s error text on a move) or words a marked
-agent wrote: a chart label, a
+text through Phosphor (the news, a chain read, a venue&#39;s error text Phosphor does not know) or
+words a marked agent wrote: a chart label, a
 board post, a worker&#39;s report, the name of an agent you have not allowed, or the raw audit log.</p>
 <p>The whole list, with what closes each item, is <a href="/docs/known-limits/">Known limits</a>. Two more limits
 are yours to know here. The safety systems are engineering by one person, without a
