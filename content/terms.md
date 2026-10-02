@@ -12,7 +12,7 @@ By downloading, installing, opening or using Phosphor, or by using this site, yo
 
 ## What Phosphor is
 
-Phosphor is software that runs on your own Mac. It holds the keys to your own accounts on your machine, sealed to that machine's Secure Enclave when it has one, and lets an AI agent you already use read your balances and draft moves. A move above your click threshold ($100 by default) waits for your click in the app window. Smaller swaps, Hyperliquid deposits and trades can run on their own, up to $500 a day by default, and you can set the threshold to zero so that every move waits. Sends, withdrawals and rule changes always wait for your click, and on a Touch ID wallet for your fingerprint too. The app connects, on your instruction, to two venues run by other people: NEAR Intents and Hyperliquid.
+Phosphor is software that runs on your own Mac. It holds the keys to your own accounts on your machine, sealed on its disk: to that machine's Secure Enclave on a Touch ID wallet, and with your password on a password wallet. It lets an AI agent you already use read your balances and draft moves. A move above your click threshold ($100 by default) waits for your click in the app window. Smaller swaps, Hyperliquid deposits and trades can run on their own, up to $500 a day by default, and you can set the threshold to zero so that every move waits. Sends, withdrawals and rule changes always wait for your click, and on a Touch ID wallet for your fingerprint too. The app connects, on your instruction, to two venues run by other people: NEAR Intents and Hyperliquid.
 
 The source code is public under the [Functional Source License](https://github.com/karimbabasf/phosphor/blob/main/LICENSE) so that you can read what the app does before you trust it.
 
