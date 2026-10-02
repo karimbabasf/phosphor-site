@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tools</title>
-<meta name="description" content="Phosphor registers 48 tools for the agent that drives it, and every one is listed here in five groups: read, propose, chart and trade surface, agents, and other. Reads change nothing. Propose tools return a proposal id and a simulation, and cannot approve, refuse or execute anything. Every call, read or write, is written to the audit log. A worker an agent spawns is an analyst: the tools marked lead only are not registered for it at all, so there is nothing to talk it into. The agent in the chat does not get ten of them: `start`, `composition`, `log_tail`, `set_theme`, `profile_learned` and the five agent tools; its instructions already carry what `start` says.">
+<meta name="description" content="Phosphor registers 50 tools for the agent that drives it, and every one is listed here in five groups: read, propose, chart and trade surface, agents, and other. Reads change nothing. Propose tools return a proposal id and a simulation, and cannot approve, refuse or execute anything. Every call the app accepts, read or write, is written to the audit log, except `skill` and `whats_new`, which the agent's own connection answers from a file on this Mac. A worker an agent spawns is an analyst: the tools marked lead only are not registered for it at all, so there is nothing to talk it into. The agent in the chat does not get ten of them: `start`, `composition`, `log_tail`, `set_theme`, `profile_learned` and the five agent tools; its instructions already carry what `start` says.">
 <link rel="canonical" href="https://phosphor.money/docs/tools/">
 <meta name="theme-color" content="#0E0F13">
 <link rel="icon" href="/favicon.ico?v=9" sizes="32x32">
@@ -14,7 +14,7 @@
 <meta property="og:site_name" content="Phosphor">
 <meta property="og:url" content="https://phosphor.money/docs/tools/">
 <meta property="og:title" content="Tools">
-<meta property="og:description" content="Phosphor registers 48 tools for the agent that drives it, and every one is listed here in five groups: read, propose, chart and trade surface, agents, and other. Reads change nothing. Propose tools return a proposal id and a simulation, and cannot approve, refuse or execute anything. Every call, read or write, is written to the audit log. A worker an agent spawns is an analyst: the tools marked lead only are not registered for it at all, so there is nothing to talk it into. The agent in the chat does not get ten of them: `start`, `composition`, `log_tail`, `set_theme`, `profile_learned` and the five agent tools; its instructions already carry what `start` says.">
+<meta property="og:description" content="Phosphor registers 50 tools for the agent that drives it, and every one is listed here in five groups: read, propose, chart and trade surface, agents, and other. Reads change nothing. Propose tools return a proposal id and a simulation, and cannot approve, refuse or execute anything. Every call the app accepts, read or write, is written to the audit log, except `skill` and `whats_new`, which the agent's own connection answers from a file on this Mac. A worker an agent spawns is an analyst: the tools marked lead only are not registered for it at all, so there is nothing to talk it into. The agent in the chat does not get ten of them: `start`, `composition`, `log_tail`, `set_theme`, `profile_learned` and the five agent tools; its instructions already carry what `start` says.">
 <meta property="og:image" content="https://phosphor.money/og.png?v=2">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/Sora-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
@@ -215,8 +215,8 @@
   <article class="doc">
     <header class="doc-head">
       <h1>Tools</h1>
-      <p class="lede">Phosphor registers 48 tools for the agent that drives it, and every one is listed here in five groups: read, propose, chart and trade surface, agents, and other. Reads change nothing. Propose tools return a proposal id and a simulation, and cannot approve, refuse or execute anything. Every call, read or write, is written to the audit log. A worker an agent spawns is an analyst: the tools marked lead only are not registered for it at all, so there is nothing to talk it into. The agent in the chat does not get ten of them: <code>start</code>, <code>composition</code>, <code>log_tail</code>, <code>set_theme</code>, <code>profile_learned</code> and the five agent tools; its instructions already carry what <code>start</code> says.</p>
-      <div class="doc-meta"><span class="mono">v0.10.11</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/tools.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <p class="lede">Phosphor registers 50 tools for the agent that drives it, and every one is listed here in five groups: read, propose, chart and trade surface, agents, and other. Reads change nothing. Propose tools return a proposal id and a simulation, and cannot approve, refuse or execute anything. Every call the app accepts, read or write, is written to the audit log, except <code>skill</code> and <code>whats_new</code>, which the agent&#39;s own connection answers from a file on this Mac. A worker an agent spawns is an analyst: the tools marked lead only are not registered for it at all, so there is nothing to talk it into. The agent in the chat does not get ten of them: <code>start</code>, <code>composition</code>, <code>log_tail</code>, <code>set_theme</code>, <code>profile_learned</code> and the five agent tools; its instructions already carry what <code>start</code> says.</p>
+      <div class="doc-meta"><span class="mono">v0.10.13</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/tools.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
     <nav class="onpage" aria-label="On this page"><ul><li><a href="#read">Read</a></li><li><a href="#propose">Propose</a></li><li><a href="#chart-and-trade-surface">Chart and trade surface</a></li><li><a href="#agents">Agents</a></li><li><a href="#other">Other</a></li><li><a href="#web-search-and-page-reading">Web search and page reading</a></li><li><a href="#what-is-not-here">What is not here</a></li></ul></nav>
     <div class="prose">
@@ -313,6 +313,10 @@
 <td>What an account has moved inside NEAR Intents: deposits, withdrawals, swap legs and sends</td>
 </tr>
 <tr>
+<td><code>web_read</code></td>
+<td>One web page as quoted text, read by the app, only at an address a web search in this chat returned or you gave. This read leaves the machine</td>
+</tr>
+<tr>
 <td><code>chart_batch</code></td>
 <td>Many chart questions and drawings in one call: candles, pivots, levels, regime, ATR and more</td>
 </tr>
@@ -327,8 +331,11 @@
 </tbody></table>
 <h2 id="propose">Propose<a class="anchor" href="#propose" aria-label="Link to this section">#</a></h2>
 <p>Every propose tool goes through the policy engine, see <a href="/docs/policy/">Policy</a>. Three of them wait
-for your click at any size; the rest run on their own under the click threshold, except after the
-chat&#39;s agent read a web page.</p>
+for your click at any size. The rest run on their own under the click threshold, except a move
+from an agent started outside Phosphor that you have not allowed, a move from an agent that read
+text from outside Phosphor (a web page, the news, a chain read, or words a marked agent wrote), a
+move the agent asked for on its own after a move did not go through, and a swap of a coin the app
+cannot price.</p>
 <table>
 <thead>
 <tr>
@@ -430,13 +437,17 @@ chat&#39;s agent read a web page.</p>
 </tr>
 <tr>
 <td><code>agent_jobs</code></td>
-<td>What the workers this agent spawned have come back with; <code>stop</code> ends one</td>
+<td>Every worker in the app and what it has come back with; <code>stop</code> ends one by its id</td>
 </tr>
 <tr>
 <td><code>agent_spawn</code></td>
-<td>Starts a worker on a written brief. A worker reads, measures, draws and posts, and has no propose tools. Three at once at most. Lead only</td>
+<td>Starts a worker on a written brief. A worker reads, measures, draws and posts, and has no propose tools. Three at once at most, across the whole app. Lead only</td>
 </tr>
 </tbody></table>
+<p>A post, a brief or a report written by an agent that had read text from outside Phosphor marks
+the agent that reads it, and so does the name an agent started outside Phosphor gave itself, on
+<code>agent_roster</code>, until you allow it. <code>log_tail</code> marks whoever reads it. See
+<a href="/docs/policy/#after-a-web-page">Policy</a>.</p>
 <h2 id="other">Other<a class="anchor" href="#other" aria-label="Link to this section">#</a></h2>
 <table>
 <thead>
@@ -459,13 +470,20 @@ chat&#39;s agent read a web page.</p>
 </tr>
 <tr>
 <td><code>profile_learned</code></td>
-<td>Records one concept the agent explained to you, so the next session does not explain it again. Lead only</td>
+<td>Records one concept the agent explained to you, so the next session does not explain it again. Not on the chat&#39;s surface. One recorded by an agent that read text from outside Phosphor, or by an agent started outside Phosphor that you have not allowed, is kept out of later chats. Lead only</td>
+</tr>
+<tr>
+<td><code>whats_new</code></td>
+<td>What changed in this version of Phosphor, or since the version you had, from the app&#39;s own changelog. Answered from a file on this Mac, so it is not audited</td>
 </tr>
 </tbody></table>
 <h2 id="web-search-and-page-reading">Web search and page reading<a class="anchor" href="#web-search-and-page-reading" aria-label="Link to this section">#</a></h2>
-<p>These are not Phosphor tools. The agent in the chat also holds its vendor&#39;s own web search and
-page reading, and nothing else beyond Phosphor&#39;s tools. After it uses either one, every move it
-proposes in that chat waits for your click, whatever the size, see
+<p>Claude in the chat also holds its vendor&#39;s own web search, and nothing else beyond Phosphor&#39;s
+tools. Pages are read by <code>web_read</code>, and only at an address that came back in a web search in that
+chat or that you gave, word for word, never one the agent wrote: a page cannot get your figures
+sent out in an address. Grok holds no web search, so it reads a page from a link you give. After a
+search, a page, or a read that carries a stranger&#39;s words (<code>research</code>, the chain reads), every move
+the agent proposes in that chat waits for your click, whatever the size, see
 <a href="/docs/policy/#after-a-web-page">Policy</a>. An agent in your terminal brings whatever tools its own
 setup gives it, and the app cannot see them.</p>
 <h2 id="what-is-not-here">What is not here<a class="anchor" href="#what-is-not-here" aria-label="Link to this section">#</a></h2>

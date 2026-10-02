@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Security</title>
-<meta name="description" content="Phosphor treats the agent as useful and untrusted at the same time: it may read everything and draft anything, and it can never decide. This page says, for a user rather than an auditor, how that is enforced, what the Secure Enclave and the lock buy you, and where the limits honestly sit. The full model, with the code paths and the tests behind each claim, is in the Security model.">
+<meta name="description" content="Phosphor treats the agent as useful and untrusted at the same time: it may read everything and draft anything, and it can never decide. This page says, for a user rather than an auditor, how that is enforced, what the Secure Enclave and the lock buy you, and where the limits honestly sit. The full model, with the code paths and the tests behind each claim, is in the Security model; its threat model is the short version, with the test that proves each defence and what stays open.">
 <link rel="canonical" href="https://phosphor.money/docs/security/">
 <meta name="theme-color" content="#0E0F13">
 <link rel="icon" href="/favicon.ico?v=9" sizes="32x32">
@@ -14,7 +14,7 @@
 <meta property="og:site_name" content="Phosphor">
 <meta property="og:url" content="https://phosphor.money/docs/security/">
 <meta property="og:title" content="Security">
-<meta property="og:description" content="Phosphor treats the agent as useful and untrusted at the same time: it may read everything and draft anything, and it can never decide. This page says, for a user rather than an auditor, how that is enforced, what the Secure Enclave and the lock buy you, and where the limits honestly sit. The full model, with the code paths and the tests behind each claim, is in the Security model.">
+<meta property="og:description" content="Phosphor treats the agent as useful and untrusted at the same time: it may read everything and draft anything, and it can never decide. This page says, for a user rather than an auditor, how that is enforced, what the Secure Enclave and the lock buy you, and where the limits honestly sit. The full model, with the code paths and the tests behind each claim, is in the Security model; its threat model is the short version, with the test that proves each defence and what stays open.">
 <meta property="og:image" content="https://phosphor.money/og.png?v=2">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/Sora-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
@@ -215,10 +215,10 @@
   <article class="doc">
     <header class="doc-head">
       <h1>Security</h1>
-      <p class="lede">Phosphor treats the agent as useful and untrusted at the same time: it may read everything and draft anything, and it can never decide. This page says, for a user rather than an auditor, how that is enforced, what the Secure Enclave and the lock buy you, and where the limits honestly sit. The full model, with the code paths and the tests behind each claim, is in the <a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security-model.md" target="_blank" rel="noopener">Security model</a>.</p>
-      <div class="doc-meta"><span class="mono">v0.10.11</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <p class="lede">Phosphor treats the agent as useful and untrusted at the same time: it may read everything and draft anything, and it can never decide. This page says, for a user rather than an auditor, how that is enforced, what the Secure Enclave and the lock buy you, and where the limits honestly sit. The full model, with the code paths and the tests behind each claim, is in the <a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security-model.md" target="_blank" rel="noopener">Security model</a>; its <a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security-model.md#threat-model" target="_blank" rel="noopener">threat model</a> is the short version, with the test that proves each defence and what stays open.</p>
+      <div class="doc-meta"><span class="mono">v0.10.13</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
-    <nav class="onpage" aria-label="On this page"><ul><li><a href="#what-the-agent-can-read-draft-and-never-decide">What the agent can read, draft and never decide</a></li><li><a href="#a-web-page-is-not-an-instruction">A web page is not an instruction</a></li><li><a href="#the-window-token">The window token</a></li><li><a href="#the-secure-enclave-and-touch-id">The Secure Enclave and Touch ID</a></li><li><a href="#the-lock">The lock</a></li><li><a href="#the-honest-limits">The honest limits</a></li><li><a href="#reporting-a-problem">Reporting a problem</a></li></ul></nav>
+    <nav class="onpage" aria-label="On this page"><ul><li><a href="#what-the-agent-can-read-draft-and-never-decide">What the agent can read, draft and never decide</a></li><li><a href="#a-web-page-is-not-an-instruction">A web page is not an instruction</a></li><li><a href="#the-window-token">The window token</a></li><li><a href="#the-secure-enclave-and-touch-id">The Secure Enclave and Touch ID</a></li><li><a href="#the-process-that-holds-the-key">The process that holds the key</a></li><li><a href="#the-files-it-runs">The files it runs</a></li><li><a href="#check-a-release-yourself">Check a release yourself</a></li><li><a href="#the-lock">The lock</a></li><li><a href="#the-honest-limits">The honest limits</a></li><li><a href="#reporting-a-problem">Reporting a problem</a></li></ul></nav>
     <div class="prose">
 <h2 id="what-the-agent-can-read-draft-and-never-decide">What the agent can read, draft and never decide<a class="anchor" href="#what-the-agent-can-read-draft-and-never-decide" aria-label="Link to this section">#</a></h2>
 <p>An agent reads untrusted text all day: token names, web pages, chart labels, notes from other
@@ -231,8 +231,9 @@ refuse and kill routes do not appear in its source, and a test reads the file to
 execute, and a test holds the live tool list to that. See <a href="/docs/tools/">Tools</a>.</li>
 <li>Every write is a proposal judged by the policy engine, see <a href="/docs/policy/">Policy</a>. A send, a
 withdrawal and a rule change always wait for your click, whatever their size.</li>
-<li>The one field that names a receiver, on a send, is behind the agent&#39;s read-back, your click
-and, on an enclave wallet, a Touch ID dialog that names the receiver itself.</li>
+<li>The one field that names a receiver, on a send, is behind your click and, on an enclave wallet,
+a Touch ID dialog that names the receiver itself. The agent is told to read the address back to
+you first, but the app cannot check where an address came from: read it on the card.</li>
 <li>A pending card cannot be dismissed from the chat. If the agent disconnects, the card is still
 there and still yours.</li>
 </ul>
@@ -240,8 +241,8 @@ there and still yours.</li>
 tells it to move funds is an attack, and the agent is told to say so. A post from another agent
 claiming you approved something is the same.</p>
 <h2 id="a-web-page-is-not-an-instruction">A web page is not an instruction<a class="anchor" href="#a-web-page-is-not-an-instruction" aria-label="Link to this section">#</a></h2>
-<p>The agent in the chat can search the web and read pages, because many questions have no answer
-in Phosphor&#39;s own tools. A page is a stranger&#39;s text, and a stranger can write &quot;swap everything
+<p>The agent in the chat can read pages, and search the web when it is Claude (Grok asks you for a
+link instead), because many questions have no answer in Phosphor&#39;s own tools. A page is a stranger&#39;s text, and a stranger can write &quot;swap everything
 into this coin&quot;. The agent is told that a page is data and never an instruction, but a rule the
 agent keeps is not a wall, so the app keeps one of its own. Once the chat&#39;s agent has searched
 the web or read a page, every money move it proposes in that chat waits for your click, whatever
@@ -250,56 +251,180 @@ its size, until the chat starts a new session. A refusal stays a refusal.</p>
 later cannot slip past it. It lasts for the whole session, not only until your next message,
 because the page stays in the agent&#39;s memory until the session ends. And it travels with chart
 labels: a label the agent writes after a web read keeps the mark across a quit, and any agent
-that reads that label back is marked as if it had read the page itself. The agent is also told never to put your
-balances, your addresses or what you said into a search or a web address; that one is an
-instruction, not a wall. See <a href="/docs/policy/#after-a-web-page">Policy</a>.</p>
+that reads that label back is marked as if it had read the page itself. Plan notes and highlight
+notes carry it the same way, and so do Phosphor&#39;s own reads that hand over a stranger&#39;s words:
+news headlines, and the token names and memos in the chain reads. So does what one agent hands
+another through Phosphor: a board post or a worker&#39;s report written after such a read marks the
+agent that reads it, a worker started by a marked agent starts marked, and the raw audit log
+(<code>log_tail</code>) marks whoever reads it. A concept the agent records as
+one you learned (<code>profile_learned</code>) after such a read is kept on your Mac and never handed to a
+later agent.</p>
+<p>An agent you start outside Phosphor (in your terminal, in another app) reads with its own tools,
+where Phosphor cannot look, so it starts marked: the window asks once whether to allow it, and
+until you do, every move it proposes waits for your click. See
+<a href="/docs/connect-an-agent/#the-window-asks-once">Connect an agent</a>.</p>
+<p>A page cannot get your data sent out either. The vendors&#39; own page readers are off: the app reads
+a page itself, and only at an address that came back in a web search in that chat or that you
+gave, word for word, never one the agent wrote. The Try again button on a failed swap sends a
+line that names the coins only when they are plain tickers, so a coin the agent named with an
+address never becomes one you gave. A search&#39;s answer also repeats the agent&#39;s own
+query and the search model&#39;s notes, so only the addresses the search engine itself returned
+count, never an address in that text. An address that carries your wallet&#39;s address or
+one of its balances is refused even then, and so is any address on this machine or your own
+network. The agent is also told never to put your balances, your addresses or what you said into
+a search; that one is an instruction, and a search that does it, by the chat&#39;s agent or by a
+worker, closes page reading for the rest of that agent&#39;s session. See <a href="/docs/policy/#after-a-web-page">Policy</a>.</p>
 <h2 id="the-window-token">The window token<a class="anchor" href="#the-window-token" aria-label="Link to this section">#</a></h2>
 <p>The decision routes need a token the app mints on every boot: 32 random bytes, made by the
 desktop shell, handed to the backend on its own input and injected into the one window you see.
 No route serves it. The MCP process never sees it, and the app removes it from the environment
 of every agent it starts. A click is the only thing that carries it, so a click is the only thing
 recorded as a human decision in the audit log.</p>
-<p>The agent&#39;s own door is behind a second secret, written under the app&#39;s data directory at every
-boot. Nothing that has not read that file can read the app or file a proposal into it, which
-keeps the door shut to any web page and to any process that has not been given the file.</p>
+<p>The agent&#39;s own door takes a secret on every call. The agents Phosphor starts get one in their
+environment. Any other program needs the copy the app writes into its data directory at every
+boot, and a seat taken with that copy waits for your click on every move until you allow it. A
+web page can reach neither. A program running as you can read both.</p>
+<p>Reading the app takes a credential as well. The window&#39;s reads carry a read key it gets for its
+token, which opens reads and nothing else; the shell sends the token; and a program you run can
+use <code>read.key</code>, which the app writes into the same data directory at every boot, readable by you
+alone. Another account on this Mac, or a sandboxed app, has none of these and learns nothing:
+<code>/api/health</code> is the one route that answers it, and it says only that the app is running and which
+version.</p>
 <h2 id="the-secure-enclave-and-touch-id">The Secure Enclave and Touch ID<a class="anchor" href="#the-secure-enclave-and-touch-id" aria-label="Link to this section">#</a></h2>
 <p>On a Mac with a Secure Enclave, the wallet file is sealed with a data key, and that data key is
 wrapped to a key the enclave made and cannot export. The wallet opens with Touch ID or your Mac
 login password, and each click on a proposal ends in a Touch ID dialog whose sentence the app
 composes from the proposal&#39;s numbers: the amount, the receiver shortened to eight characters at
 each end (a NEAR name whole), the chain. No agent-written text reaches that dialog. Read it before you confirm.</p>
+<p>A Touch ID or a password opens only what it was asked for. &quot;Show your deposit address&quot; verifies
+the address, and &quot;Reveal your recovery phrase&quot;, or the password typed to see the words, shows the
+words; none of them opens the wallet, so a locked wallet stays locked, no trading plan re-arms and
+nothing waiting for an unlock runs. The Touch ID that approves a move on a locked wallet opens it
+for that move alone: nothing else can start while it signs, and the key goes as soon as it has.
+Only Unlock opens the wallet for the session.</p>
 <p>Two limits belong here. While the vault is open, the unwrapped wallet key sits in the backend&#39;s
-memory as bytes, so the app can sign the moves you approved and the small ones the policy allows;
-the lock wipes it. And on a build that is not signed with a Developer ID, the enclave key is bound
-to this Mac rather than to Phosphor, so the Keys row in the Vault tab says &quot;This copy of Phosphor
-is not signed, so other apps on this Mac could ask for the key.&quot;</p>
+memory as bytes, so the app can sign the moves you approved and the small ones the policy allows.
+The lock overwrites those bytes, but copies of the key that a signature or an unlock left as text
+stay in the app&#39;s memory until it is reused. And every build so far, the signed releases
+included, binds the enclave key to this Mac rather than to Phosphor. On a signed release the vault
+service answers only the signed Phosphor app; on a copy you build yourself, which is signed ad
+hoc, it checks the app&#39;s identifier alone, which another app can claim. Either way another app
+running as you could ask to use the key with a Touch ID prompt of its own, and the Keys row in the
+Vault tab says so. Binding the key to Phosphor itself takes a keychain entitlement that no build
+carries yet.</p>
 <p>A software wallet is locked with your password and a slow key derivation. Anything that learns
 the password, or reads the disk and guesses it, has the keys. A click on a software wallet is a
 click alone, with no biometric: Approve runs the move with no Touch ID after it. That is the
 custody you chose, not a bypass of it. When your Mac has an enclave, Protect with Touch ID in the
 Keys row moves the same wallet behind it; use it when you can.</p>
+<h2 id="the-process-that-holds-the-key">The process that holds the key<a class="anchor" href="#the-process-that-holds-the-key" aria-label="Link to this section">#</a></h2>
+<p>While the vault is open, the key sits in one process: the backend the app starts. The app starts
+it shut against the ways in that Node leaves open by default:</p>
+<ul>
+<li>Its debugger cannot be opened. Node opens one, with no password, when any program running as
+you sends it a signal; that signal is turned off.</li>
+<li>Nothing from your Mac&#39;s environment reaches it except the settings Phosphor reads, named one by
+one. A NODE_OPTIONS set on this Mac (one <code>launchctl setenv</code> reaches every app you open) would
+load code into Node as it starts; it never reaches the backend.</li>
+<li>Native add-ons and eval are off in it, and it runs the Node 24 the app ships, never one from
+your PATH.</li>
+<li>A signature, and each start of a trading plan&#39;s runner, reads the one key it needs, held as 32
+bytes the lock overwrites, so neither leaves another copy of your recovery phrase in memory. The
+signature still turns that key into text and a number JavaScript cannot wipe, so a copy of the
+key can stay until the memory is reused.</li>
+<li>Only fourteen packages can load into it, each one read: viem and zod and what they depend on. A
+test fails when another one could. CI runs that test and checks every package&#39;s registry
+signature on each push to main and each pull request; the release build does not run either
+again, so a release is only as checked as the CI run on its commit. The packages the agent&#39;s
+connection uses load in a separate process with no key.</li>
+</ul>
+<p>A test starts the shipped runtime and files exactly the way the app does, from an environment
+with a NODE_OPTIONS planted in it, and fails if the planted code ever runs.</p>
+<h2 id="the-files-it-runs">The files it runs<a class="anchor" href="#the-files-it-runs" aria-label="Link to this section">#</a></h2>
+<p>The backend runs from the files inside the app, in its <code>Contents/Resources/phosphor</code> folder:
+its code, its packages and the screens it serves you. Each release is built to accept one exact
+set of them, named by a digest compiled into the signed app. Every time Phosphor starts the
+backend, it works the digest out again from the files on disk. If one was changed, added or
+removed since the release was built, it starts nothing and its window says &quot;Phosphor needs a
+fresh copy&quot;. Nothing has opened your wallet at that point; install a fresh copy from
+phosphor.money. The check runs while the window opens, so it adds no wait. The window&#39;s Details
+name each digest by its first 12 characters and the folder as Phosphor.app, so they fit; the full
+digests are what <code>phosphor-desktop --payload-digest</code> prints (below), and the shell&#39;s log line keeps
+the whole reason.</p>
+<p>The Node runtime beside those files is checked as well. On a signed release, the running process
+has to carry a Developer ID signature of the same team as the app, or it is stopped before it is
+given anything.</p>
+<p>The limit: the files are checked when the backend starts. A file changed while Phosphor is
+running is caught at the next start, not before.</p>
+<h2 id="check-a-release-yourself">Check a release yourself<a class="anchor" href="#check-a-release-yourself" aria-label="Link to this section">#</a></h2>
+<p>You can check that the files in your copy are the ones its release&#39;s source builds, with no
+Phosphor code involved in the check.</p>
+<ol>
+<li><p>The digest your copy was built for, and the digest of its files on disk:</p>
+<pre><code>/Applications/Phosphor.app/Contents/MacOS/phosphor-desktop --payload-digest
+</code></pre>
+</li>
+<li><p>The same digest, worked out with the tools macOS ships:</p>
+<pre><code>cd /Applications/Phosphor.app/Contents/Resources/phosphor
+find . -type f ! -name .DS_Store | sed &#39;s|^\./||&#39; | LC_ALL=C sort | tr &#39;\n&#39; &#39;\0&#39; | xargs -0 shasum -a 256 | shasum -a 256
+</code></pre>
+</li>
+<li><p>The digest the release&#39;s source builds, on a Mac with Node 24 and Xcode&#39;s command line tools.
+Use the tag of the version you have, such as v0.10.13:</p>
+<pre><code>git clone --depth 1 --branch v0.10.13 https://github.com/karimbabasf/phosphor.git
+cd phosphor &amp;&amp; npm run bundle
+</code></pre>
+<p>It prints <code>payload: digest</code> and the value.</p>
+</li>
+</ol>
+<p>The three agree when your copy is the one that tag builds. Only the files&#39; contents and names go
+into the digest, never dates or owners, so the same tag gives the same digest on any Mac. Finder&#39;s
+<code>.DS_Store</code> files are left out because Finder writes one into any folder it shows.</p>
+<p>In that clone, the check the release itself passed before and after signing compares the
+payload&#39;s own files in your copy with the tag, one by one, and reads the entitlements of every
+binary in it. It does not compare the compiled programs (the shell, the bundled Node, the Secure
+Enclave service) or the installed packages:</p>
+<pre><code>node scripts/release-check.ts --app /Applications/Phosphor.app --checkout . --stage signed
+</code></pre>
+<p>The defences in this document are checked by an attack suite the repository ships: <code>npm run attack</code>
+runs the app this checkout builds (<code>npm run app:build</code> makes the ad-hoc bundle it boots), plays the
+hostile local process against each defence on a throwaway data dir and home, prints a table, and
+exits non-zero on any that does not hold. Add <code>-- --app &lt;Phosphor.app&gt;</code> to include the checks that
+need a Developer ID build.</p>
 <h2 id="the-lock">The lock<a class="anchor" href="#the-lock" aria-label="Link to this section">#</a></h2>
-<p>The wallet locks after fifteen minutes with nobody at the window by default (the Vault tab
-offers 5 minutes, 15 minutes or 1 hour), when the Mac sleeps, and when you close the window.
-Locked, the key is gone from memory and the window is frosted. Reads still work. A proposal made
+<p>The wallet locks after five minutes with nobody at the window by default (the Vault tab
+offers 5 minutes, 15 minutes or 1 hour), when the Mac wakes from a sleep of more than a minute,
+when the screen locks or the Mac switches to another user, and when you close the window. The key
+stays in memory while the Mac sleeps; if macOS locks the screen as it goes to sleep, that locks
+the wallet first. When the screen locks, nothing new can
+start from that moment; a move that has not been signed yet gets its signature first (two minutes
+at most), and then the key goes. A move the venue is still delivering does not hold the lock, and a
+move waiting for your click stays on its card. Locked, the app holds no key it can sign with and
+the window is frosted; copies a signature left as text can stay in memory until it is reused.
+Reads still work. A proposal made
 while locked is drafted, priced and checked, and its card says Unlock to decide; when you
 unlock, it is decided again and lands as something to click. An unlock is never an approval,
 even for a move small enough to have run on its own with the app open.</p>
 <p>The one thing that outlives a lock is an armed trading plan. It holds a separate trading key on a
-session of at most 24 hours; that key can place and cancel orders and cannot withdraw or transfer.
+session as long as the plan&#39;s expiry, a day at most. A plan whose entry is resting on the venue
+renews it, eight hours at a time, until the plan itself expires, at most seven days after it was
+made. That key can place and cancel orders and cannot withdraw or transfer.
 A bot that outlives a lock holds trading authority, not custody. See
 <a href="/docs/trading/#after-the-wallet-locks">Trading</a>.</p>
 <h2 id="the-honest-limits">The honest limits<a class="anchor" href="#the-honest-limits" aria-label="Link to this section">#</a></h2>
 <p>The model defends, completely, the case its tool surface covers: an agent driving the app through
 the tools it was given, reading hostile text, and being talked into trying something. That agent
 has no tool to approve with and no way to remove a rule without your click.</p>
-<p>What it does not defend against is a process already running as you on this Mac. Such a process
-can read the agent&#39;s secret from the data directory, and then it can do what an agent can do:
-read the app and file proposals. Three things follow, stated rather than hidden:</p>
+<p>What it does not fully defend against is a process already running as you on this Mac. Such a
+process can read the agent secret and the read key from the data directory, read the app, and
+take a seat. That seat counts as an agent started outside Phosphor, so every move it proposes
+waits for your click until you allow it. Three things follow, stated rather than hidden:</p>
 <ol>
-<li>The path under the click threshold is the money exposure that remains. A proposal sized under
-the threshold executes with no human involved, and the threshold is readable. If a hostile
-local process is in your threat model, lower it or set it to zero.</li>
+<li>The path under the click threshold is the money exposure that remains. The agents Phosphor
+starts carry their own secret in their environment. While one runs, a process running as you
+can read that secret and propose as that agent, and a move under the click threshold then runs
+with no human involved. The threshold is readable. If a hostile local process is in your
+threat model, lower it or set it to zero.</li>
 <li>Prompt injection into an agent that also has a shell is contained for approval and not for
 proposal. The tests prove the tool surface holds and that a decision needs the window; they
 prove nothing about what a sub-threshold proposal can cost.</li>
@@ -308,7 +433,9 @@ policy; only a click is recorded as decided by a human.</li>
 </ol>
 <p>The web-read mark has an edge too. The app sees the web searches and page reads of the agent it
 runs in the chat. An agent in your terminal reads the web with its own tools, out of the app&#39;s
-sight, so its moves follow your click threshold as usual unless it reads a marked chart label.</p>
+sight, so once you allow it, its moves follow your click threshold as usual unless it reads outside
+text through Phosphor (the news, a chain read) or words a marked agent wrote: a chart label, a
+board post, a worker&#39;s report, the name of an agent you have not allowed, or the raw audit log.</p>
 <p>The whole list, with what closes each item, is <a href="/docs/known-limits/">Known limits</a>. Two more limits
 are yours to know here. The safety systems are engineering by one person, without a
 third-party audit; read the

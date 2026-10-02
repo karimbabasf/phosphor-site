@@ -17,7 +17,10 @@ The docs at `/docs/`, the terms, privacy and security pages at `/terms/`, `/priv
 `/security/`, the `404.html` page and `sitemap.xml` are generated. The docs source is markdown
 in the app repo (`../phosphor/docs`, listed by its `README.md`), the site's own pages come from
 `content/<slug>.md` here, and `scripts/build-docs.mjs` renders all of it with a vendored
-`marked` (`scripts/vendor/marked.esm.js`, 18.0.13, MIT). The output is committed. `robots.txt`
+`marked` (`scripts/vendor/marked.esm.js`, 18.0.13, MIT). A line
+`<!-- include: <file>.md#<section> -->` in a content page pulls that section of the app's docs in
+at build time, so the security page shows the threat model from the app's
+`docs/security-model.md` and the two cannot drift. The output is committed. `robots.txt`
 is a plain file.
 
 ## Run it

@@ -216,7 +216,7 @@
     <header class="doc-head">
       <h1>Trading</h1>
       <p class="lede">The Trade tab is the <a href="https://hyperliquid.xyz" target="_blank" rel="noopener">Hyperliquid</a> perpetuals surface: the chart, your positions, your orders and your plans. A perpetual is a futures contract with no expiry date, so you can hold a long or a short for as long as your collateral lasts. This page explains what a proposed trade is, when it needs your click, what an armed plan may do on its own, and what stops when the wallet locks.</p>
-      <div class="doc-meta"><span class="mono">v0.10.11</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/trading.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.10.13</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/trading.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
     <nav class="onpage" aria-label="On this page"><ul><li><a href="#trade-mode">Trade mode</a></li><li><a href="#a-proposed-trade">A proposed trade</a></li><li><a href="#the-click">The click</a></li><li><a href="#armed-rules">Armed rules</a></li><li><a href="#after-the-wallet-locks">After the wallet locks</a></li><li><a href="#reading-the-account">Reading the account</a></li></ul></nav>
     <div class="prose">
@@ -287,18 +287,27 @@ Hyperliquid API wallet the app keeps for trading: by the venue&#39;s own signing
 and cancel orders, and it cannot withdraw, cannot transfer, and cannot approve another agent. The
 session lasts as long as the plan&#39;s expiry, and never more than 24 hours. When it runs out, a
 waiting plan shows Needs unlock and re-arms on your next unlock; a placed plan renews its session,
+eight hours at a time until the plan itself expires (at most seven days after it was made),
 because a fill needs the key to be protected; an open plan needs no key at all.</p>
 <h2 id="after-the-wallet-locks">After the wallet locks<a class="anchor" href="#after-the-wallet-locks" aria-label="Link to this section">#</a></h2>
-<p>The lock wipes the wallet key from memory, so nothing can be signed with it: no swap, no send, no
-funding, no withdrawal, and no new plan can arm. A plan that was already armed keeps its session
+<p>The lock overwrites the wallet key the app holds, so nothing can be signed with it: no swap, no
+send, no funding, no withdrawal, and no new plan can arm. (Copies a signature left as text can
+stay in memory until it is reused; see <a href="/docs/known-limits/">Known limits</a>.) A plan that was already armed keeps its session
 key until that session ends, so a bot that outlives a lock holds trading authority, not custody.
 It can place the entry it was armed for and its exits; it cannot move money out.</p>
 <p>A plan whose session has ended while the wallet is locked waits as Needs unlock and re-arms when
-you unlock. If the prices behind the watcher stop coming in, the plan says Waiting for prices and
+you unlock. Only Unlock re-arms it: showing an address, revealing the phrase or approving a move
+with Touch ID does not. If the prices behind the watcher stop coming in, the plan says Waiting for prices and
 nothing fires until they are back.</p>
-<p>Freeze everything in the top bar ends all of it: every plan is finished, resting orders are
-cancelled, and every open position on the account is closed at the market price when the venue
-can be reached. A position that does not close keeps its stop and target resting.
+<p>Freeze everything in the top bar ends all of it: the orders your plans have resting are
+cancelled, every open position on the account is closed at the market price when the venue can be
+reached, and every plan whose position closed is finished. A plan whose position does not close
+stays live with its stop and target resting. Orders you placed on Hyperliquid yourself are not
+cancelled. Closing takes
+the trading key, which a running plan holds and an open wallet hands over: with neither (the
+wallet locked and no plan running, or no trading key for the account) nothing on Hyperliquid can
+be closed, the freeze still stops everything else, and the window says the positions are still
+open.
 See <a href="/docs/getting-started/#freeze-everything">Getting started</a>.</p>
 <h2 id="reading-the-account">Reading the account<a class="anchor" href="#reading-the-account" aria-label="Link to this section">#</a></h2>
 <p>Ask your assistant for the whole situation and it reads <code>trade_read</code>: account health, every open

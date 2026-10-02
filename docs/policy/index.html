@@ -216,7 +216,7 @@
     <header class="doc-head">
       <h1>Policy</h1>
       <p class="lede">Your rules decide what the agent may do on its own, what waits for your click, and what is refused outright. They live in the app as plain sentences, a pure engine enforces them with no model in the path, and no proposal reaches execution without either your click or an allow inside limits you wrote. This page explains the rules, the click threshold, the click that follows a web page, how a rule changes, and why the gate has no off switch.</p>
-      <div class="doc-meta"><span class="mono">v0.10.11</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/policy.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.10.13</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/policy.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
     <nav class="onpage" aria-label="On this page"><ul><li><a href="#the-rules">The rules</a></li><li><a href="#the-click-threshold">The click threshold</a></li><li><a href="#policy-as-sentences">Policy as sentences</a></li><li><a href="#changing-a-rule">Changing a rule</a></li><li><a href="#the-three-verdicts">The three verdicts</a></li><li><a href="#why-the-gate-has-no-off-switch">Why the gate has no off switch</a></li></ul></nav>
     <div class="prose">
@@ -254,8 +254,8 @@ removed.</li>
 </ul>
 <p>Two more cases wait for a click whatever their size: a swap the app cannot measure, because it
 spends a coin the app cannot price or one whose listed price nothing in the quote can check (see
-<a href="/docs/money/#swap">Money</a>), and every move the chat&#39;s agent proposes after it read a web page (see
-below).</p>
+<a href="/docs/money/#swap">Money</a>), and every move an agent proposes after it read text from outside
+Phosphor (see below).</p>
 <p>A move that waits is one card in the chat that says Needs your OK. It shows what leaves and what
 arrives at least, its Details say why it asks, and it has two buttons: Cancel and Approve. On an
 enclave wallet Approve then asks for Touch ID, and the card says Confirm on your Mac until you
@@ -264,18 +264,34 @@ answer.</p>
 tab, or ask your assistant to set it to zero: at zero every move waits for a person.
 <a href="/docs/security/#the-honest-limits">Security</a> says why that is the one exposure that remains.</p>
 <h3 id="after-a-web-page">After a web page<a class="anchor" href="#after-a-web-page" aria-label="Link to this section">#</a></h3>
-<p>Once the agent in the chat has searched the web or read a page, every money move it proposes in
-that chat waits for your click, whatever its size, until the chat starts a new session (the agent
-restarts, or you start a new chat). Why it asks, in the card&#39;s Details, says: &quot;It read a web
-page earlier in this chat, so this one waits for your OK.&quot; A chart label the agent writes after
-a web read carries the same mark, and an agent that later reads that label is marked too. A move
+<p>Once the agent in the chat has searched the web, read a page, or read a stranger&#39;s words through
+Phosphor (news headlines, token names and memos on a chain), every money move it proposes in that
+chat waits for your click, whatever its size, until the chat starts a new session (the agent
+restarts, or you start a new chat). The card says why under its head: &quot;This chat read text
+from outside Phosphor, so this move waits for your OK.&quot; A chart label, a plan note or a
+highlight the agent writes after a web read carries the same mark, and an agent that later reads
+one is marked too. So do a board post and a worker&#39;s report, and a worker that a marked agent
+starts begins marked. A move
 that would have been refused is still refused; the mark only turns a move that would have run on
 its own into one that asks. <a href="/docs/security/#a-web-page-is-not-an-instruction">Security</a> says why.</p>
+<h3 id="an-agent-you-started-outside-phosphor">An agent you started outside Phosphor<a class="anchor" href="#an-agent-you-started-outside-phosphor" aria-label="Link to this section">#</a></h3>
+<p>An agent in your terminal or in another app attaches with a secret the app writes into its data
+folder, and any program running as you can read that folder. So the first time one attaches, the
+window asks &quot;Allow this agent?&quot;, and until you allow it, every money move it proposes waits for
+your click, whatever its size. The card says under its head: &quot;This agent was started outside
+Phosphor and is not allowed yet, so this move waits for your OK.&quot; Allow lets its next moves run
+under these rules like the chat&#39;s own agent, and a move it already asked for still waits; Ask
+each time keeps every one waiting, and its row in the conversation keeps a Change that asks
+again. An Allow holds for that one connection: restart the agent and the window asks again.
+Phosphor cannot see what such an agent reads with its own tools, so a read it makes through
+Phosphor (news, a chain read) still marks it as above, and the card says to allow only an agent
+you started yourself. It cannot read a page through Phosphor: <code>web_read</code> opens only an address a
+search in the chat returned or you typed in the chat.</p>
 <h3 id="after-a-move-that-did-not-go-through">After a move that did not go through<a class="anchor" href="#after-a-move-that-did-not-go-through" aria-label="Link to this section">#</a></h3>
 <p>When a move your agent proposed does not go through, the app wakes the agent to tell you in one
 line, without waiting for your next message. Nobody typed that turn, so every money move the agent
-proposes in it waits for your click, whatever its size. Why it asks says: &quot;Your agent asked for
-this on its own after a move did not go through, so it waits for your OK.&quot; The mark ends with that
+proposes in it waits for your click, whatever its size. The card says under its head: &quot;Your
+agent asked for this on its own after a move did not go through, so it waits for your OK.&quot; The mark ends with that
 turn, and a move that would have been refused is still refused.</p>
 <h2 id="policy-as-sentences">Policy as sentences<a class="anchor" href="#policy-as-sentences" aria-label="Link to this section">#</a></h2>
 <p>The policy is stored as a file but read as English. The sentences are rendered from the file by

@@ -87,6 +87,7 @@ test('the build fails when the generator puts the analytics tag on either page',
     writeFileSync(join(dir, 'app', 'package.json'), '{"version":"0.0.0"}');
     writeFileSync(join(docs, 'README.md'), '# Docs\n\nThe docs.\n\n## Pages\n\n- [Start](start.md): the start\n\n## For developers\n\n- [Inside](inside.md): the inside\n');
     writeFileSync(join(docs, 'start.md'), '# Start\n\nThe start.\n\n## One\n\nText.\n');
+    writeFileSync(join(docs, 'security-model.md'), '# Security model\n\nThe model.\n\n## Threat model\n\nWho it plans for.\n');
     const build = () => spawnSync(process.execPath, [join(dir, 'scripts', 'build-docs.mjs')], { env: { ...process.env, PHOSPHOR_DOCS: docs }, encoding: 'utf8' });
     const clean = build();
     assert.equal(clean.status, 0, clean.stderr);

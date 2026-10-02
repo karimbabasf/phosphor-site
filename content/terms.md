@@ -12,7 +12,7 @@ By downloading, installing, opening or using Phosphor, or by using this site, yo
 
 ## What Phosphor is
 
-Phosphor is software that runs on your own Mac. It holds the keys to your own accounts on your machine, sealed to that machine's Secure Enclave, and lets an AI agent you already use read your balances and draft moves. Every move that spends money waits for your click in the app window, and a send waits for your fingerprint as well. The app connects, on your instruction, to two venues run by other people: NEAR Intents and Hyperliquid.
+Phosphor is software that runs on your own Mac. It holds the keys to your own accounts on your machine, sealed to that machine's Secure Enclave when it has one, and lets an AI agent you already use read your balances and draft moves. A move above your click threshold ($100 by default) waits for your click in the app window. Smaller swaps, Hyperliquid deposits and trades can run on their own, up to $500 a day by default, and you can set the threshold to zero so that every move waits. Sends, withdrawals and rule changes always wait for your click, and on a Touch ID wallet for your fingerprint too. The app connects, on your instruction, to two venues run by other people: NEAR Intents and Hyperliquid.
 
 The source code is public under the [Functional Source License](https://github.com/karimbabasf/phosphor/blob/main/LICENSE) so that you can read what the app does before you trust it.
 
@@ -45,7 +45,7 @@ You are responsible for checking this, and for every tax, reporting, securities,
 - **You can lose money, including all of it.** Prices move fast. A perpetual futures position is held on margin at a multiple of what you put in, and it can be liquidated in full.
 - **Transactions are final.** A wrong address, a wrong amount or a signed message you did not read cannot be undone by anyone.
 - **The app is alpha software.** Version 0.x. It is written by one person, it can carry bugs, its safety systems are engineering and not a guarantee, and it has had no third-party security audit. Interfaces, tool names and behaviour change without notice.
-- **Venues, bridges and networks fail.** A deposit or a send can be delayed, refunded, stuck or lost by a venue, a bridge, a solver, a chain, an RPC provider or a price feed the author does not run. When a move is waiting on one of them the app says "settling" and can only show you what it can read. The author cannot speed it up, reverse it or make it whole.
+- **Venues, bridges and networks fail.** A deposit or a send can be delayed, refunded, stuck or lost by a venue, a bridge, a solver, a chain, an RPC provider or a price feed the author does not run. When a move is waiting on one of them the card says what it is waiting for, and the app can only show you what it can read. The author cannot speed it up, reverse it or make it whole.
 - **AI agents make mistakes.** A model can misread you, invent a proposal or be manipulated by something it read. The approval gate exists for that reason, and the click stays yours.
 
 ## Third parties
