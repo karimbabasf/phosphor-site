@@ -251,11 +251,13 @@ ${html}
 // out of the address bar and puts it in #code. With no code, or a broken one, the page says so
 // and still offers the app.
 {
-  const download = `
+  // The phone line differs by state: by the time it shows, the page has taken the code out of
+  // the address bar, so sharing the open page would send a link with no code in it.
+  const download = (phone) => `
           <div class="get-row">
             <a class="get" href="/download/mac">Download for Mac</a>
             <span class="req">For Apple silicon Macs on macOS 13.5 or later.</span>
-            <span class="only">Phosphor runs on a Mac. Open this link there to download it.</span>
+            <span class="only">${phone}</span>
           </div>`;
   const article = `
 <main class="docs wrap single">
@@ -274,7 +276,7 @@ ${html}
         <p class="hint" id="hint" role="status"></p>
       </div>
       <ol class="steps">
-        <li><div><strong>Download Phosphor</strong> and open it.${download}
+        <li><div><strong>Download Phosphor</strong> and open it.${download('Phosphor runs on a Mac. Open the message with this link on your Mac, or tap Copy and send the code to yourself.')}
         </div></li>
         <li><div><strong>Paste the code</strong> when Phosphor asks "Have an invite code?" while you set it up. Already using Phosphor? Open Add money and pick "Have an invite code?".</div></li>
       </ol>
@@ -282,10 +284,10 @@ ${html}
     </div>
     <div class="when-none">
       <header class="doc-head">
-        <h1>No invite code here</h1>
-        <p class="lede">This link has no complete invite code in it. Open it again from the message it came in.</p>
-        <noscript><p class="lede">JavaScript is off, so this page cannot show the code. Your code is the part of the address after the # sign.</p></noscript>
-      </header>${download}
+        <h1 class="with-js">No invite code here</h1>
+        <p class="lede with-js">This link has no complete invite code in it. Open it again from the message it came in.</p>
+        <noscript><h1>Your invite code is in the link</h1><p class="lede">JavaScript is off, so this page cannot show the code. Your code is the part of the address after the # sign.</p></noscript>
+      </header>${download('Phosphor runs on a Mac. Open this link there to download it.')}
       <p class="note reload">This page takes the code out of the address bar as soon as it reads it, so a reload shows this message.</p>
     </div>
   </article>

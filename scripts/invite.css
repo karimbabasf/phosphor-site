@@ -8,6 +8,10 @@
   [data-invite="code"] .when-code { display: block; }
   [data-invite="code"] .when-none { display: none; }
   :root:not([data-invite]) .reload { display: none; }
+  /* With JavaScript off the code is never read, so the page says where it is instead. */
+  @media (scripting: none) {
+    .with-js { display: none; }
+  }
 
   .code-wrap { position: relative; margin-bottom: 46px; }
   .code-card { position: relative; display: flex; align-items: center; gap: 16px; padding: 16px 16px 16px 22px; border: 1px solid var(--rule-2); border-radius: 14px; background: var(--ink-2); overflow: hidden; }
@@ -36,7 +40,7 @@
   .req { font-size: 14px; line-height: 1.4; color: var(--text-3); }
   /* On a phone or a tablet there is nothing to download, as on the front page. */
   .only { display: none; font-size: 15px; line-height: 1.5; color: var(--text-2); }
-  .note { padding-top: 22px; border-top: 1px solid var(--rule); font-size: 15px; line-height: 1.6; color: var(--text-2); text-wrap: pretty; }
+  .note { max-width: 68ch; padding-top: 22px; border-top: 1px solid var(--rule); font-size: 15px; line-height: 1.6; color: var(--text-2); text-wrap: pretty; }
   .when-none .get-row { margin: 0 0 36px; }
 
   @media (hover: hover) and (pointer: fine) {
