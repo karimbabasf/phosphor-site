@@ -370,10 +370,10 @@ It is rehearsed and written to the file before it is signed, like every move her
 bytes are written down before 1Click gets them. If a run stops, the next <code>convert</code> finishes it with
 the same bytes, never a second signature, and converts nothing new while they can still run. A
 convert ends on NEAR Intents&#39; own record, its one-time number spent, and then on 1Click&#39;s word for
-the NEAR USDC; a refund counts only once it shows on T, at what went in less 1 percent, the most
-a convert may lose (or the amount 1Click says it refunded, when that is more). 1Click&#39;s word is
-unsigned, so a lying 1Click can close a convert before its money reaches T by saying it
-succeeded (see <a href="/docs/known-limits/#the-invite-tools">Known limits</a>). If NEAR Intents can no longer answer for that
+the NEAR USDC; a refund counts only once T holds at least what went in less 1 percent, or more
+when 1Click says it refunded more. 1Click&#39;s word is unsigned, so a lying 1Click can close a
+convert before its money reaches T by saying it succeeded (see
+<a href="/docs/known-limits/#the-invite-tools">Known limits</a>). If NEAR Intents can no longer answer for that
 number (days later), 1Click&#39;s word decides, and a convert 1Click never saw lapses five minutes
 after its deadline instead of holding up the next one. A Mac clock more than a minute fast
 is refused before the signature, because three minutes on it would be longer on NEAR.</p>
@@ -474,8 +474,8 @@ quote 1Click signs for the same swap. Under the click
 threshold a swap runs on its own, unless your assistant read text from outside Phosphor (a web
 page, the news, a chain read, a venue&#39;s words the app does not know) earlier in that session, was
 started outside Phosphor and is not allowed yet, the swap spends a coin the app cannot price,
-1Click&#39;s quote puts no dollar figure on one of its coins, or the relay&#39;s price could not be
-checked against a quote 1Click signed;
+1Click puts no dollar figure on one of its coins, or the relay&#39;s price could not be checked
+against a quote 1Click signed;
 above it, the card shows what you pay and what you get at least, and waits for your click. See
 <a href="/docs/policy/#the-click-threshold">Policy</a>.</p>
 <p>Every coin the swap service lists has a price in your balance. A swap that spends a coin priced
@@ -483,7 +483,8 @@ only by that list is judged at the larger of the listed price and what the quote
 so a wrong listed price cannot make a move look small. Three cases always wait for your click,
 whatever the size: a swap whose listed price nothing in the quote can check, a swap that spends a
 coin the app cannot price at all, which is valued off what the quote says arrives, and a swap
-1Click&#39;s quote puts no dollar figure on, since nothing can measure what it gives up.</p>
+into or out of a coin 1Click puts no dollar figure on, since nothing can measure what it gives
+up.</p>
 <h2 id="send">Send<a class="anchor" href="#send" aria-label="Link to this section">#</a></h2>
 <p>A send is the one way money leaves for somebody else, and it leaves only from the intents
 balance. Your assistant proposes it with <code>propose_send</code> and must say where it lands: on a real
@@ -645,7 +646,7 @@ chains: on 2026-09-26 USDT on Tron needed about $85 and Bitcoin about 0.00074 BT
 <li>A swap floor more than 20 percent below the app&#39;s quote is refused as no floor at all.</li>
 <li>A swap may give up at most 3 percent of its value to fees and price, by the dollar figures
 1Click signs for both sides, on the solver relay and on 1Click alike. When 1Click gives no
-dollar figure for a coin there is nothing to measure by, so no cap applies and the swap waits
+dollar figure for a coin there is nothing to measure by and no cap applies, so the swap waits
 for your click on either route. A quote whose request carries a fee, a field or a
 value the app did not ask for is refused before anything is signed.</li>
 <li>A move runs with the coins its card was priced with. If the swap service&#39;s coin list names a
