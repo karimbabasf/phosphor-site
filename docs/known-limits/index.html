@@ -225,7 +225,7 @@
       <p class="lede">What this build does not cover, stated plainly so you can size what you put in it. Each item says what the limit is, what it means for your money, and what closes it. The Vault tab, the cards and the audit log say several of them in their own words; this page has them all.</p>
       <div class="doc-meta"><span class="mono">v0.10.13</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/known-limits.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
-    <nav class="onpage" aria-label="On this page"><ul><li><a href="#alpha-software-that-moves-real-money">Alpha software that moves real money</a></li><li><a href="#the-key-is-in-memory-while-the-vault-is-open">The key is in memory while the vault is open</a></li><li><a href="#a-touch-id-while-the-app-starts-can-re-arm-a-plan">A Touch ID while the app starts can re-arm a plan</a></li><li><a href="#two-seconds-after-the-backend-stops">Two seconds after the backend stops</a></li><li><a href="#a-local-program-that-reads-the-seat-secret-can-propose">A local program that reads the seat secret can propose</a></li><li><a href="#the-secure-enclave-key-is-bound-to-this-mac-not-to-phosphor">The Secure Enclave key is bound to this Mac, not to Phosphor</a></li><li><a href="#the-venues-are-not-ours">The venues are not ours</a></li><li><a href="#hyperliquid-and-what-a-withdrawal-needs">Hyperliquid, and what a withdrawal needs</a></li><li><a href="#a-fee-can-hide-inside-the-loss-floors">A fee can hide inside the loss floors</a></li><li><a href="#some-coins-take-their-1click-id-on-first-sight">Some coins take their 1Click id on first sight</a></li><li><a href="#names-a-venue-lists-do-not-mark-the-agent">Names a venue lists do not mark the agent</a></li><li><a href="#a-release-signs-what-its-build-made">A release signs what its build made</a></li><li><a href="#the-release-keys-are-not-behind-an-approval-yet">The release keys are not behind an approval yet</a></li><li><a href="#an-armed-plan-keeps-trading-after-a-lock">An armed plan keeps trading after a lock</a></li><li><a href="#the-audit-log-is-evidence-not-a-lock">The audit log is evidence, not a lock</a></li><li><a href="#what-web-reading-still-lets-through">What web reading still lets through</a></li><li><a href="#an-invite-code-changed-by-hand">An invite code changed by hand</a></li><li><a href="#a-claim-can-look-failed-for-a-while">A claim can look failed for a while</a></li><li><a href="#one-agent-can-get-in-the-way-of-another">One agent can get in the way of another</a></li><li><a href="#the-invite-tools">The invite tools</a></li><li><a href="#what-the-app-cannot-protect-you-from">What the app cannot protect you from</a></li><li><a href="#where-to-report-a-limit-you-hit">Where to report a limit you hit</a></li></ul></nav>
+    <nav class="onpage" aria-label="On this page"><ul><li><a href="#alpha-software-that-moves-real-money">Alpha software that moves real money</a></li><li><a href="#the-key-is-in-memory-while-the-vault-is-open">The key is in memory while the vault is open</a></li><li><a href="#two-seconds-after-the-backend-stops">Two seconds after the backend stops</a></li><li><a href="#a-local-program-that-reads-the-seat-secret-can-propose">A local program that reads the seat secret can propose</a></li><li><a href="#the-secure-enclave-key-is-bound-to-this-mac-not-to-phosphor">The Secure Enclave key is bound to this Mac, not to Phosphor</a></li><li><a href="#the-venues-are-not-ours">The venues are not ours</a></li><li><a href="#hyperliquid-and-what-a-withdrawal-needs">Hyperliquid, and what a withdrawal needs</a></li><li><a href="#a-fee-can-hide-inside-the-loss-floors">A fee can hide inside the loss floors</a></li><li><a href="#names-a-venue-lists-do-not-mark-the-agent">Names a venue lists do not mark the agent</a></li><li><a href="#a-release-signs-what-its-build-made">A release signs what its build made</a></li><li><a href="#a-release-rests-on-one-github-account">A release rests on one GitHub account</a></li><li><a href="#an-armed-plan-keeps-trading-after-a-lock">An armed plan keeps trading after a lock</a></li><li><a href="#the-audit-log-is-evidence-not-a-lock">The audit log is evidence, not a lock</a></li><li><a href="#what-web-reading-still-lets-through">What web reading still lets through</a></li><li><a href="#an-invite-code-changed-by-hand">An invite code changed by hand</a></li><li><a href="#a-claim-can-look-failed-for-a-while">A claim can look failed for a while</a></li><li><a href="#one-agent-can-get-in-the-way-of-another">One agent can get in the way of another</a></li><li><a href="#the-invite-tools">The invite tools</a></li><li><a href="#what-the-app-cannot-protect-you-from">What the app cannot protect you from</a></li><li><a href="#where-to-report-a-limit-you-hit">Where to report a limit you hit</a></li></ul></nav>
     <div class="prose">
 <h2 id="alpha-software-that-moves-real-money">Alpha software that moves real money<a class="anchor" href="#alpha-software-that-moves-real-money" aria-label="Link to this section">#</a></h2>
 <p>Every address the app makes is a real address, and every move it makes is a real move on a real
@@ -235,11 +235,12 @@ before you fund the wallet, and start with an amount you can afford to lose.</p>
 <p>What closes it: an audit by a third party, which is planned and not done. Nothing internal
 gets called an audit until a third party signs it.</p>
 <h2 id="the-key-is-in-memory-while-the-vault-is-open">The key is in memory while the vault is open<a class="anchor" href="#the-key-is-in-memory-while-the-vault-is-open" aria-label="Link to this section">#</a></h2>
-<p>Your wallet file is sealed on disk, and on a Mac with a Secure Enclave the seal opens only with
-Touch ID. But while the vault is open the unsealed key sits in the app&#39;s memory, because that is
-what signs the moves you approved and the small ones your rules allow. The lock overwrites it, and
-the lock comes after five minutes with nobody at the window (or the time you set in the Vault
-tab), when the Mac wakes from a sleep of more than a minute, when the screen locks or the Mac
+<p>Your wallet file is sealed on disk: a Touch ID wallet to this Mac&#39;s Secure Enclave, which opens
+it with Touch ID or your Mac login password, and a password wallet with your password. But while
+the vault is open the unsealed key sits in the app&#39;s memory, because that is what signs the moves
+you approved and the small ones your rules allow. The lock overwrites it, along with a key or
+recovery phrase you asked to see and had not read yet. The lock comes after five minutes with
+nobody at the window (or the time you set in the Vault tab), when the Mac wakes from a sleep of more than a minute, when the screen locks or the Mac
 switches to another user, when you close the window, and when you press Lock now. The key stays
 in memory while the Mac sleeps. When the screen locks, the Mac switches user or the window closes,
 a move that has not been signed yet gets its signature first, two minutes at most, while nothing
@@ -252,20 +253,10 @@ to attach to another process, which the hardened runtime is there to refuse. Kee
 only while you are using it.</p>
 <p>What closes it: the chip vault, where the Secure Enclave signs NEAR Intents moves itself so that
 key never exists as bytes, or a hardware signer. Neither ships here.</p>
-<h2 id="a-touch-id-while-the-app-starts-can-re-arm-a-plan">A Touch ID while the app starts can re-arm a plan<a class="anchor" href="#a-touch-id-while-the-app-starts-can-re-arm-a-plan" aria-label="Link to this section">#</a></h2>
-<p>For up to 20 seconds after Phosphor starts, its check of your trading plans waits for
-Hyperliquid&#39;s first answer. If you approve a move with Touch ID on a locked wallet in that time,
-and the check lands while that move holds the key, every waiting plan re-arms with its trading
-key, as an unlock would.</p>
-<p>What it means: a plan you armed earlier can trade again without an unlock, inside the limits you
-armed it with. Its trading key can place and cancel orders and can never withdraw or transfer.
-Freeze stops it.</p>
-<p>What closes it: the check arming plans only after an unlock.</p>
 <h2 id="two-seconds-after-the-backend-stops">Two seconds after the backend stops<a class="anchor" href="#two-seconds-after-the-backend-stops" aria-label="Link to this section">#</a></h2>
 <p>If a program running as you stops the app&#39;s backend and takes its port, the app needs up to two
 seconds to notice. In that time what the window sends goes to that program: a click, or a
-password typed into Unlock. A screen lock in those seconds sends the lock there too, with the
-window token, which no longer opens anything.</p>
+password typed into Unlock, with the window token, which no longer opens anything.</p>
 <p>What it means: the program would have to time this to the second, and a password wallet&#39;s
 password is what it would be after. If the window suddenly shows the splash, or Phosphor says
 its backend stopped, do not type your password until it is back.</p>
@@ -325,22 +316,12 @@ not caught.</p>
 <p>What it means: someone who can change a quote between your Mac and the venue, which takes
 breaking HTTPS or being the venue, can take up to 3 percent of a swap on either route, 1 percent
 of a send, 3 percent of a payout, 5 percent of a Hyperliquid deposit, 0.25 USDC plus 0.4 percent
-of a Hyperliquid withdrawal, or 1 percent of an invite claim that goes through 1Click. A swap of a
-coin 1Click puts no dollar figure on has no cap at all; on the relay route such a swap waits for
-your click. The same strict check cuts the other way:
+of a Hyperliquid withdrawal, or 1 percent of an invite claim that goes through 1Click. A swap
+1Click puts no dollar figure on has no cap, so it waits for your click on either route. The same
+strict check cuts the other way:
 if 1Click starts sending back a field the app does not know, every quote is refused until
 Phosphor is updated, and nothing moves.</p>
 <p>What closes it: the venues signing what they quote, the fee included.</p>
-<h2 id="some-coins-take-their-1click-id-on-first-sight">Some coins take their 1Click id on first sight<a class="anchor" href="#some-coins-take-their-1click-id-on-first-sight" aria-label="Link to this section">#</a></h2>
-<p>A card pins each coin&#39;s 1Click id and decimals when it lands, so the coin list cannot change under
-it before you click. For most coins the app&#39;s own registry names the id ahead of time. ETH (on
-Ethereum, Base and Arbitrum), SOL, and six registry coins (USDS, PYUSD and USDe on Ethereum, DAI on
-Base and on Arbitrum, PYUSD on Solana) take the id 1Click&#39;s coin list gives the first time a card
-is priced.</p>
-<p>What it means: someone who can forge 1Click&#39;s coin list at that moment, which takes breaking HTTPS
-or being 1Click, could price another coin under one of those names. When 1Click prices both coins,
-its signed figures still hold the swap to the 3 percent floor.</p>
-<p>What closes it: the registry naming 1Click&#39;s id for every coin it lists.</p>
 <h2 id="names-a-venue-lists-do-not-mark-the-agent">Names a venue lists do not mark the agent<a class="anchor" href="#names-a-venue-lists-do-not-mark-the-agent" aria-label="Link to this section">#</a></h2>
 <p>A page, the news, a chain read or a venue&#39;s error text marks the agent that reads it, and its
 next small move waits for your click. Some names a venue lists do not: 1Click&#39;s coin names, the
@@ -352,24 +333,28 @@ your daily limit.</p>
 <p>Releases are built in a job that holds no secret, and signed in another job that installs and
 builds nothing. Before signing, the release checks that the payload&#39;s own files match the tagged
 source and that every program inside carries only the committed entitlements. That check skips
-anything named <code>.DS_Store</code>, a folder of that name and what is in it included, and nothing checks
-what else the build put on the disk image beside the app. It cannot vouch for the compiled
+only files named <code>.DS_Store</code>, and nothing checks what else the build put on the disk image beside
+the app. It cannot vouch for the compiled
 programs (the shell, the bundled Node, the Secure Enclave service) or for the installed packages,
 and the release build does not repeat CI&#39;s check of each package&#39;s registry signature.</p>
-<p>What it means: a build job someone tampered with could hand the signing job a changed program, a
-file in a <code>.DS_Store</code> folder, or an extra file beside the app on the disk image, and it would be
-signed. <a href="/docs/security/#check-a-release-yourself">Check a release yourself</a> covers the payload&#39;s
+<p>What it means: a build job someone tampered with could hand the signing job a changed program or
+an extra file beside the app on the disk image, and it would be signed. <a href="/docs/security/#check-a-release-yourself">Check a release yourself</a> covers the payload&#39;s
 files, not those programs.</p>
 <p>What closes it: a build anyone can reproduce byte for byte.</p>
-<h2 id="the-release-keys-are-not-behind-an-approval-yet">The release keys are not behind an approval yet<a class="anchor" href="#the-release-keys-are-not-behind-an-approval-yet" aria-label="Link to this section">#</a></h2>
-<p>The release workflow names a <code>release</code> environment that is meant to hold the signing secrets and
-wait for the maintainer&#39;s approval. At 0.10.13 it asks no approval and lets any branch in, and the
-secrets (the Developer ID and the update key among them) sit at repository level.</p>
-<p>What it means: any workflow pushed to this repository can read both signing keys, not only a
-tagged release that the maintainer approved. Only the maintainer can push to it, so this rests
-on that one GitHub account.</p>
-<p>What closes it: the secrets moved into the environment, with a required approval and only <code>v*</code>
-tags let in.</p>
+<h2 id="a-release-rests-on-one-github-account">A release rests on one GitHub account<a class="anchor" href="#a-release-rests-on-one-github-account" aria-label="Link to this section">#</a></h2>
+<p>The signing keys (the Developer ID and the update key) are read only in the release workflow&#39;s
+<code>release</code> environment, which lets only <code>v*</code> tags in and waits for the maintainer&#39;s approval. The
+job that puts the disk image on phosphor.money reads the Blob token alone, in a <code>release-site</code>
+environment that starts only after that approved job, so a release asks for one approval. Both
+are settings on the repository, not code in it. The GitHub API shows them: the approval each
+environment asks, then which tags each lets in.</p>
+<pre><code>gh api repos/karimbabasf/phosphor/environments
+gh api repos/karimbabasf/phosphor/environments/release/deployment-branch-policies
+gh api repos/karimbabasf/phosphor/environments/release-site/deployment-branch-policies
+</code></pre>
+<p>What it means: the maintainer&#39;s GitHub account, the only one that can push, approves every
+release and can change those settings. Someone who takes that account can ship a signed release.</p>
+<p>What closes it: a second person who must approve, or signing that needs a device outside GitHub.</p>
 <h2 id="an-armed-plan-keeps-trading-after-a-lock">An armed plan keeps trading after a lock<a class="anchor" href="#an-armed-plan-keeps-trading-after-a-lock" aria-label="Link to this section">#</a></h2>
 <p>A trading plan you armed keeps its own trading key when the wallet locks. The key&#39;s session lasts
 as long as the plan&#39;s expiry, a day at most, and a plan whose entry rests on the venue renews it
@@ -402,20 +387,16 @@ rehearsal. It can pay only your wallet.</p>
 <p>What it means: the money lands, but the window says the claim failed until Phosphor&#39;s next start
 finds it and marks the code claimed. Restart Phosphor before you ask for a new code.</p>
 <h2 id="one-agent-can-get-in-the-way-of-another">One agent can get in the way of another<a class="anchor" href="#one-agent-can-get-in-the-way-of-another" aria-label="Link to this section">#</a></h2>
-<p>When an outside agent&#39;s seat lapses, another program that read the agent&#39;s secret file can take
-its id. Its goodbye then removes your Allow, so the returning agent&#39;s moves wait for your click
-again; or the returning agent shows as allowed while every move it asks for waits. Any agent can
-also stop a worker another agent started.</p>
-<p>What it means: an agent can lose its no-click moves, or a worker its job. None of this moves
-money; each case ends in a move that waits for you.</p>
+<p>Any agent can stop a worker another agent started.</p>
+<p>What it means: a worker can lose its job before it finishes. That moves no money.</p>
 <h2 id="the-invite-tools">The invite tools<a class="anchor" href="#the-invite-tools" aria-label="Link to this section">#</a></h2>
 <p><code>npm run invite</code>, for whoever hands out invite codes, guards the treasury, each code&#39;s key and the
 encrypted invite file. Its passphrase is what keeps that file shut. Its refusal of piped input
 only stops a script or an agent from running it by accident: a program that pretends to be a
 terminal gets past it and can read what the terminal shows, live links included.</p>
 <p>What it means: type the passphrase only in your own Terminal, never through an agent. A convert
-closes on 1Click&#39;s word, which is unsigned, so a lying 1Click can mark a convert done or refunded
-before its money reaches the treasury. A Mac clock running fast
+closes on 1Click&#39;s word, which is unsigned, so a lying 1Click can mark a convert done before its
+money reaches the treasury; a refund counts only once it shows there. A Mac clock running fast
 and a lying NEAR RPC together can run a batch&#39;s rehearsal as well as its real payload: each code
 then holds twice its amount, a claim takes all of it, and <code>reclaim</code> takes back what nobody
 claimed. A convert may give up 1 percent of its
