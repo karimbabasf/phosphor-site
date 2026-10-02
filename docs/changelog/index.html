@@ -228,7 +228,8 @@
     <nav class="onpage" aria-label="On this page"><ul><li><a href="#0-10-13">0.10.13</a></li><li><a href="#0-10-12">0.10.12</a></li><li><a href="#0-10-11">0.10.11</a></li><li><a href="#0-10-10">0.10.10</a></li><li><a href="#0-10-9">0.10.9</a></li><li><a href="#0-10-8">0.10.8</a></li><li><a href="#0-10-7">0.10.7</a></li><li><a href="#0-10-6">0.10.6</a></li><li><a href="#0-10-5">0.10.5</a></li><li><a href="#0-10-4">0.10.4</a></li><li><a href="#0-10-3">0.10.3</a></li><li><a href="#0-10-2">0.10.2</a></li><li><a href="#0-10-0">0.10.0</a></li><li><a href="#0-9-3">0.9.3</a></li><li><a href="#0-9-2">0.9.2</a></li><li><a href="#0-9-1">0.9.1</a></li><li><a href="#0-9-0">0.9.0</a></li><li><a href="#0-8-0">0.8.0</a></li><li><a href="#0-7-0">0.7.0</a></li><li><a href="#0-6-0">0.6.0</a></li><li><a href="#0-5-2">0.5.2</a></li><li><a href="#0-5-1">0.5.1</a></li><li><a href="#0-5-0">0.5.0</a></li><li><a href="#0-4-4">0.4.4</a></li><li><a href="#0-4-3">0.4.3</a></li><li><a href="#0-4-2">0.4.2</a></li><li><a href="#0-4-1">0.4.1</a></li><li><a href="#0-4-0">0.4.0</a></li><li><a href="#0-3-0">0.3.0</a></li><li><a href="#0-2-0">0.2.0</a></li><li><a href="#0-1-0">0.1.0</a></li></ul></nav>
     <div class="prose">
 <h2 id="0-10-13">0.10.13<a class="anchor" href="#0-10-13" aria-label="Link to this section">#</a></h2>
-<p>Built 2026-10-01, the invite codes and safety pass. Not tagged at the time of writing.</p>
+<p>Built 2026-10-01 and 2026-10-02, the invite codes and safety pass. Not tagged at the time of
+writing.</p>
 <ul>
 <li>Invite codes. Someone can send you a code, or a link to phosphor.money/invite, that holds USDC
 for a new wallet, usually $5. Paste it on the new step after the terms, Have an invite code?, or
@@ -316,8 +317,13 @@ already being signed gets its signature, then the key goes. A move waiting for y
 on its card. The lock screen says why Phosphor locked (your screen locked, your Mac switched
 users or slept, or the minutes you picked went by) and how many moves wait for your OK, without
 saying what they are, and the Vault&#39;s lock timer says the window also locks with your screen.</li>
+<li>A lock while you write your recovery words down in the first run puts the lock card in front of
+them: the words leave the screen, the unlock field takes the keyboard, and unlocking brings you
+back to the same step. The moving lines behind the first run stop drawing while the card is up.</li>
 <li>Any lock, yours or the app&#39;s, wipes a key or recovery phrase you asked to see and had not read
-yet, and one you never read is wiped when it expires.</li>
+yet, and one you never read is wiped when it expires. The window&#39;s read cache no longer keeps a
+copy of a recovery phrase you asked to see; before, it held one after the Vault tab had closed
+the phrase&#39;s row.</li>
 <li>The wallet locks after 5 idle minutes by default instead of 15. A time you picked in the Vault
 stays, and the app now waits the time you picked; before, it always waited 15 minutes. The one
 exception is 15 minutes picked before this version: the app cannot tell it from the old default,
@@ -333,14 +339,23 @@ arms or changes. Closing positions still runs.</li>
 and Unfreeze waits until the file is fixed. Freeze tells you when it could not close your trading
 positions.</li>
 <li>Proving your backup asks for three different words. After two misses the window shows the words
-again; after five, the check stops until you show the words again with Back it up. Finishing an
-interrupted migration counts wrong passwords like every other password check.</li>
+again; after five, the Vault&#39;s check stops until you show the words again with Back it up. In
+the first run, Prove it checks your words however long writing them down took: past half an
+hour, or after five wrong tries, it reads them again with the password you just set and asks
+once more. Finishing an interrupted migration counts wrong passwords like every other password
+check.</li>
 <li>A quote changed on its way to 1Click (a fee paying someone else, a field the app never sent, a
 value it never chose) is refused before anything is signed, and a swap gives up at most 3
-percent of its value by the dollar figures 1Click signs. A swap on the solver relay is held to
-the same 3 percent, judged by a quote 1Click signed for the same swap; with no signed price to
-check it by, it waits for your click. A swap 1Click puts no dollar figure on waits for your
-click on either route.</li>
+percent of its value by the dollar figures 1Click signs, so the cap trusts 1Click&#39;s prices. A
+swap on the solver relay is held to the same 3 percent, judged by a quote 1Click signed for the
+same swap. With no signed price to check it by, a relay swap waits for your click whatever its
+size and its card says Phosphor could not check the price; once you click it, what the card says
+you get at least is the only check. A swap 1Click puts no dollar figure on waits for your click
+on either route, and its card says why.</li>
+<li>A swap that waits because an earlier swap of the same coin may still go through, or because only
+1Click&#39;s list prices it, says why on its card at every size; above your click threshold the card
+used to give the threshold as its only reason. When a swap waits for more than one reason the
+app adds about its price or an earlier swap, its card&#39;s Why it asks says each on its own line.</li>
 <li>A swap, send, payout or Hyperliquid deposit moves exactly the coins its card showed. If the coin
 list names another coin or other decimals by the time you click, the move is refused and nothing
 is signed. Native ETH and SOL are pinned to 1Click&#39;s ids like the registry&#39;s coins, and a registry
@@ -416,12 +431,15 @@ defence with the tests that prove each half of it, what stays open, and how to c
 yourself. What stays open names, each with a Known limits section: the two seconds after the
 backend stops, names a venue lists that do not mark the agent, disk image files nobody checks,
 the fee room on a Hyperliquid withdrawal and on an invite claim through 1Click, a claim that
-looks failed until the next start, an agent that can stop another&#39;s worker, and a release that
-rests on one GitHub account. It also covers the invite tools: what <code>npm run invite</code> guards and
-trusts, the tests behind it, and what stays open (the terminal rule is a speed bump; the
-passphrase is the wall).</li>
+looks failed until the next start, an agent that can stop another&#39;s worker, a relay swap you
+click with no signed 1Click price beside it, and a release that rests on one GitHub account. It
+also covers the invite tools: what <code>npm run invite</code> guards and trusts, the tests behind it, and
+what stays open (the terminal rule is a speed bump; the passphrase is the wall).</li>
 <li>For people who build Phosphor: the update signer names its key the way minisign does, so a test
 that failed about one run in sixteen passes every time.</li>
+<li>For people who build Phosphor: a trading runner built without being told whether the wallet is
+open reads it as locked, so a waiting plan never arms on a missing wire, and the type check
+stops a caller that leaves it out.</li>
 <li>For people who build Phosphor: the secret sweep passes again. All 51 values it stopped on were
 public (transactions and addresses the chain reader reads live, deposit addresses, test
 receivers, one curve constant), each now excused by its exact value. <code>npm run sweep</code> reads the
