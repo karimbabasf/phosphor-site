@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Security</title>
-<meta name="description" content="Phosphor moves real money on mainnet. This page says how to report a problem privately, what counts, what the app does to fail closed, and what has and has not been done to it. It mirrors SECURITY.md in the repository.">
+<meta name="description" content="Phosphor moves real money on mainnet. This page says what it defends against, the test behind each defence, what stays open, and how to check a release yourself. To report a problem privately, go to Report a vulnerability.">
 <link rel="canonical" href="https://phosphor.money/security/">
 <meta name="theme-color" content="#0E0F13">
 <link rel="icon" href="/favicon.ico?v=9" sizes="32x32">
@@ -14,7 +14,7 @@
 <meta property="og:site_name" content="Phosphor">
 <meta property="og:url" content="https://phosphor.money/security/">
 <meta property="og:title" content="Security">
-<meta property="og:description" content="Phosphor moves real money on mainnet. This page says how to report a problem privately, what counts, what the app does to fail closed, and what has and has not been done to it. It mirrors SECURITY.md in the repository.">
+<meta property="og:description" content="Phosphor moves real money on mainnet. This page says what it defends against, the test behind each defence, what stays open, and how to check a release yourself. To report a problem privately, go to Report a vulnerability.">
 <meta property="og:image" content="https://phosphor.money/og.png?v=2">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/Sora-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
@@ -205,12 +205,203 @@
   <article class="doc">
     <header class="doc-head">
       <h1>Security</h1>
-      <p class="lede">Phosphor moves real money on mainnet. This page says how to report a problem privately, what counts, what the app does to fail closed, and what has and has not been done to it. It mirrors <a href="https://github.com/karimbabasf/phosphor/blob/main/SECURITY.md" target="_blank" rel="noopener">SECURITY.md</a> in the repository.</p>
+      <p class="lede">Phosphor moves real money on mainnet. This page says what it defends against, the test behind each defence, what stays open, and how to check a release yourself. To report a problem privately, go to <a href="#report-a-vulnerability">Report a vulnerability</a>.</p>
     </header>
     <div class="prose">
+<h2 id="threat-model">Threat model<a class="anchor" href="#threat-model" aria-label="Link to this section">#</a></h2>
+<p>This is the short version of Phosphor&#39;s security model, for anyone deciding whether to trust it
+with money. It says who Phosphor plans for, what the agent can and cannot do, what Phosphor
+defends against and the test that proves each defence, what stays open, and how to check a
+release yourself. It describes version 0.10.13. The rest of the
+<a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security-model.md#the-trust-boundary-is-the-app-window-not-the-conversation" target="_blank" rel="noopener">security model</a>
+gives the detail behind each line.</p>
+<h3 id="who-it-plans-for">Who it plans for<a class="anchor" href="#who-it-plans-for" aria-label="Link to this section">#</a></h3>
+<ul>
+<li><strong>The agent.</strong> It reads text from strangers all day: web pages, news, token names, memos and
+other agents&#39; words. Any of that text can try to talk it into a move. This is the main case.</li>
+<li><strong>A web page</strong> open in your browser, which can try to reach the app on 127.0.0.1.</li>
+<li><strong>Another account on this Mac, or a sandboxed app.</strong></li>
+<li><strong>A program running as you.</strong> It can read your files, so it is only partly kept out.
+<a href="#what-stays-open">What stays open</a> says how far it gets.</li>
+<li><strong>Someone between your Mac and a venue</strong> who changes a quote on its way.</li>
+<li><strong>A changed copy of the app</strong>: a file swapped inside it, or a fake update.</li>
+</ul>
+<p>It does not plan for root, the kernel, or someone who holds both release signing keys and the
+maintainer&#39;s approval.</p>
+<h3 id="what-the-agent-can-and-cannot-do">What the agent can and cannot do<a class="anchor" href="#what-the-agent-can-and-cannot-do" aria-label="Link to this section">#</a></h3>
+<p>The agent can:</p>
+<ul>
+<li>read your balances, positions, rules and waiting moves;</li>
+<li>price any move and propose it;</li>
+<li>run small moves on its own: swaps, Hyperliquid deposits and trades at or under your click
+threshold ($100 by default), up to a daily total ($500 by default). See <a href="/docs/policy/">Policy</a>;</li>
+<li>search the web when it is Claude, and read a page only at an address a search returned or you
+typed;</li>
+<li>switch the screen you see, and draw on the chart.</li>
+</ul>
+<p>The agent cannot:</p>
+<ul>
+<li>approve, refuse or run a move, or change a rule;</li>
+<li>send money out, or withdraw from Hyperliquid, without your click, at any size;</li>
+<li>see or use the wallet key;</li>
+<li>read a page at an address it wrote itself;</li>
+<li>see an invite code you put in the invite field.</li>
+</ul>
+<p>A small move still waits for your click when its agent read text from outside Phosphor in that
+session (a page, the news, a chain read, or words a marked agent wrote), when its agent was
+started outside Phosphor and you have not allowed it, when the agent asked for it on its own after
+a move failed, or when it spends a coin the app cannot price.</p>
+<h3 id="what-it-defends-against-and-the-test-that-proves-it">What it defends against, and the test that proves it<a class="anchor" href="#what-it-defends-against-and-the-test-that-proves-it" aria-label="Link to this section">#</a></h3>
+<p>Each line names the test that fails if the defence stops holding. <code>npm test</code> runs the unit tests
+in <code>tests/unit/</code>, the injection suite and the lockdown suite. <code>npm run attack</code> boots the app this checkout builds
+(<code>npm run app:build</code>) on a throwaway data folder and home, plays a hostile program in each case of
+<code>tests/attack/cases/</code>, and exits with an error when a defence does not hold. Two cases have a half
+that needs a Developer ID build; add <code>-- --app &lt;Phosphor.app&gt;</code> to run it.</p>
+<ul>
+<li><strong>The agent approves its own move.</strong> No tool and no route in the agent&#39;s process decides. A
+decision needs the window token, which no route serves and no agent&#39;s environment holds.
+Proof: <code>injection.test.ts</code>; attack <code>14-secret-no-leak</code>.</li>
+<li><strong>A web page drives the app.</strong> The app answers only requests addressed to 127.0.0.1 or
+localhost, and a write must carry a matching <code>Origin</code>, which a page cannot fake.
+Proof: <code>security-hardening.test.ts</code>.</li>
+<li><strong>Another account on this Mac, or a sandboxed app, reads your money.</strong> Every read takes the
+window token or a read key only your account can read. Proof: <code>read-gate.test.ts</code>.</li>
+<li><strong>A program running as you takes the agent&#39;s door with its secret file.</strong> Its seat counts as
+an agent started outside Phosphor, so every move it proposes waits until you allow it, however
+it names itself. Proof: attacks <code>06-agent-door</code>, <code>15-seat-id-dodge</code>.</li>
+<li><strong>A page, a token name or a memo talks the agent into a small move.</strong> The read marks that agent
+until its session ends, and any agent that reads its words is marked too. Every move a marked
+agent asks for waits for your click. Proof: attacks <code>07-stranger-text</code>, <code>16-mark-laundering</code>;
+<code>stranger-relay.test.ts</code>.</li>
+<li><strong>A page gets your data sent out in a web address.</strong> A page is read only at an address a search
+returned or you typed. An address that carries your wallet&#39;s address or balances, or points at
+this Mac or your network, is refused. Proof: attacks <code>05-web-gate-addresses</code>,
+<code>05-web-gate-dns</code>, <code>05-web-gate-echo</code>, <code>05-web-gate-redirect</code>.</li>
+<li><strong>A small send to an attacker.</strong> Every send and every withdrawal waits for your click, whatever
+its size. Proof: <code>send-gate.test.ts</code>, <code>injection.test.ts</code>.</li>
+<li><strong>A program stops the backend and takes its port.</strong> The shell knows its backend by a fresh
+question only that backend can answer, and posts no token to a backend that died.
+Proof: attack <code>17-port-takeover</code>.</li>
+<li><strong>Code loaded into the process that holds the key.</strong> That process gets nothing from your
+environment but the settings Phosphor names, no debugger signal, no add-ons and no eval, and
+only 14 reviewed packages can load in it. Proof: attacks <code>01-env-injection</code>, <code>02-inspector</code>, <code>11-key-process</code>;
+<code>key-process-packages.test.ts</code>.</li>
+<li><strong>A file changed inside the installed app.</strong> The shell checks the files against the digest
+built into the release, and starts nothing when they differ. Proof: attack <code>03-payload-tamper</code>.</li>
+<li><strong>A fake update.</strong> An update must pass its minisign signature, then carry Phosphor&#39;s Developer
+ID, identifier and team. Proof: attack <code>04-update-signature</code>.</li>
+<li><strong>Another program asks the Secure Enclave service to open the wallet.</strong> On a signed release
+the service answers only the signed Phosphor app. Proof: attack <code>12-xpc-vault</code>.</li>
+<li><strong>A quote changed between your Mac and 1Click.</strong> A quote must echo the request as it was sent,
+carry 1Click&#39;s signature, and name the receiver the card shows. Proof:
+<code>quote-request-echo.test.ts</code>, <code>quote-signature.test.ts</code>, <code>intents-spend.test.ts</code>.</li>
+<li><strong>The coin list changes under a card before you click.</strong> A card&#39;s coins are pinned when it
+lands. A list that names another coin at the click refuses the move, and nothing is signed.
+Proof: <code>asset-pins.test.ts</code>.</li>
+<li><strong>The screen locks with the wallet open.</strong> The wallet shuts at once. A move already signing
+gets its signature, then the key goes. Proof: attacks <code>10-screen-lock-shell</code>,
+<code>10-screen-lock-backend</code>.</li>
+<li><strong>One Touch ID opens more than it should.</strong> A Touch ID that approves a move on a locked wallet
+opens it for that move alone, and your rules run again after the touch, before anything signs.
+Proof: <code>approve-touch-lease.test.ts</code>, <code>touch-recheck.test.ts</code>.</li>
+<li><strong>Freeze is pressed while the policy file is broken.</strong> Plans stop first, and the window says
+the switch could not be saved. Proof: <code>kill-switch.test.ts</code>.</li>
+<li><strong>Someone guesses your password.</strong> Five wrong tries start a wait, on unlock and on every other
+password check. Proof: <code>keystore.test.ts</code>.</li>
+<li><strong>An invite code reaches the agent or a log.</strong> The chat&#39;s guard, the backend&#39;s wall and the log
+tail hold back a code as it was issued, and as an editor or a chat app changes it. Proof:
+attacks <code>13-invite-composer-guard</code>, <code>13-invite-no-leak</code>.</li>
+<li><strong>An invite claim is replayed, or paid to an edited address.</strong> One code signs once, and the
+money goes to the wallet&#39;s decrypted address, never to the plain copy on disk. Proof: attacks
+<code>13-invite-replay</code>, <code>13-invite-replay-sim</code>, <code>13-invite-tampered-header</code>.</li>
+<li><strong>Words are planted in Claude Code&#39;s task list.</strong> The task tools are denied to the chat&#39;s agent
+and to the operator profile. Proof: attack <code>08-task-list</code>.</li>
+<li><strong>A test or a scratch copy rewrites your agents&#39; settings.</strong> Only the installed app, on its own
+data folder, adds Phosphor to them. Proof: attack <code>09-vendor-configs</code>.</li>
+</ul>
+<h3 id="what-stays-open">What stays open<a class="anchor" href="#what-stays-open" aria-label="Link to this section">#</a></h3>
+<p>These are true of 0.10.13. <a href="/docs/known-limits/">Known limits</a> gives each one with what it means for
+your money.</p>
+<ul>
+<li><strong>The key is in memory while the wallet is open.</strong> The backend holds the unwrapped key so it
+can sign. A program able to read that process&#39;s memory has it; the hardened runtime is there to
+refuse that. The lock drops the key, but copies a signature or an unlock made can stay in memory
+until it is reused. What closes it: the chip vault, where the Secure Enclave signs NEAR Intents
+moves itself, so that key never exists as bytes. It is planned, not built. Until then, lock the
+wallet when you step away.</li>
+<li><strong>The Touch ID key is bound to this Mac, not to Phosphor.</strong> Another app running as you can ask
+to use it and show its own Touch ID dialog. Approve a Touch ID dialog only for something you
+started in Phosphor, and read its sentence. What closes it: custody binding, which needs a
+keychain entitlement no build carries yet.</li>
+<li><strong>A program running as you can read and propose.</strong> It can read the read key and the agent&#39;s
+secret file, and a seat taken with that file waits for your click until you allow it. It can
+also read the secret that an agent Phosphor started carries in its environment, and a move filed
+with that one under your click threshold runs with no click. If that worries you, set the
+threshold to zero: then every move waits for you.</li>
+<li><strong>A fee can hide inside fixed floors.</strong> 1Click does not sign its fee field. Someone who can
+change a quote on its way, which takes breaking HTTPS or being 1Click, can take up to a move&#39;s
+loss floor: 3 percent of a swap, 1 percent of a send, 3 percent of a payout, 5 percent of a
+Hyperliquid deposit. A swap of a coin 1Click puts no dollar figure on has no cap at all. What
+closes it: 1Click signing its fee field.</li>
+<li><strong>The quote check fails closed.</strong> If 1Click starts sending back a field this app does not know,
+every quote is refused until Phosphor is updated. Nothing is signed, and your money stays where
+it is.</li>
+<li><strong>A release signs what its build job made.</strong> Before signing, the release checks that the
+payload&#39;s own files match the tagged source and that every program carries only the committed
+entitlements. It cannot vouch for the compiled programs (the shell, the bundled Node, the
+Secure Enclave service) or for the installed packages, and the release build does not repeat
+CI&#39;s check of each package&#39;s registry signature. What closes it: a build anyone can reproduce
+byte for byte.</li>
+<li><strong>An armed trading plan outlives a lock.</strong> Its trading key can place and cancel orders until the
+plan expires, seven days at most, and can never withdraw or transfer. Freeze stops every plan
+from placing anything new.</li>
+<li><strong>The audit log is evidence, not a lock.</strong> It is hash-chained, so a hand edit to one entry
+shows. A program running as you can rewrite the whole file, and nothing on chain records that a
+Touch ID happened.</li>
+<li><strong>The venues are not Phosphor&#39;s.</strong> The NEAR Intents verifier can be upgraded by its owners, and
+an invite claim on the 1Click route rests on 1Click delivering.</li>
+<li><strong>The web gate lets a little through.</strong> Which pages the agent chooses to read can tell those
+sites a few bits each, at most 12 pages a session and 3 a site.</li>
+<li><strong>Grok has no web search.</strong> With Grok in the chat, the agent cannot search the web. Give it a
+link and it reads that page.</li>
+<li><strong>An invite code changed by hand can reach the agent.</strong> The guards catch a code as it was
+issued and as an editor or a chat app changes it, not one someone retyped with a slip. Paste
+codes only into the invite field.</li>
+</ul>
+<h3 id="check-a-release-yourself">Check a release yourself<a class="anchor" href="#check-a-release-yourself" aria-label="Link to this section">#</a></h3>
+<p>You can check a download with tools that are not Phosphor&#39;s. The disk image should match the
+SHA-256 on its release page:</p>
+<pre><code>shasum -a 256 ~/Downloads/Phosphor-macOS-arm64.dmg
+</code></pre>
+<p>It should be built from this repository&#39;s code, at the commit the release names:</p>
+<pre><code>gh attestation verify ~/Downloads/Phosphor-macOS-arm64.dmg --repo karimbabasf/phosphor
+</code></pre>
+<p>Its files should be the ones the release&#39;s source builds. The app&#39;s own report, the tools macOS
+ships and the source each give a payload digest, and the three agree when your copy is the one
+the tag builds:</p>
+<pre><code>/Applications/Phosphor.app/Contents/MacOS/phosphor-desktop --payload-digest
+
+cd /Applications/Phosphor.app/Contents/Resources/phosphor
+find . -type f ! -name .DS_Store | sed &#39;s|^\./||&#39; | LC_ALL=C sort | tr &#39;\n&#39; &#39;\0&#39; | xargs -0 shasum -a 256 | shasum -a 256
+
+git clone --depth 1 --branch v0.10.13 https://github.com/karimbabasf/phosphor.git
+cd phosphor &amp;&amp; npm run bundle
+</code></pre>
+<p>Use the tag of the version you have. The last step needs Node 24 and Xcode&#39;s command line tools,
+and prints <code>payload: digest</code> with the value. The digest covers the payload&#39;s files, not the
+compiled programs (see the release item above). <a href="/docs/security/#check-a-release-yourself">Security</a>
+has the full steps.</p>
+<h2 id="what-has-been-done-and-what-has-not">What has been done, and what has not<a class="anchor" href="#what-has-been-done-and-what-has-not" aria-label="Link to this section">#</a></h2>
+<ul>
+<li>The code is public under FSL-1.1-MIT, so anyone can read what signs.</li>
+<li>The test suite (unit, injection and lockdown) runs on every push to main and every pull request, beside a secret sweep and a check of every package&#39;s registry signature. <code>npm run attack</code> plays a hostile program on your Mac against a built copy of the app, 26 cases, and anyone can run it.</li>
+<li>Since version 0.10.12 every release is signed with an Apple Developer ID and notarized by Apple.</li>
+<li>Only the latest commit on <code>main</code> is supported. There are no backports.</li>
+<li>There has been <strong>no third-party audit</strong>. Until one is published here, treat the app as reviewed by its author alone, and size what you put in it accordingly.</li>
+</ul>
 <h2 id="report-a-vulnerability">Report a vulnerability<a class="anchor" href="#report-a-vulnerability" aria-label="Link to this section">#</a></h2>
 <p>Do not open a public issue for anything that could move, expose or lose funds. Use <a href="https://github.com/karimbabasf/phosphor/security/advisories/new" target="_blank" rel="noopener">GitHub private vulnerability reporting</a>: it is private to the maintainer until an advisory is published. If you cannot use it, open a public issue that asks for a private channel and says nothing technical.</p>
-<p>A useful report carries the version or commit, the configuration that was live (network, gate state, policy), the exact steps, what you expected the policy engine to do, and what it did.</p>
+<p>A useful report carries the version or commit, the configuration that was live (network, policy), the exact steps, what you expected the policy engine to do, and what it did.</p>
 <h2 id="what-counts">What counts<a class="anchor" href="#what-counts" aria-label="Link to this section">#</a></h2>
 <ul>
 <li>Anything that gets a write executed without the human click the policy required.</li>
@@ -218,31 +409,11 @@
 <li>Key material leaving the machine, landing in a log, or entering the git tree.</li>
 <li>Forged, dropped or reordered entries in the audit log, or a log that records a human decision when no person clicked.</li>
 <li>A rule (budget, allowlist, threshold, composition limit, kill switch) that can be bypassed or silently skipped.</li>
-<li>A proposal whose displayed facts differ from what gets signed, on any window.</li>
+<li>A proposal whose displayed facts differ from what gets signed, on any screen.</li>
 <li>Prompt injection that reaches a real capability rather than only the agent&#39;s text.</li>
+<li>A program running as you that breaks a boundary the threat model says holds against one: the click, the window token, the read gate, the update check, or the Secure Enclave service&#39;s caller check.</li>
 </ul>
-<p>Out of scope: bugs in third-party protocols, chains, bridges, venues or RPC providers (report those to them); losses caused by your own configuration, your own approval, or a rule that did what it said; anything that needs an attacker who already has your machine, your shell or your key file; and the limits the security model already states as known.</p>
-<h2 id="how-the-app-fails-closed">How the app fails closed<a class="anchor" href="#how-the-app-fails-closed" aria-label="Link to this section">#</a></h2>
-<ul>
-<li>The agent proposes. It cannot approve, execute or change a rule; those paths take a click in the window, and the click carries a token the agent never sees.</li>
-<li>Every write is simulated and checked against your rules before it can be offered to you, and the card names the exact amount, token and address that will be signed.</li>
-<li>Keys live in one encrypted file sealed to your Mac&#39;s Secure Enclave; signing takes Touch ID or your login password.</li>
-<li>The audit log is append-only and hash-chained, so an entry cannot be changed or removed without breaking the chain.</li>
-<li>Updates are signed with a key the author holds, and the app refuses one that does not verify.</li>
-</ul>
-<p>The full trust boundary and its known limits are in <a href="/docs/security/">Security</a> and <a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security-model.md" target="_blank" rel="noopener">security-model.md</a>.</p>
-<h2 id="what-has-been-done-and-what-has-not">What has been done, and what has not<a class="anchor" href="#what-has-been-done-and-what-has-not" aria-label="Link to this section">#</a></h2>
-<ul>
-<li>The code is public under FSL-1.1-MIT, so anyone can read what signs.</li>
-<li>The test suite (unit, injection and lockdown) runs on every commit, and CodeQL scans every push.</li>
-<li>Only the latest commit on <code>main</code> is supported. There are no backports.</li>
-<li>There has been <strong>no third-party audit</strong>. Until one is published here, treat the app as reviewed by its author alone, and size what you put in it accordingly.</li>
-<li>Builds are not yet notarized by Apple, which is why the first open needs Open Anyway. Verify the download instead: the release page lists the SHA-256 of every file.</li>
-</ul>
-<h2 id="verify-a-download">Verify a download<a class="anchor" href="#verify-a-download" aria-label="Link to this section">#</a></h2>
-<pre><code>shasum -a 256 ~/Downloads/Phosphor-macOS-arm64.dmg
-</code></pre>
-<p>The line must match the one on the <a href="https://github.com/karimbabasf/phosphor/releases/latest" target="_blank" rel="noopener">release page</a>. Only download Phosphor from this site or from that page.</p>
+<p>Out of scope: bugs in third-party protocols, chains, bridges, venues or RPC providers (report those to them); losses caused by your own configuration, your own approval, or a rule that did what it said; anything that needs an attacker who already has your key file, root, or code running as you that the security model says it does not defend against; and the limits the threat model already states as open.</p>
 <h2 id="what-to-expect">What to expect<a class="anchor" href="#what-to-expect" aria-label="Link to this section">#</a></h2>
 <p>Best effort, from one person, with no promised timeline. There is no bug bounty and no payment. Please allow 90 days for a fix before publishing, or less if the issue is already being exploited. You are credited in the advisory if you want to be.</p>
 <h2 id="contact">Contact<a class="anchor" href="#contact" aria-label="Link to this section">#</a></h2>

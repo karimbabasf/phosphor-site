@@ -226,10 +226,29 @@ ${html}
   write(`docs/${p.slug}/index.html`, shell({ title: `${title}`, description: summary.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1'), url: `/docs/${p.slug}/`, body: article, active: 'docs', kind: 'read' }));
 });
 
+// A content page can carry one section of the app's docs, so the two cannot drift: a line
+// `<!-- include: security-model.md#threat-model -->` becomes that section, from its heading down
+// to the next heading of the same or a higher level, fenced code skipped. The security page shows
+// the threat model this way.
+const include = (md) => md.replace(/^<!-- include: ([\w-]+\.md)#([\w-]+) -->$/gm, (_, file, id) => {
+  const lines = readFileSync(join(src, file), 'utf8').split('\n');
+  const start = lines.findIndex(l => /^#{2,6} /.test(l) && slugify(l.replace(/^#+ /, '')) === id);
+  if (start < 0) throw new Error(`content: docs/${file} has no section #${id}`);
+  const depth = lines[start].match(/^#+/)[0].length;
+  let end = lines.length;
+  let fenced = false;
+  for (let i = start + 1; i < lines.length; i++) {
+    if (/^(```|~~~)/.test(lines[i])) fenced = !fenced;
+    const h = !fenced && lines[i].match(/^(#{1,6}) /);
+    if (h && h[1].length <= depth) { end = i; break; }
+  }
+  return lines.slice(start, end).join('\n').trimEnd();
+});
+
 // The site's own pages, from the content folder: terms, privacy, security.
 const legal = ['terms', 'privacy', 'security'];
 for (const slug of legal) {
-  const md = readFileSync(join(root, 'content', `${slug}.md`), 'utf8');
+  const md = include(readFileSync(join(root, 'content', `${slug}.md`), 'utf8'));
   const { title, summary, body } = split(md);
   const html = marked.parse(body);
   const article = `
