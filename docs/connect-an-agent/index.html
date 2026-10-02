@@ -392,14 +392,15 @@ another agent&#39;s <code>start</code> calls it &quot;an agent started outside P
 <h2 id="what-the-agent-can-never-do">What the agent can never do<a class="anchor" href="#what-the-agent-can-never-do" aria-label="Link to this section">#</a></h2>
 <ul>
 <li>Approve, refuse, dismiss or execute anything. No tool on the surface does that, and the
-approval routes need a token the agent&#39;s process never holds. See <a href="/docs/security/">Security</a>.</li>
+approval routes need a token the agent&#39;s process never holds. A small move it proposes runs
+only when your rules allow it with no click. See <a href="/docs/security/">Security</a>.</li>
 <li>Read a private key or the recovery phrase. Neither leaves the window.</li>
 <li>Move money without a proposal. Every write goes through the policy engine, see
 <a href="/docs/policy/">Policy</a>, and the ones that leave your custody always wait for a click.</li>
-<li>Send without your click. <code>propose_send</code> always waits for you, and the card and the Touch ID
-dialog both name the address in full. The agent is told to use only an address you gave it and
-to read it back first, but the app cannot check where an address came from, so read it before
-you approve.</li>
+<li>Send without your click. <code>propose_send</code> always waits for you. The card names the address in
+full, and the Touch ID dialog on a Touch ID wallet names its two ends. The agent is told to use
+only an address you gave it and to read it back first, but the app cannot check where an
+address came from, so read it before you approve.</li>
 <li>Talk a rule away. A policy change is itself a proposal and always waits for your click.</li>
 <li>Turn off the gate. There is no flag, setting or argument that reaches execution without a
 click or a policy allow inside limits you wrote.</li>
