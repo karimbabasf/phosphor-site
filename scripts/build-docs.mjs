@@ -60,6 +60,12 @@ const renderer = {
 };
 marked.use({ renderer, gfm: true });
 
+// A command in a table cell wraps when its column is narrow (scripts/page.css), and only between
+// its words: each word of a code span with a space in it is kept whole, so `--scope` never splits
+// into `--` and `scope`. The text, and so what a copy takes, stays the same.
+const wholeWords = (html) => html.replace(/<td([^>]*)>([\s\S]*?)<\/td>/g, (_, attrs, cell) =>
+  `<td${attrs}>${cell.replace(/<code>([^<]* [^<]*)<\/code>/g, (__, text) => `<code>${text.replace(/[^ ]+/g, (word) => `<span class="word">${word}</span>`)}</code>`)}</td>`);
+
 // The head of a page: its title (the H1) and its summary (the first paragraph).
 const split = (md) => {
   const lines = md.split('\n');
@@ -201,7 +207,7 @@ if (existsSync(docsDir)) for (const d of readdirSync(docsDir, { withFileTypes: t
 pages.forEach((p, i) => {
   const md = readFileSync(join(src, p.file), 'utf8');
   const { title, summary, body } = split(md);
-  const html = marked.parse(body);
+  const html = wholeWords(marked.parse(body));
   const toc = headings(html);
   const prev = pages[i - 1], next = pages[i + 1];
   const article = `
@@ -250,7 +256,7 @@ const legal = ['terms', 'privacy', 'security'];
 for (const slug of legal) {
   const md = include(readFileSync(join(root, 'content', `${slug}.md`), 'utf8'));
   const { title, summary, body } = split(md);
-  const html = marked.parse(body);
+  const html = wholeWords(marked.parse(body));
   const article = `
 <main class="docs wrap single">
   <article class="doc">

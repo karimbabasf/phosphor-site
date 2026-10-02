@@ -113,7 +113,7 @@
   .doc > h2 { margin-top: 48px; font-weight: 600; font-size: 22px; letter-spacing: -0.01em; }
 
   /* The prose */
-  .prose { font-size: 17px; line-height: 1.65; }
+  .prose { font-size: 17px; line-height: 1.65; container-type: inline-size; }
   .prose > * + * { margin-top: 18px; }
   .prose h2 { margin-top: 52px; padding-top: 28px; border-top: 1px solid var(--rule); font-weight: 600; font-size: 24px; line-height: 1.25; letter-spacing: -0.015em; }
   .prose h3 { margin-top: 34px; font-weight: 600; font-size: 19px; line-height: 1.3; }
@@ -136,6 +136,13 @@
   .prose th, .prose td { text-align: left; vertical-align: top; padding: 10px 12px 10px 0; border-bottom: 1px solid var(--rule); }
   .prose th { font-weight: 600; color: var(--text-2); font-size: 13px; }
   .prose td code { white-space: nowrap; }
+  /* A text column narrower than the widest table (the agent commands on Connect an agent need
+     about 690px) lets a command in a cell break between its words (build-docs.mjs, wholeWords),
+     each piece in its own box. */
+  @container (max-width: 700px) {
+    .prose td code { white-space: normal; overflow-wrap: break-word; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+    .prose td code .word { white-space: nowrap; }
+  }
   .prose strong { font-weight: 600; }
   .prose img { max-width: 100%; height: auto; border-radius: 12px; }
 
@@ -278,19 +285,19 @@ command, so there is nothing to paste:</p>
 </thead>
 <tbody><tr>
 <td>Claude Code</td>
-<td><code>claude mcp add phosphor --scope user --env ... -- &lt;node&gt; &lt;path&gt;/src/mcp.ts</code></td>
+<td><code><span class="word">claude</span> <span class="word">mcp</span> <span class="word">add</span> <span class="word">phosphor</span> <span class="word">--scope</span> <span class="word">user</span> <span class="word">--env</span> <span class="word">...</span> <span class="word">--</span> <span class="word">&lt;node&gt;</span> <span class="word">&lt;path&gt;/src/mcp.ts</span></code></td>
 </tr>
 <tr>
 <td>Codex</td>
-<td><code>codex mcp add phosphor --env ... -- &lt;node&gt; &lt;path&gt;/src/mcp.ts</code> (writes <code>~/.codex/config.toml</code>)</td>
+<td><code><span class="word">codex</span> <span class="word">mcp</span> <span class="word">add</span> <span class="word">phosphor</span> <span class="word">--env</span> <span class="word">...</span> <span class="word">--</span> <span class="word">&lt;node&gt;</span> <span class="word">&lt;path&gt;/src/mcp.ts</span></code> (writes <code>~/.codex/config.toml</code>)</td>
 </tr>
 <tr>
 <td>Hermes</td>
-<td><code>hermes mcp add phosphor --command &lt;node&gt; --env ... --args &lt;path&gt;/src/mcp.ts</code></td>
+<td><code><span class="word">hermes</span> <span class="word">mcp</span> <span class="word">add</span> <span class="word">phosphor</span> <span class="word">--command</span> <span class="word">&lt;node&gt;</span> <span class="word">--env</span> <span class="word">...</span> <span class="word">--args</span> <span class="word">&lt;path&gt;/src/mcp.ts</span></code></td>
 </tr>
 <tr>
 <td>Grok</td>
-<td><code>grok mcp add phosphor &lt;node&gt; --scope user --env ... -- &lt;path&gt;/src/mcp.ts</code></td>
+<td><code><span class="word">grok</span> <span class="word">mcp</span> <span class="word">add</span> <span class="word">phosphor</span> <span class="word">&lt;node&gt;</span> <span class="word">--scope</span> <span class="word">user</span> <span class="word">--env</span> <span class="word">...</span> <span class="word">--</span> <span class="word">&lt;path&gt;/src/mcp.ts</span></code></td>
 </tr>
 </tbody></table>
 <p><code>...</code> is <code>PHOSPHOR_PORT=&lt;port&gt;</code> and <code>PHOSPHOR_DATA_DIR=&lt;state directory&gt;</code>, the two things the
