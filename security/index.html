@@ -221,7 +221,7 @@
 <p>This is the short version of Phosphor&#39;s security model, for anyone deciding whether to trust it
 with money. It says who Phosphor plans for, what the agent can and cannot do, what Phosphor
 defends against and the test that proves each defence, what stays open, what the invite tools
-guard, and how to check a release yourself. It describes version 0.10.13. The rest of the
+guard, and how to check a release yourself. It describes version 0.10.14. The rest of the
 <a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security-model.md#the-trust-boundary-is-the-app-window-not-the-conversation" target="_blank" rel="noopener">security model</a>
 gives the detail behind each line.</p>
 <h3 id="who-it-plans-for">Who it plans for<a class="anchor" href="#who-it-plans-for" aria-label="Link to this section">#</a></h3>
@@ -330,6 +330,12 @@ checked against a quote 1Click signed for the same swap. A swap that gives up mo
 percent of its value by that quote&#39;s prices is refused, even after your click, and one with no
 signed price to check it by waits for your click. Proof: <code>intents-relay.test.ts</code>,
 <code>swap-price-ask.test.ts</code>.</li>
+<li><strong>The solver relay offers no price for a pair, or answers with an error or not at all.</strong> The
+same swap is drafted on the 1Click route before its card is priced, and held to that route&#39;s own
+checks: a signed quote, the echo of the request it sent, one fee account, the 3 percent cap and
+the pinned coins. A relay price past the cap is still refused, never routed around, and a swap
+never changes route once its card is drawn: a relay error at the click stays on the relay&#39;s route.
+Proof: <code>swap-route.test.ts</code>, <code>intents-relay.test.ts</code>.</li>
 <li><strong>The coin list changes under a card before you click.</strong> A card&#39;s coins are pinned when it
 lands. A list that names another coin at the click refuses the move, and nothing is signed.
 Proof: <code>asset-pins.test.ts</code>.</li>
@@ -373,7 +379,7 @@ and to the operator profile. Proof: attack <code>08-task-list</code>.</li>
 data folder, adds Phosphor to them. Proof: attack <code>09-vendor-configs</code>.</li>
 </ul>
 <h3 id="what-stays-open">What stays open<a class="anchor" href="#what-stays-open" aria-label="Link to this section">#</a></h3>
-<p>These are true of 0.10.13. <a href="/docs/known-limits/">Known limits</a> gives each one with what it means for
+<p>These are true of 0.10.14. <a href="/docs/known-limits/">Known limits</a> gives each one with what it means for
 your money.</p>
 <ul>
 <li><strong>The key is in memory while the wallet is open.</strong> The backend holds the unwrapped key so it
@@ -420,6 +426,11 @@ its answer), a relay swap waits for your click whatever its size, and its card s
 could not check the price. Once you click, it runs at the relay&#39;s price, held only to what its
 card says you get at least, so the card is the only check. What closes it: the relay signing
 what it quotes.</li>
+<li><strong>A relay that answers nothing or an error moves a swap to 1Click.</strong> Whoever runs the relay can
+send a swap to 1Click by answering nothing, or an error. There 1Click holds the coins for the
+seconds until it delivers, where the relay moves both sides at once. Both venues have one
+operator, already trusted for the price on both routes. What closes it: a click on every swap
+that leaves the relay.</li>
 <li><strong>The quote check fails closed.</strong> If 1Click starts sending back a field this app does not know,
 every quote is refused until Phosphor is updated. Nothing is signed, and your money stays where
 it is.</li>
@@ -509,7 +520,7 @@ SHA-256 on its release page:</p>
 <p>It should be built by this repository&#39;s release workflow, from the tag of its version:</p>
 <pre><code>gh attestation verify ~/Downloads/Phosphor-macOS-arm64.dmg --repo karimbabasf/phosphor \
   --signer-workflow karimbabasf/phosphor/.github/workflows/release.yml \
-  --source-ref refs/tags/v0.10.13
+  --source-ref refs/tags/v0.10.14
 </code></pre>
 <p>With <code>--repo</code> alone, the check also passes for a file any other workflow in this repository
 vouched for, on any branch.</p>
@@ -521,7 +532,7 @@ the tag builds:</p>
 cd /Applications/Phosphor.app/Contents/Resources/phosphor
 find . -type f ! -name .DS_Store | sed &#39;s|^\./||&#39; | LC_ALL=C sort | tr &#39;\n&#39; &#39;\0&#39; | xargs -0 shasum -a 256 | shasum -a 256
 
-git clone --depth 1 --branch v0.10.13 https://github.com/karimbabasf/phosphor.git
+git clone --depth 1 --branch v0.10.14 https://github.com/karimbabasf/phosphor.git
 cd phosphor &amp;&amp; npm run bundle
 </code></pre>
 <p>Use the tag of the version you have. <code>--payload-digest</code> is new in 0.10.13: an older copy does not

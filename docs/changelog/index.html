@@ -225,10 +225,35 @@
     <header class="doc-head">
       <h1>Changelog</h1>
       <p class="lede">What changed in each version of Phosphor, newest first, written from the git history of the <a href="https://github.com/karimbabasf/phosphor" target="_blank" rel="noopener">repository</a>. The top entry is the version these pages describe, and a test fails the suite when it is not the version in <code>package.json</code>. Versions without a git tag say so.</p>
-      <div class="doc-meta"><span class="mono">v0.10.13</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/changelog.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.10.14</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/changelog.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
-    <nav class="onpage" aria-label="On this page"><ul><li><a href="#0-10-13">0.10.13</a></li><li><a href="#0-10-12">0.10.12</a></li><li><a href="#0-10-11">0.10.11</a></li><li><a href="#0-10-10">0.10.10</a></li><li><a href="#0-10-9">0.10.9</a></li><li><a href="#0-10-8">0.10.8</a></li><li><a href="#0-10-7">0.10.7</a></li><li><a href="#0-10-6">0.10.6</a></li><li><a href="#0-10-5">0.10.5</a></li><li><a href="#0-10-4">0.10.4</a></li><li><a href="#0-10-3">0.10.3</a></li><li><a href="#0-10-2">0.10.2</a></li><li><a href="#0-10-0">0.10.0</a></li><li><a href="#0-9-3">0.9.3</a></li><li><a href="#0-9-2">0.9.2</a></li><li><a href="#0-9-1">0.9.1</a></li><li><a href="#0-9-0">0.9.0</a></li><li><a href="#0-8-0">0.8.0</a></li><li><a href="#0-7-0">0.7.0</a></li><li><a href="#0-6-0">0.6.0</a></li><li><a href="#0-5-2">0.5.2</a></li><li><a href="#0-5-1">0.5.1</a></li><li><a href="#0-5-0">0.5.0</a></li><li><a href="#0-4-4">0.4.4</a></li><li><a href="#0-4-3">0.4.3</a></li><li><a href="#0-4-2">0.4.2</a></li><li><a href="#0-4-1">0.4.1</a></li><li><a href="#0-4-0">0.4.0</a></li><li><a href="#0-3-0">0.3.0</a></li><li><a href="#0-2-0">0.2.0</a></li><li><a href="#0-1-0">0.1.0</a></li></ul></nav>
+    <nav class="onpage" aria-label="On this page"><ul><li><a href="#0-10-14">0.10.14</a></li><li><a href="#0-10-13">0.10.13</a></li><li><a href="#0-10-12">0.10.12</a></li><li><a href="#0-10-11">0.10.11</a></li><li><a href="#0-10-10">0.10.10</a></li><li><a href="#0-10-9">0.10.9</a></li><li><a href="#0-10-8">0.10.8</a></li><li><a href="#0-10-7">0.10.7</a></li><li><a href="#0-10-6">0.10.6</a></li><li><a href="#0-10-5">0.10.5</a></li><li><a href="#0-10-4">0.10.4</a></li><li><a href="#0-10-3">0.10.3</a></li><li><a href="#0-10-2">0.10.2</a></li><li><a href="#0-10-0">0.10.0</a></li><li><a href="#0-9-3">0.9.3</a></li><li><a href="#0-9-2">0.9.2</a></li><li><a href="#0-9-1">0.9.1</a></li><li><a href="#0-9-0">0.9.0</a></li><li><a href="#0-8-0">0.8.0</a></li><li><a href="#0-7-0">0.7.0</a></li><li><a href="#0-6-0">0.6.0</a></li><li><a href="#0-5-2">0.5.2</a></li><li><a href="#0-5-1">0.5.1</a></li><li><a href="#0-5-0">0.5.0</a></li><li><a href="#0-4-4">0.4.4</a></li><li><a href="#0-4-3">0.4.3</a></li><li><a href="#0-4-2">0.4.2</a></li><li><a href="#0-4-1">0.4.1</a></li><li><a href="#0-4-0">0.4.0</a></li><li><a href="#0-3-0">0.3.0</a></li><li><a href="#0-2-0">0.2.0</a></li><li><a href="#0-1-0">0.1.0</a></li></ul></nav>
     <div class="prose">
+<h2 id="0-10-14">0.10.14<a class="anchor" href="#0-10-14" aria-label="Link to this section">#</a></h2>
+<p>Built 2026-10-02. Tagged v0.10.14 on 2026-10-02.</p>
+<ul>
+<li>A move card names its coins from the moment it appears. A swap your assistant asked for by a
+coin&#39;s id used to show that id for a split second (&quot;Swap 1.7147 nep141:17208628...a1 to SOL&quot;,
+over two gray letters) before it read &quot;Swap 1.7147 USDC to SOL&quot;. Now it says USDC and shows the
+USDC logo from the start. The id still decides which coin is signed for.</li>
+<li>A payment to another chain says where it lands (&quot;on Base&quot;) from the start, and a coin your
+assistant typed in lower case reads the same as it will once the move is filed.</li>
+<li>Activity and receipts name every coin by its ticker, and a payment&#39;s Details name the coin it
+swaps on the way by where it came from (&quot;the USDC from Ethereum&quot;), never by an id.</li>
+<li>A move the app turned away before filing it, such as an amount below zero or a repeat of a swap
+that is still running, now says it did not go through and that nothing moved. Its card used to
+say Swapping for good. A check on a move the app does not hold draws no card and says so in one
+line.</li>
+<li>A swap the solver relay has no price for, such as USDC to ETH, wNEAR or ETH on Base, used to
+be turned away. It now goes through 1Click with the same checks: the price is held to 1Click&#39;s
+signed figures and the coins are pinned when the card appears. A relay that answers with an
+error or not at all moves the swap to 1Click the same way, before anything is signed.</li>
+<li>Tauri is 2.12.0 and its updater plugin 2.13.1, which still checks every update against the same
+key: the 0.10.12 and 0.10.13 downloads both pass it. The MCP SDK is 1.31.0 and viem 2.57.1.</li>
+<li>For people who build Phosphor: <code>npm test</code> fails when a run leaves a temp folder behind, and proof
+scripts write their pictures into scripts/scratch/ unless you pass <code>--docs</code>.</li>
+<li>Your wallet, your keys and your settings stay as they were.</li>
+</ul>
 <h2 id="0-10-13">0.10.13<a class="anchor" href="#0-10-13" aria-label="Link to this section">#</a></h2>
 <p>Built 2026-10-01 and 2026-10-02, the invite codes and safety pass. Tagged v0.10.13 on
 2026-10-02.</p>
