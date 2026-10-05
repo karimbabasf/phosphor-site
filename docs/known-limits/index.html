@@ -132,6 +132,9 @@
   .prose code { font-family: "Geist Mono", ui-monospace, monospace; font-size: 0.88em; padding: 2px 6px; border-radius: 6px; background: var(--ink-2); border: 1px solid var(--rule); }
   .prose pre { padding: 16px 18px; overflow-x: auto; border-radius: 12px; background: var(--ink-2); border: 1px solid var(--rule); font-size: 14px; line-height: 1.55; }
   .prose pre code { padding: 0; border: 0; background: none; font-size: inherit; }
+  /* An address or a file path in running text can be longer than a phone's line: it breaks where
+     it must, each piece in its own box, instead of pushing the page sideways. */
+  .prose p code, .prose li code { overflow-wrap: anywhere; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
   .prose blockquote { margin: 0; padding: 4px 0 4px 18px; border-left: 1px solid var(--rule-2); color: var(--text-2); }
   .prose hr { border: 0; border-top: 1px solid var(--rule); margin: 40px 0; }
   .prose table { width: 100%; border-collapse: collapse; font-size: 15px; line-height: 1.45; }
