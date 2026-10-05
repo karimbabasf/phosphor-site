@@ -1,6 +1,6 @@
 # Privacy
 
-Phosphor has no accounts, no sign-up and no server of its own. Nothing you do in the app reaches the author. This page says what stays on your Mac, which services the app talks to in your name and what they can see, and what this website records. Effective 2026-10-01.
+Phosphor has no accounts, no sign-up and no server of its own. Nothing you do in the app reaches the author. This page says what stays on your Mac, which services the app talks to in your name and what they can see, and what this website records. Effective 2026-10-05.
 
 ## No accounts, no telemetry
 
@@ -18,13 +18,18 @@ An invite code is a small NEAR Intents account that holds money for a new wallet
 - **Who sees the claim.** The app signs the claim on your Mac, sends it to the NEAR Intents solver relay (chaindefuser.com) and checks it on public NEAR RPC nodes. They see it the way they see every Phosphor read: your IP address, the request and the addresses it concerns. If the relay turns the claim away, the app sends it through NEAR Intents' 1Click API instead, which sees the same.
 - **The code itself.** The part of an invite link after # never reaches this site's servers or its analytics, and the invite page sends the code nowhere. Anyone who can read the message the link came in can read the code, so treat it like cash. The app uses the code on your Mac to sign the claim and does not write it to a file or a log, unless you paste it into the chat in a form the chat does not recognize. Paste codes only where Phosphor asks "Have an invite code?".
 
+## Your vault on Touch ID
+
+Moving your vault to Touch ID adds two accounts beside it: your allowance, inside NEAR Intents, which your assistant spends from, and your gas account on NEAR, which sends the vault's moves. Those moves are public, so anyone reading NEAR can see that your vault, your allowance and your gas account are linked.
+
 ## What stays on your Mac
 
-- **Keys.** Your key file, `keys.enc.json`, lives under `~/.phosphor`. It is one encrypted envelope. On a Touch ID wallet the key that opens it is sealed to your Mac's Secure Enclave, so the file opens only on this Mac, and a copy of it is not a backup. On a password wallet your password opens it. Your backup is your recovery phrase. Phosphor keeps no copy of either. If you lose the file and the phrase, nobody can restore the wallet.
+- **Keys.** Your key file, `keys.enc.json`, lives under `~/.phosphor`. It is one encrypted envelope. On a Touch ID wallet the key that opens it is sealed to your Mac's Secure Enclave, so the file opens only on this Mac, and a copy of it is not a backup. On a password wallet your password opens it. Your backup is your recovery phrase, or the private key on a wallet with no phrase. Phosphor keeps no copy of the file or of that backup. If you lose both, nobody can restore the wallet.
+- **Your paper key.** Once your vault moves to Touch ID, a paper key opens it too: 24 words you write by hand. Phosphor shows them once, checks the ones you type back, writes them to no file or log, and keeps no copy. On this Mac it keeps only the paper key's public half, which anyone can read on NEAR.
 - **State.** Your rules, your saved addresses, the append-only audit log, the agent's seat secret, the read key, the record of each invite claim (never the code) and the window's preferences live in `~/Library/Application Support/com.karimbabasf.phosphor/`.
 - **Your agent's transcript.** When the app starts your assistant, the conversation is held by that agent on your Mac, under your own account.
 
-Before you delete anything, back up your recovery phrase: the Recovery phrase row in the Vault tab, and [Getting started](/docs/getting-started/) says how. To remove Phosphor, delete the app and those two folders, and remove the `phosphor` entry it added to your agents' settings (Claude Code, Codex, Grok or Hermes).
+Before you delete anything, back up your recovery phrase (or private key): its row in the Vault tab, and [Getting started](/docs/getting-started/) says how. If your vault has moved to Touch ID, keep your paper key as well: away from this Mac, it is the only key that opens your vault. To remove Phosphor, delete the app and those two folders, and remove the `phosphor` entry it added to your agents' settings (Claude Code, Codex, Grok or Hermes).
 
 ## Who the app talks to, in your name
 
@@ -32,7 +37,7 @@ When you or your agent act, the app sends requests straight from your Mac to the
 
 - **NEAR Intents**, through its 1Click API and bridge (chaindefuser.com): deposit addresses, quotes, swaps, sends, and your intents account.
 - **Hyperliquid** (api.hyperliquid.xyz): your account address, orders, positions and the messages you sign.
-- **Public RPC nodes and price feeds** (for example publicnode.com, fastnear.com, CoinGecko and Coinbase): balance reads, prices and chain data for your addresses.
+- **Public RPC nodes and price feeds** (for example publicnode.com, fastnear.com, CoinGecko and Coinbase): balance reads, prices and chain data for your addresses. Once your vault has moved to Touch ID, a public NEAR RPC node (fastnear.com) also carries your vault's moves: each one is a NEAR transaction sent from your gas account, the account that pays NEAR's fee for them.
 - **Block explorers and chain indexers** (for example blockscout.com, mempool.space and nearblocks.io): when your agent looks up an address or a transaction. That can be any address it names, not only yours.
 - **Four crypto news sites** (CoinDesk, Cointelegraph, The Block and Decrypt): when your agent asks for the news. They see your IP address and nothing else.
 - **A web page your agent reads**: the app fetches it from your Mac, only at an address a web search returned or you typed, so that site sees your IP address and the address asked for.

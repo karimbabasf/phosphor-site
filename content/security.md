@@ -7,7 +7,7 @@ Phosphor moves real money on mainnet. This page says what it defends against, th
 ## What has been done, and what has not
 
 - The code is public under FSL-1.1-MIT, so anyone can read what signs.
-- The test suite (unit, injection and lockdown) runs on every push to main and every pull request, beside a secret sweep and a check of every package's registry signature. `npm run attack` plays a hostile program on your Mac against a built copy of the app, 26 cases, and anyone can run it.
+- The test suite (unit, injection and lockdown) runs on every push to main and every pull request, beside a secret sweep and a check of every package's registry signature. `npm run attack` plays a hostile program on your Mac against a built copy of the app, 32 cases, and anyone can run it.
 - Since version 0.10.12 every release is signed with an Apple Developer ID and notarized by Apple.
 - Only the latest commit on `main` is supported. There are no backports.
 - There has been **no third-party audit**. Until one is published here, treat the app as reviewed by its author alone, and size what you put in it accordingly.
