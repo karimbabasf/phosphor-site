@@ -228,7 +228,7 @@
     <header class="doc-head">
       <h1>Getting started</h1>
       <p class="lede">Phosphor is a Mac app that holds your keys, your venue connections and your rules. An agent reads your money and proposes moves; you approve each one with a click in the window. This page takes you from the download to a wallet that is made, backed up and locked, and shows you the brake.</p>
-      <div class="doc-meta"><span class="mono">v0.10.16</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/getting-started.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.10.18</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/getting-started.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
     <nav class="onpage" aria-label="On this page"><ul><li><a href="#download">Download</a></li><li><a href="#check-the-file">Check the file</a></li><li><a href="#first-open">First open</a></li><li><a href="#create-or-restore-a-wallet">Create or restore a wallet</a></li><li><a href="#the-backup-words">The backup words</a></li><li><a href="#touch-id-and-the-secure-enclave">Touch ID and the Secure Enclave</a></li><li><a href="#move-your-vault-to-touch-id">Move your vault to Touch ID</a></li><li><a href="#the-five-minute-lock">The five minute lock</a></li><li><a href="#freeze-everything">Freeze everything</a></li><li><a href="#the-help-menu">The Help menu</a></li><li><a href="#next">Next</a></li></ul></nav>
     <div class="prose">
@@ -246,7 +246,7 @@ the disk image. This line must print the same one:</p>
 file was built from the public code. It needs the GitHub CLI (<code>brew install gh</code>):</p>
 <pre><code class="language-sh">gh attestation verify ~/Downloads/Phosphor-macOS-arm64.dmg --repo karimbabasf/phosphor \
   --signer-workflow karimbabasf/phosphor/.github/workflows/release.yml \
-  --source-ref refs/tags/v0.10.16
+  --source-ref refs/tags/v0.10.18
 </code></pre>
 <p>Put the version you downloaded in the last line. It passes only for a file that this
 repository&#39;s release workflow built on GitHub&#39;s machines from that version&#39;s tag, and it prints
@@ -390,19 +390,17 @@ this Mac&#39;s Touch ID key and a paper key you write by hand. After the move no
 every move out of the vault asks for a Touch ID that names it, and your assistant spends from a
 small allowance.</p>
 <p>Your paper key is the only key that opens your vault away from this Mac. Your recovery phrase also
-controls your allowance (its size plus 10 percent, more while a move is under way), the gas account
-(about 0.5 NEAR) and your Hyperliquid account, so keep both like cash. On a wallet with no recovery
+controls your allowance (its size plus 10 percent, more while a move is under way) and your
+Hyperliquid account, so keep both like cash. On a wallet with no recovery
 phrase, that second backup is your private key. Once the vault has moved, the Vault tab names the
 allowance&#39;s cap in dollars: $110 at the default size of $100.</p>
-<p>Under Your vault, the Vault key row takes you through four steps, in order:</p>
+<p>You never need NEAR for fees: Phosphor sends each vault move through the NEAR Intents relay, which
+pays NEAR&#39;s fee, as it does for swaps. If your wallet paid NEAR into the old fee account in 0.10.16,
+the Vault tab offers to send it back to your vault, in one click.</p>
+<p>Under Your vault, the Vault key row takes you through three steps, in order:</p>
 <ol>
-<li><strong>Back up your recovery phrase</strong> (or private key). It still opens the allowance, the gas account
-and Hyperliquid after the move.</li>
-<li><strong>Add NEAR to the gas account.</strong> It pays NEAR&#39;s small fee for every move of your vault. Add 0.1 to
-1 NEAR from the Gas account row: a payout you approve on its card in the conversation, with one
-Touch ID that names the gas account. If your vault holds no NEAR yet, Add NEAR shows the gas
-account whole, with Copy: send 0.1 to 1 NEAR to it on NEAR from any NEAR wallet, or ask your
-assistant to swap a little USDC to NEAR, then add it here.</li>
+<li><strong>Back up your recovery phrase</strong> (or private key). It still opens the allowance and Hyperliquid
+after the move.</li>
 <li><strong>Write your paper key.</strong> Show my paper key puts 24 words on screen once, with your vault&#39;s
 address to write under them. Write both by hand, and check each word as you write it: there is
 no Print and no Copy, because a printer, a screenshot or a clipboard keeps one more key to your

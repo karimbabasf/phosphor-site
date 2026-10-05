@@ -228,7 +228,7 @@
     <header class="doc-head">
       <h1>Check it yourself</h1>
       <p class="lede">Phosphor&#39;s wallet makes seven security claims. For each one this page names the code that enforces it, the test that fails if it stops holding, and the command that runs that test, followed by the lines it prints when the claim holds. Then it shows how to check your download and your vault on NEAR with tools that are not Phosphor&#39;s, and what you cannot check yet.</p>
-      <div class="doc-meta"><span class="mono">v0.10.16</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/verify.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.10.18</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/verify.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
     <nav class="onpage" aria-label="On this page"><ul><li><a href="#before-you-start">Before you start</a></li><li><a href="#the-claims">The claims</a></li><li><a href="#check-your-download">Check your download</a></li><li><a href="#check-your-vault-on-near">Check your vault on NEAR</a></li><li><a href="#what-you-cannot-check-yet">What you cannot check yet</a></li></ul></nav>
     <div class="prose">
@@ -256,8 +256,9 @@ be compromised, so the service reads each one itself. Its tests run it with a st
 <h3 id="1-only-this-mac-39-s-touch-id-key-and-your-paper-key-can-move-your-vault">1. Only this Mac&#39;s Touch ID key and your paper key can move your vault<a class="anchor" href="#1-only-this-mac-39-s-touch-id-key-and-your-paper-key-can-move-your-vault" aria-label="Link to this section">#</a></h3>
 <p>The move is one call to the NEAR Intents verifier: add the chip key and the paper key, remove every
 other key, turn off auth by predecessor id. Its dry run must report exactly the events the app
-planned, and afterwards the app checks at one final block that those two are the vault&#39;s only keys,
-and says so when another key is there.</p>
+planned. The NEAR Intents relay puts the signed call on chain and pays NEAR&#39;s fee; it can delay or
+drop it and cannot change it, because every payload in it is signed. Afterwards the app checks at
+one final block that those two are the vault&#39;s only keys, and says so when another key is there.</p>
 <p>Enforced by the verifier, which runs an intent for the vault only when a key it holds for it signed;
 <code>IntentGrammar.swift</code> (<code>refusedKinds</code>, claim 3); <code>src/vault/rekey.ts</code> (<code>rekeyIntents</code>,
 <code>rekeyEvents</code>), <code>src/vault/payload.ts</code> (<code>expectedEvents</code>), <code>src/vault/submit.ts</code> (<code>rekeyViews</code>).

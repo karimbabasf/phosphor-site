@@ -228,7 +228,7 @@
     <header class="doc-head">
       <h1>Money</h1>
       <p class="lede">Phosphor keeps money in two places, moves it between them, and pays it out to other people. This page walks through every move: where the money lives, deposit, swap, send, funding the trading account and bringing collateral back, what &quot;settling&quot; means, and the fees that make the app refuse a move.</p>
-      <div class="doc-meta"><span class="mono">v0.10.16</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/money.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.10.18</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/money.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
     <nav class="onpage" aria-label="On this page"><ul><li><a href="#where-money-lives">Where money lives</a></li><li><a href="#deposit">Deposit</a></li><li><a href="#invite-codes">Invite codes</a></li><li><a href="#swap">Swap</a></li><li><a href="#send">Send</a></li><li><a href="#fund-the-trading-account">Fund the trading account</a></li><li><a href="#withdraw-from-hyperliquid">Withdraw from Hyperliquid</a></li><li><a href="#after-the-click">After the click</a></li><li><a href="#fees-and-refusals">Fees and refusals</a></li></ul></nav>
     <div class="prose">
@@ -246,8 +246,8 @@ trading account to back positions. It comes from the intents balance and goes ba
 </ul>
 <p>Nothing else holds money. The app signs no transaction on any chain: every move is an intent or
 a venue action signed by the one key in your wallet, and the bridge does the chain work. Once your
-vault moves to Touch ID (below), other keys sign, and the gas account holds and spends a little
-NEAR.</p>
+vault moves to Touch ID (below), other keys sign. Phosphor sends each vault move through the NEAR
+Intents relay, which pays NEAR&#39;s fee, as it does for swaps: you never need NEAR for fees.</p>
 <h3 id="once-your-vault-moves-to-touch-id">Once your vault moves to Touch ID<a class="anchor" href="#once-your-vault-moves-to-touch-id" aria-label="Link to this section">#</a></h3>
 <p>Moving your vault to this Mac&#39;s Touch ID key splits your NEAR Intents balance in two. Until you
 move it, nothing on this page changes: one account holds everything and every move spends from it.</p>
@@ -267,8 +267,8 @@ first, a top-up you confirm with Touch ID, and the swap quote says how much befo
 proposed.</p>
 <h3 id="top-ups-and-the-sweep">Top-ups and the sweep<a class="anchor" href="#top-ups-and-the-sweep" aria-label="Link to this section">#</a></h3>
 <p>The allowance has a size, $100 until you pick another in the Vault tab. Two moves keep it near
-that size, both inside NEAR Intents, both sent by your gas account (a small NEAR account the app
-derives from your wallet key, about 0.0005 NEAR a move):</p>
+that size, both inside NEAR Intents, both sent through the NEAR Intents relay, which pays NEAR&#39;s
+fee:</p>
 <ul>
 <li><strong>A top-up</strong> moves USDC from your vault to your allowance. You ask for it in the Vault tab, or
 the window offers one when the allowance falls under a quarter of its size. It always waits
@@ -298,7 +298,7 @@ writes one line in the log, <code>allowance_swept</code>, naming every coin and 
 </ul>
 <p>A size of $0 sends everything priced home at the next sweep. What a Mac running someone else&#39;s
 code could spend with no Touch ID is the allowance (its size plus 10 %, $110 at the default, more
-while a move is under way) and the gas account; the vault needs your finger.</p>
+while a move is under way); the vault needs your finger.</p>
 <h2 id="deposit">Deposit<a class="anchor" href="#deposit" aria-label="Link to this section">#</a></h2>
 <p>Money comes in through the deposit card, never through a tool. Press Add money on the Basic or
 Pro tab and the steps run in place, beside the chat. The Addresses row in the Vault tab opens the
@@ -681,11 +681,13 @@ the card says Taking longer, and your assistant reads &quot;Late, nothing has ch
 over: the app keeps watching, and the card moves on the moment the venue credits it. A refund and
 a failure are endings, and each names why.</p>
 <p>A swap inside NEAR Intents moves nothing until a buyer takes it: the transfer and the fill settle
-together. While it waits the card says &quot;Sent. Waiting for a buyer to take it.&quot; Its signed transfer
-can run for three minutes. Once NEAR&#39;s own clock and this Mac&#39;s are both half a minute past that
-and the transfer never ran, it can never run, and the card says Didn&#39;t go through: nothing left
-your balance. The app reads NEAR&#39;s clock and the transfer&#39;s nonce itself, so it knows this even
-when the swap service does not answer.</p>
+together. While it waits the card says &quot;Sent. Waiting for a buyer to take it.&quot; The card says Done
+once NEAR shows the swap ran, even while the swap service still calls it working: the app reads
+the swap&#39;s own signed transfer on NEAR, spent, and the coin it bought in your balance, at least
+the amount you approved. Its signed transfer can run for three minutes. Once NEAR&#39;s own clock and
+this Mac&#39;s are both half a minute past that and the transfer never ran, it can never run, and the
+card says Didn&#39;t go through: nothing left your balance. The app reads NEAR&#39;s clock and the
+transfer&#39;s nonce itself, so it knows this even when the swap service does not answer.</p>
 <p>If the venue said success and the app could not see the money land, the row is Not confirmed
 and nothing more is signed. That is the honest state, not a failure: the money is on its way,
 and the card keeps saying the move is working. The app judges the row again on every balance

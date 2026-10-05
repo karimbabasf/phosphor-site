@@ -228,10 +228,44 @@
     <header class="doc-head">
       <h1>Changelog</h1>
       <p class="lede">What changed in each version of Phosphor, newest first, written from the git history of the <a href="https://github.com/karimbabasf/phosphor" target="_blank" rel="noopener">repository</a>. The top entry is the version these pages describe, and a test fails the suite when it is not the version in <code>package.json</code>. Versions without a git tag say so.</p>
-      <div class="doc-meta"><span class="mono">v0.10.16</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/changelog.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.10.18</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/changelog.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
-    <nav class="onpage" aria-label="On this page"><ul><li><a href="#0-10-16">0.10.16</a></li><li><a href="#0-10-15">0.10.15</a></li><li><a href="#0-10-14">0.10.14</a></li><li><a href="#0-10-13">0.10.13</a></li><li><a href="#0-10-12">0.10.12</a></li><li><a href="#0-10-11">0.10.11</a></li><li><a href="#0-10-10">0.10.10</a></li><li><a href="#0-10-9">0.10.9</a></li><li><a href="#0-10-8">0.10.8</a></li><li><a href="#0-10-7">0.10.7</a></li><li><a href="#0-10-6">0.10.6</a></li><li><a href="#0-10-5">0.10.5</a></li><li><a href="#0-10-4">0.10.4</a></li><li><a href="#0-10-3">0.10.3</a></li><li><a href="#0-10-2">0.10.2</a></li><li><a href="#0-10-0">0.10.0</a></li><li><a href="#0-9-3">0.9.3</a></li><li><a href="#0-9-2">0.9.2</a></li><li><a href="#0-9-1">0.9.1</a></li><li><a href="#0-9-0">0.9.0</a></li><li><a href="#0-8-0">0.8.0</a></li><li><a href="#0-7-0">0.7.0</a></li><li><a href="#0-6-0">0.6.0</a></li><li><a href="#0-5-2">0.5.2</a></li><li><a href="#0-5-1">0.5.1</a></li><li><a href="#0-5-0">0.5.0</a></li><li><a href="#0-4-4">0.4.4</a></li><li><a href="#0-4-3">0.4.3</a></li><li><a href="#0-4-2">0.4.2</a></li><li><a href="#0-4-1">0.4.1</a></li><li><a href="#0-4-0">0.4.0</a></li><li><a href="#0-3-0">0.3.0</a></li><li><a href="#0-2-0">0.2.0</a></li><li><a href="#0-1-0">0.1.0</a></li></ul></nav>
+    <nav class="onpage" aria-label="On this page"><ul><li><a href="#0-10-18">0.10.18</a></li><li><a href="#0-10-17">0.10.17</a></li><li><a href="#0-10-16">0.10.16</a></li><li><a href="#0-10-15">0.10.15</a></li><li><a href="#0-10-14">0.10.14</a></li><li><a href="#0-10-13">0.10.13</a></li><li><a href="#0-10-12">0.10.12</a></li><li><a href="#0-10-11">0.10.11</a></li><li><a href="#0-10-10">0.10.10</a></li><li><a href="#0-10-9">0.10.9</a></li><li><a href="#0-10-8">0.10.8</a></li><li><a href="#0-10-7">0.10.7</a></li><li><a href="#0-10-6">0.10.6</a></li><li><a href="#0-10-5">0.10.5</a></li><li><a href="#0-10-4">0.10.4</a></li><li><a href="#0-10-3">0.10.3</a></li><li><a href="#0-10-2">0.10.2</a></li><li><a href="#0-10-0">0.10.0</a></li><li><a href="#0-9-3">0.9.3</a></li><li><a href="#0-9-2">0.9.2</a></li><li><a href="#0-9-1">0.9.1</a></li><li><a href="#0-9-0">0.9.0</a></li><li><a href="#0-8-0">0.8.0</a></li><li><a href="#0-7-0">0.7.0</a></li><li><a href="#0-6-0">0.6.0</a></li><li><a href="#0-5-2">0.5.2</a></li><li><a href="#0-5-1">0.5.1</a></li><li><a href="#0-5-0">0.5.0</a></li><li><a href="#0-4-4">0.4.4</a></li><li><a href="#0-4-3">0.4.3</a></li><li><a href="#0-4-2">0.4.2</a></li><li><a href="#0-4-1">0.4.1</a></li><li><a href="#0-4-0">0.4.0</a></li><li><a href="#0-3-0">0.3.0</a></li><li><a href="#0-2-0">0.2.0</a></li><li><a href="#0-1-0">0.1.0</a></li></ul></nav>
     <div class="prose">
+<h2 id="0-10-18">0.10.18<a class="anchor" href="#0-10-18" aria-label="Link to this section">#</a></h2>
+<p>Built 2026-10-05, the simpler vault. Tagged v0.10.18 on 2026-10-05.</p>
+<ul>
+<li>Phosphor pays NEAR&#39;s fee for every vault move, as it does for swaps. Each move goes through the
+NEAR Intents relay with no quote, and done is still what NEAR&#39;s own records say. There is no gas
+account to fill any more. NEAR left in a 0.10.16 gas account shows in the Vault tab with &quot;Send to
+my vault&quot;, which sends it back once NEAR Intents confirms it takes NEAR deposits.</li>
+<li>Your vault sets up with one button, &quot;Secure my vault&quot;. It shows only the steps you still need,
+one at a time, and none that is already done.</li>
+<li>A deposit address shows only when NEAR Intents&#39; swap service says it takes that coin in right
+now. Before, a slow check during an incident could show a TON address that was paused, to you and
+to your assistant. Now both say Phosphor cannot confirm it yet, with Try again.</li>
+<li>Your balance opens fast and never shows a false $0.00. Before it waited on the swap service&#39;s coin
+list, up to ten seconds during today&#39;s incident. In Pro, a refresh that misses keeps your last good coins
+on screen instead of &quot;Still reading your coins&quot;.</li>
+<li>Money you receive through a deposit address shows in Activity, as &quot;Received 5 USDC on Base&quot;, with
+its state and its chain transaction.</li>
+<li>A send card says Done as soon as NEAR shows the money arrived, the way swap cards do since 0.10.17.</li>
+<li>When your coin sits in your vault, your assistant proposes its exact amount, and Approve moves it
+from your vault with one more Touch ID. Before, &quot;swap all&quot; read only the allowance and the
+assistant sent you to the Vault tab instead.</li>
+</ul>
+<h2 id="0-10-17">0.10.17<a class="anchor" href="#0-10-17" aria-label="Link to this section">#</a></h2>
+<p>Built 2026-10-05, the swap card fix. Tagged v0.10.17 on 2026-10-05.</p>
+<ul>
+<li>Every move card follows its own move to the end, however many run at once. Before, the window
+carried only the newest few, and the other cards stopped where they were: after &quot;divide my funds
+into 8 coins&quot;, five cards kept saying &quot;Sent. Waiting for a buyer to take it.&quot; and then &quot;Taking
+longer&quot; while your balance, and your assistant, already showed all eight coins.</li>
+<li>A swap card says Done as soon as NEAR shows the swap ran, even while the swap service still calls
+it working. Phosphor checks two things on NEAR: the swap&#39;s own signed transfer is spent, and the
+coin it bought is in your balance at no less than the amount you approved. A swap NEAR has not run
+keeps saying it waits for a buyer, and nothing is ever signed twice.</li>
+</ul>
 <h2 id="0-10-16">0.10.16<a class="anchor" href="#0-10-16" aria-label="Link to this section">#</a></h2>
 <p>Built 2026-10-04 and 2026-10-05, the Touch ID vault pass. Tagged v0.10.16 on 2026-10-05.</p>
 <ul>
