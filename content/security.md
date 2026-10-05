@@ -2,6 +2,8 @@
 
 Phosphor moves real money on mainnet. This page says what it defends against, the test behind each defence, what stays open, and how to check a release yourself. To report a problem privately, go to [Report a vulnerability](#report-a-vulnerability).
 
+[Check it yourself](/docs/verify/) puts each of the wallet's security claims beside the code that enforces it, the test that proves it and the command that runs it, and shows how to check your download and your vault on NEAR.
+
 <!-- include: security-model.md#threat-model -->
 
 ## What has been done, and what has not
