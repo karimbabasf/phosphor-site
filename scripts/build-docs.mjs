@@ -33,6 +33,15 @@ const list = (heading) => {
 };
 const pages = list('Pages');
 const dev = list('For developers');
+// The developer list links to GitHub, except the pages named here, which the site shows itself:
+// Check it yourself is written for anyone who wants to check the wallet, and it links only to
+// other docs pages and the web, so it reads the same here.
+const hosted = new Set(['verify']);
+const isHosted = (p) => hosted.has(p.slug);
+const onSite = [...pages, ...dev.filter(isHosted)];
+const devLink = (p, inner, current) => isHosted(p)
+  ? `<a href="/docs/${p.slug}/"${p.slug === current ? ' aria-current="page"' : ''}>${inner}</a>`
+  : `<a href="${repo}/blob/main/docs/${p.file}" target="_blank" rel="noopener">${inner}</a>`;
 
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const slugify = (s) => s.toLowerCase().replace(/<[^>]+>/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -50,7 +59,7 @@ const renderer = {
     const t = title ? ` title="${esc(title)}"` : '';
     const m = href.match(/^([\w-]+)\.md(#.*)?$/);
     if (m) {
-      const known = pages.find(p => p.slug === m[1]);
+      const known = onSite.find(p => p.slug === m[1]);
       const url = known ? `/docs/${m[1]}/${m[2] || ''}` : `${repo}/blob/main/docs/${m[1]}.md${m[2] || ''}`;
       return known ? `<a href="${url}"${t}>${text}</a>` : `<a href="${url}"${t} target="_blank" rel="noopener">${text}</a>`;
     }
@@ -164,7 +173,7 @@ const sidebar = (current) => `
   <nav aria-label="Docs">
     <ul>${pages.map(p => `<li><a href="/docs/${p.slug}/"${p.slug === current ? ' aria-current="page"' : ''}>${esc(p.title)}</a></li>`).join('')}</ul>
     <div class="side-head">For developers</div>
-    <ul>${dev.map(p => `<li><a href="${repo}/blob/main/docs/${p.file}" target="_blank" rel="noopener">${esc(p.title)}</a></li>`).join('')}</ul>
+    <ul>${dev.map(p => `<li>${devLink(p, esc(p.title), current)}</li>`).join('')}</ul>
   </nav>
 </aside>`;
 
@@ -196,20 +205,19 @@ if (existsSync(docsDir)) for (const d of readdirSync(docsDir, { withFileTypes: t
     </ol>
     <h2 id="for-developers">For developers</h2>
     <ul class="toc plain">
-      ${dev.map(p => `<li><a href="${repo}/blob/main/docs/${p.file}" target="_blank" rel="noopener"><strong>${esc(p.title)}</strong><span>${esc(p.line)}</span></a></li>`).join('\n      ')}
+      ${dev.map(p => `<li>${devLink(p, `<strong>${esc(p.title)}</strong><span>${esc(p.line)}</span>`, '')}</li>`).join('\n      ')}
     </ul>
   </article>
 </main>`;
   write('docs/index.html', shell({ title: 'Phosphor docs', description: intro.summary.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1'), url: '/docs/', body, active: 'docs', kind: 'read' }));
 }
 
-// Each page.
-pages.forEach((p, i) => {
+// Each page. A hosted developer page sits outside the reading order, so it has no pager.
+const docPage = (p, prev, next) => {
   const md = readFileSync(join(src, p.file), 'utf8');
   const { title, summary, body } = split(md);
   const html = wholeWords(marked.parse(body));
   const toc = headings(html);
-  const prev = pages[i - 1], next = pages[i + 1];
   const article = `
 <main class="docs wrap">
   ${sidebar(p.slug)}
@@ -222,15 +230,17 @@ pages.forEach((p, i) => {
     ${toc.length > 2 ? `<nav class="onpage" aria-label="On this page"><ul>${toc.map(h => `<li><a href="#${h.id}">${h.text}</a></li>`).join('')}</ul></nav>` : ''}
     <div class="prose">
 ${html}
-    </div>
+    </div>${prev || next ? `
     <nav class="pager" aria-label="Pages">
       ${prev ? `<a class="prev" href="/docs/${prev.slug}/"><span>Previous</span>${esc(prev.title)}</a>` : '<span></span>'}
       ${next ? `<a class="next" href="/docs/${next.slug}/"><span>Next</span>${esc(next.title)}</a>` : '<span></span>'}
-    </nav>
+    </nav>` : ''}
   </article>
 </main>`;
   write(`docs/${p.slug}/index.html`, shell({ title: `${title}`, description: summary.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1'), url: `/docs/${p.slug}/`, body: article, active: 'docs', kind: 'read' }));
-});
+};
+pages.forEach((p, i) => docPage(p, pages[i - 1], pages[i + 1]));
+dev.filter(isHosted).forEach(p => docPage(p));
 
 // A content page can carry one section of the app's docs, so the two cannot drift: a line
 // `<!-- include: security-model.md#threat-model -->` becomes that section, from its heading down
@@ -347,7 +357,7 @@ ${html}
 
 // The sitemap lists every page this script writes plus the front page, so it cannot drift.
 {
-  const urls = ['/', '/docs/', ...pages.map(p => `/docs/${p.slug}/`), ...legal.map(s => `/${s}/`)];
+  const urls = ['/', '/docs/', ...onSite.map(p => `/docs/${p.slug}/`), ...legal.map(s => `/${s}/`)];
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls.map(u => `  <url><loc>${site}${u}</loc></url>`).join('\n')}
