@@ -218,16 +218,16 @@
   <nav aria-label="Docs">
     <ul><li><a href="/docs/getting-started/">Getting started</a></li><li><a href="/docs/connect-an-agent/">Connect an agent</a></li><li><a href="/docs/money/">Money</a></li><li><a href="/docs/trading/">Trading</a></li><li><a href="/docs/policy/">Policy</a></li><li><a href="/docs/security/">Security</a></li><li><a href="/docs/tools/">Tools</a></li><li><a href="/docs/troubleshooting/" aria-current="page">Troubleshooting</a></li><li><a href="/docs/known-limits/">Known limits</a></li><li><a href="/docs/changelog/">Changelog</a></li></ul>
     <div class="side-head">For developers</div>
-    <ul><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/architecture.md" target="_blank" rel="noopener">Architecture</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security-model.md" target="_blank" rel="noopener">Security model</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/reference.md" target="_blank" rel="noopener">Reference</a></li></ul>
+    <ul><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/architecture.md" target="_blank" rel="noopener">Architecture</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security-model.md" target="_blank" rel="noopener">Security model</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/reference.md" target="_blank" rel="noopener">Reference</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/verify.md" target="_blank" rel="noopener">Check it yourself</a></li></ul>
   </nav>
 </aside>
   <article class="doc">
     <header class="doc-head">
       <h1>Troubleshooting</h1>
       <p class="lede">The situations people actually hit, what the window says in each, and what to do. The rule under all of them: when the app says a move is unconfirmed, do not send it again. Read first.</p>
-      <div class="doc-meta"><span class="mono">v0.10.14</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/troubleshooting.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.10.16</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/troubleshooting.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
-    <nav class="onpage" aria-label="On this page"><ul><li><a href="#a-move-is-late-or-not-confirmed">A move is late, or Not confirmed</a></li><li><a href="#hyperliquid-is-not-answering-one-of-our-reads">Hyperliquid is not answering one of our reads</a></li><li><a href="#macos-will-not-open-the-app">macOS will not open the app</a></li><li><a href="#the-agent-does-not-connect">The agent does not connect</a></li><li><a href="#a-move-card-says-unlock-to-decide">A move card says Unlock to decide</a></li><li><a href="#a-send-was-refused-for-a-typo">A send was refused for a typo</a></li><li><a href="#something-else">Something else</a></li></ul></nav>
+    <nav class="onpage" aria-label="On this page"><ul><li><a href="#a-move-is-late-or-not-confirmed">A move is late, or Not confirmed</a></li><li><a href="#hyperliquid-is-not-answering-one-of-our-reads">Hyperliquid is not answering one of our reads</a></li><li><a href="#macos-will-not-open-the-app">macOS will not open the app</a></li><li><a href="#the-agent-does-not-connect">The agent does not connect</a></li><li><a href="#a-move-card-says-unlock-to-decide">A move card says Unlock to decide</a></li><li><a href="#the-lock-card-says-the-wallet-file-stayed-closed">The lock card says the wallet file stayed closed</a></li><li><a href="#a-send-was-refused-for-a-typo">A send was refused for a typo</a></li><li><a href="#moving-the-vault-to-touch-id">Moving the vault to Touch ID</a></li><li><a href="#something-else">Something else</a></li></ul></nav>
     <div class="prose">
 <h2 id="a-move-is-late-or-not-confirmed">A move is late, or Not confirmed<a class="anchor" href="#a-move-is-late-or-not-confirmed" aria-label="Link to this section">#</a></h2>
 <p>Between your click and Done the card in the chat says the move is working (Swapping, Funding
@@ -325,6 +325,16 @@ unlock the window, with Touch ID or your password. Every waiting move is then de
 against the policy as it stands, and lands as something to click, small ones included: an unlock
 is not an approval. If the policy now refuses the move, it is refused whether or not there is a
 key to sign it with. See <a href="/docs/getting-started/#the-five-minute-lock">Getting started</a>.</p>
+<h2 id="the-lock-card-says-the-wallet-file-stayed-closed">The lock card says the wallet file stayed closed<a class="anchor" href="#the-lock-card-says-the-wallet-file-stayed-closed" aria-label="Link to this section">#</a></h2>
+<p>Phosphor did not open the wallet file on this Mac, because the file is not the one Phosphor saved
+here, is an older wallet file on a Mac where a wallet is Phosphor-only (any wallet on this Mac
+counts, see <a href="/docs/getting-started/#touch-id-and-the-secure-enclave">Getting started</a>), or cannot be
+read. Nothing moved, and asking Touch ID again opens nothing. The line ends with the way back,
+and the button under it, Restore from your private key (or Restore from your recovery phrase),
+opens the restore in the card: type your backup, press Restore twice, and one Touch ID opens your
+wallet here again. No proven backup is asked for first, since the file this Mac holds cannot be
+opened anyway. A cancelled Touch ID changes nothing, and the next press asks again before it
+replaces anything.</p>
 <h2 id="a-send-was-refused-for-a-typo">A send was refused for a typo<a class="anchor" href="#a-send-was-refused-for-a-typo" aria-label="Link to this section">#</a></h2>
 <p><code>propose_send</code> decodes the address for the place it is going before any quote is asked. An EVM
 address must be forty hex characters and, when it carries capitals, pass its own EIP-55 checksum.
@@ -341,6 +351,55 @@ the agent character for character, and confirm. A contract address cannot be pai
 coin at all, because a contract without a receive path burns it. The card and the Touch ID
 sentence both name the receiver, so you can check it once more before the click. See
 <a href="/docs/money/#send">Money</a>.</p>
+<h2 id="moving-the-vault-to-touch-id">Moving the vault to Touch ID<a class="anchor" href="#moving-the-vault-to-touch-id" aria-label="Link to this section">#</a></h2>
+<p>The move adds this Mac&#39;s Touch ID key and your paper key to the vault and takes the owner key off,
+in one call that lands whole or not at all. It asks two Touch IDs: the first reads &quot;Move your vault
+to this Mac&#39;s Touch ID key and your paper key&quot;, the second &quot;confirm this Mac&#39;s Touch ID key for your
+vault&quot;. Anything else in the dialog is not the move: cancel it. What the window may say instead:</p>
+<ul>
+<li><strong>Type your paper key back first.</strong> The paper is checked before anything moves: three words
+while the app still holds the paper, all 24 after a lock, the tab left or a restart. A lock wipes
+words already typed, so after a lock type them again.</li>
+<li><strong>Those words do not match.</strong> One word differs from your paper or from the screen. While the
+words are still in the window, it names the first slip by its number, never the word; after a
+lock or a restart it cannot, so check each word.</li>
+<li><strong>The gas account has no NEAR yet, or needs more.</strong> The move is paid from the gas account, a NEAR
+account derived from your key. Add 0.1 to 1 NEAR from the Vault tab: it is a payout you click
+and confirm with Touch ID, and the dialog names the gas account. Nothing is made or signed until
+it can pay. Once your vault is on Touch ID, the NEAR comes from your allowance; when the allowance
+holds too little, Phosphor first moves the difference from your vault, behind one more Touch ID.</li>
+<li><strong>Touch ID took longer than the move can wait.</strong> Each signature lives about two minutes. Start the
+move again and answer both dialogs when they come.</li>
+<li><strong>Your last vault move can still land on NEAR.</strong> A call that left this Mac can run until its own
+deadline, so Phosphor signs nothing new for a few minutes. Try again then; you may need to type
+the paper again.</li>
+<li><strong>Phosphor sent this move and NEAR has not confirmed it yet.</strong> It keeps checking on its own, and
+finishes the move the moment the chain shows it, also after a restart. Do not start it again.</li>
+<li><strong>Your vault already answers to other keys.</strong> The vault moved, from this Mac or another one. On a
+new Mac, restore it from the Vault tab: restore the wallet from its key backup first, write a new
+paper key, then type the old paper&#39;s 24 words.</li>
+<li><strong>Your vault opens with another Mac&#39;s Touch ID key now.</strong> NEAR shows your wallet&#39;s own key off
+the vault, and this Mac holds no Touch ID key for it, so this Mac signs no swap, send, payout or
+Hyperliquid deposit from the vault: each one says so before anything is signed. Restore the vault
+on this Mac to spend from it here. The gas account still takes NEAR: Add NEAR shows its account
+whole, to send 0.1 to 1 NEAR to it from any NEAR wallet.</li>
+<li><strong>A paper shown earlier opens nothing.</strong> It was never added to the vault. Show a new one and write
+that down; destroy the old one.</li>
+<li><strong>Your vault moved, and it also holds a key Phosphor did not add.</strong> Someone with your owner key
+added a key while the move was being signed, and that key can still move the vault&#39;s money. The
+Vault tab names it. Treat the owner key and its backup as seen by someone else: send the money in
+the vault, and in the allowance, to a wallet whose key was made fresh, then stop using this one.</li>
+<li><strong>Your assistant says your vault is moving.</strong> While the move or a restore runs, your assistant&#39;s
+moves wait: it can ask for nothing new, a move it asked for earlier cannot be approved until the
+move is done, and one already on its way stops with nothing sent. Ask again once the move is over.</li>
+<li><strong>Checking which keys open your vault.</strong> Phosphor&#39;s own note of the move on this Mac went missing
+(in vault.json). The Vault tab asks NEAR which keys open the vault, and writes the note back as
+soon as NEAR shows this Mac&#39;s Touch ID key on it.</li>
+</ul>
+<p>If the Mac is gone, the paper and the key backup together bring the vault back on a new one. If the
+paper is gone and this Mac still opens the vault, move the money out with Touch ID while you can:
+the Touch ID key cannot add a new paper key on its own. See
+<a href="/docs/known-limits/#the-paper-is-the-only-key-that-opens-the-vault-away-from-this-mac">Known limits</a>.</p>
 <h2 id="something-else">Something else<a class="anchor" href="#something-else" aria-label="Link to this section">#</a></h2>
 <p>Recent moves on the Pro tab lists your latest moves, and an ended one opens its receipt. An agent
 in your terminal can read the raw audit lines with <code>log_tail</code>. Every refusal names its rule. For

@@ -218,16 +218,16 @@
   <nav aria-label="Docs">
     <ul><li><a href="/docs/getting-started/" aria-current="page">Getting started</a></li><li><a href="/docs/connect-an-agent/">Connect an agent</a></li><li><a href="/docs/money/">Money</a></li><li><a href="/docs/trading/">Trading</a></li><li><a href="/docs/policy/">Policy</a></li><li><a href="/docs/security/">Security</a></li><li><a href="/docs/tools/">Tools</a></li><li><a href="/docs/troubleshooting/">Troubleshooting</a></li><li><a href="/docs/known-limits/">Known limits</a></li><li><a href="/docs/changelog/">Changelog</a></li></ul>
     <div class="side-head">For developers</div>
-    <ul><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/architecture.md" target="_blank" rel="noopener">Architecture</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security-model.md" target="_blank" rel="noopener">Security model</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/reference.md" target="_blank" rel="noopener">Reference</a></li></ul>
+    <ul><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/architecture.md" target="_blank" rel="noopener">Architecture</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security-model.md" target="_blank" rel="noopener">Security model</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/reference.md" target="_blank" rel="noopener">Reference</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/verify.md" target="_blank" rel="noopener">Check it yourself</a></li></ul>
   </nav>
 </aside>
   <article class="doc">
     <header class="doc-head">
       <h1>Getting started</h1>
       <p class="lede">Phosphor is a Mac app that holds your keys, your venue connections and your rules. An agent reads your money and proposes moves; you approve each one with a click in the window. This page takes you from the download to a wallet that is made, backed up and locked, and shows you the brake.</p>
-      <div class="doc-meta"><span class="mono">v0.10.14</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/getting-started.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.10.16</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/getting-started.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
-    <nav class="onpage" aria-label="On this page"><ul><li><a href="#download">Download</a></li><li><a href="#check-the-file">Check the file</a></li><li><a href="#first-open">First open</a></li><li><a href="#create-or-restore-a-wallet">Create or restore a wallet</a></li><li><a href="#the-backup-words">The backup words</a></li><li><a href="#touch-id-and-the-secure-enclave">Touch ID and the Secure Enclave</a></li><li><a href="#the-five-minute-lock">The five minute lock</a></li><li><a href="#freeze-everything">Freeze everything</a></li><li><a href="#the-help-menu">The Help menu</a></li><li><a href="#next">Next</a></li></ul></nav>
+    <nav class="onpage" aria-label="On this page"><ul><li><a href="#download">Download</a></li><li><a href="#check-the-file">Check the file</a></li><li><a href="#first-open">First open</a></li><li><a href="#create-or-restore-a-wallet">Create or restore a wallet</a></li><li><a href="#the-backup-words">The backup words</a></li><li><a href="#touch-id-and-the-secure-enclave">Touch ID and the Secure Enclave</a></li><li><a href="#move-your-vault-to-touch-id">Move your vault to Touch ID</a></li><li><a href="#the-five-minute-lock">The five minute lock</a></li><li><a href="#freeze-everything">Freeze everything</a></li><li><a href="#the-help-menu">The Help menu</a></li><li><a href="#next">Next</a></li></ul></nav>
     <div class="prose">
 <h2 id="download">Download<a class="anchor" href="#download" aria-label="Link to this section">#</a></h2>
 <p>Download the disk image from <a href="https://phosphor.money/download/mac" target="_blank" rel="noopener">phosphor.money/download/mac</a>. It needs
@@ -243,7 +243,7 @@ the disk image. This line must print the same one:</p>
 file was built from the public code. It needs the GitHub CLI (<code>brew install gh</code>):</p>
 <pre><code class="language-sh">gh attestation verify ~/Downloads/Phosphor-macOS-arm64.dmg --repo karimbabasf/phosphor \
   --signer-workflow karimbabasf/phosphor/.github/workflows/release.yml \
-  --source-ref refs/tags/v0.10.14
+  --source-ref refs/tags/v0.10.16
 </code></pre>
 <p>Put the version you downloaded in the last line. It passes only for a file that this
 repository&#39;s release workflow built on GitHub&#39;s machines from that version&#39;s tag, and it prints
@@ -281,9 +281,19 @@ mode. Size your first deposit as a test.</p>
 a Mac that has one, the first run is short: Create your wallet is one click and one Touch ID.
 There is nothing to write down yet. The app then shows your addresses and asks which agent you
 use, see <a href="/docs/connect-an-agent/">Connect an agent</a>.</p>
+<p>If you already have a wallet (a Mac lost or replaced, the case the backup is for), press I already
+have a wallet beside Create a new wallet. Type your recovery phrase, or your private key if your
+wallet has no phrase, and one Touch ID restores it here. The key can be typed the way the backup
+shows it: with or without 0x, the spaces or line breaks between the groups, even the numbers in
+front of each group. A character a key never uses (an o for a 0) is named by its group before
+anything is sent. With no wallet on this Mac yet, nothing is replaced, so no backup is asked for; a
+cancelled Touch ID leaves the Mac as it was.</p>
+<p>Before any address, the next screen, Your wallet is back, names the wallet that came back with its
+full address. Check it against the address on your copy: a key with one slipped character restores
+a wallet too, an empty one. If it is not yours, press That is not my wallet and type the copy again.</p>
 <h3 id="with-a-password">With a password<a class="anchor" href="#with-a-password" aria-label="Link to this section">#</a></h3>
-<p>Without an enclave, the app asks you to make a new wallet or bring one in with its recovery
-words. Set a password of at least eight characters. Nobody can reset it, not the app and not your
+<p>Without a Secure Enclave, the app asks you to create a new wallet or restore one from its recovery
+phrase, or from its private key if it has no phrase. Set a password of at least eight characters. Nobody can reset it, not the app and not your
 assistant. The app then shows twelve recovery words once, and asks you to type three of them back
 by their number before it goes on. Take as long as writing them down takes. If Phosphor locks
 meanwhile, after five quiet minutes or when your screen locks, the lock card covers the words;
@@ -295,12 +305,16 @@ or pick $25, $100, $500 or $1,000. The shipped default is $100. You can change i
 Vault tab, see <a href="/docs/policy/#changing-a-rule">Policy</a>.</p>
 <h3 id="a-wallet-from-another-mac">A wallet from another Mac<a class="anchor" href="#a-wallet-from-another-mac" aria-label="Link to this section">#</a></h3>
 <p>A wallet file made on a different Mac cannot be opened here, because its key lives in that Mac&#39;s
-enclave. The window says Made on another Mac and asks for your recovery phrase, twelve or
-twenty-four words, to bring the wallet here.</p>
+Secure Enclave. This is what moving to a new Mac with Migration Assistant looks like, so the window skips
+the welcome and says Made on another Mac: your wallet file came with you and your money has not
+moved. Type your recovery phrase, twelve or twenty-four words, or the private key of a wallet that
+has no phrase (see <a href="#a-wallet-with-no-phrase">A wallet with no phrase</a>), to open it here. The next
+screen sets the wallet that came back beside the one the old file names. With no copy at hand,
+open Phosphor on the Mac that made the wallet, then Vault, Back it up, and come back with the copy.</p>
 <h2 id="the-backup-words">The backup words<a class="anchor" href="#the-backup-words" aria-label="Link to this section">#</a></h2>
 <p>The recovery phrase is the only way back to the wallet. Anyone who has it has your money, and
 nobody from this app will ever ask you for it.</p>
-<p>On an enclave wallet the phrase is not shown at first run. Open the Vault tab: under Safety, the
+<p>On a Touch ID wallet the phrase is not shown at first run. Open the Vault tab: under Safety, the
 Recovery phrase row has Back it up. Touch ID shows the words in that row only. Write them down
 somewhere that is not this Mac, click I wrote them down, then Prove it and type three of the
 words back by their number. Only that turns the row&#39;s line from Not backed up yet to Backed up.
@@ -311,20 +325,114 @@ beside it, and the first deposit that lands reminds you once more. The Vault tab
 forget a wallet whose phrase has not been proven backed up: its Forget row says Back up first.</p>
 <p>A password wallet shows its words at creation. In the Vault tab, Show my words (in the Recovery
 phrase row) and Save an encrypted copy (in the Restore row) both ask for the password.</p>
+<h3 id="a-wallet-with-no-phrase">A wallet with no phrase<a class="anchor" href="#a-wallet-with-no-phrase" aria-label="Link to this section">#</a></h3>
+<p>A wallet brought in as a key has no recovery phrase, so its backup is the private key itself, and
+anyone who has it has your money. Under Safety its row is Private key: Back it up and a Touch ID
+(or your password, on a password wallet) show the key in that row only, hidden behind dots, with the
+wallet it opens under it. Show reveals it and Hide puts the dots back; Copy puts the whole key on
+the clipboard, for a password manager, and Phosphor clears it when you click I saved it somewhere
+safe, Hide, Close or Done. If you leave without one of those clicks, the key stays on the clipboard
+until you copy something else. Save it somewhere safe, then click I saved it somewhere safe: that
+turns the row to Backed up. Nothing is typed back. The line at the foot of the window says Private
+key not backed up until then, and Forget waits for it the same way.</p>
+<p>The click counts only just after the key was shown: half an hour later, or after a restart, the
+row asks you to show the key again. Later, Check my copy checks a copy you kept against this
+wallet, with no Touch ID and nothing changed. Never check a
+copy by restoring it over the wallet you have: after its Touch ID, a restore replaces the wallet on
+this Mac with whatever wallet the copy makes. A cancelled Touch ID leaves the wallet you have as it
+was.</p>
+<p>To bring the wallet back, on this Mac or another one, use Restore from a key in the Restore row
+(or the Made on another Mac screen). Type the key as you wrote it: with or without 0x, with or
+without the spaces between the groups. The note that says Restored names the wallet it brought,
+so check it against the one your copy opens. While the wallet on this Mac is not backed up, the
+Restore row says Back up first instead, before anything is typed: a restore of another wallet would
+replace the only copy of this one.</p>
 <h2 id="touch-id-and-the-secure-enclave">Touch ID and the Secure Enclave<a class="anchor" href="#touch-id-and-the-secure-enclave" aria-label="Link to this section">#</a></h2>
-<p>The Keys row in the Vault tab, under Your wallet, says which kind of wallet you have. On an
-enclave wallet it reads Touch ID: the key is behind the Secure Enclave on this Mac, and Touch ID
+<p>The Keys row in the Vault tab, under Your wallet, says which kind of wallet you have. A Touch
+ID wallet&#39;s row reads Touch ID: the key is behind the Secure Enclave on this Mac, and Touch ID
 or your Mac login password opens it. The key file, <code>keys.enc.json</code>, sits under <code>~/.phosphor</code>,
 outside the app and outside any code checkout. Its contents are sealed with a data key, and that
-data key is wrapped to a key the enclave made and cannot export. Nothing on disk opens the file
-without the enclave.</p>
-<p>On an enclave wallet, every click you make on a proposal ends in a Touch ID dialog. The dialog
+data key is wrapped to a key the Secure Enclave made and cannot export. Nothing on disk opens the
+file without the Secure Enclave.</p>
+<p>On a Touch ID wallet, every click you make on a proposal ends in a Touch ID dialog. The dialog
 is drawn by macOS, and its sentence is composed by the app from the proposal&#39;s own numbers: the
 amount, the receiver shortened to eight characters at each end (a NEAR name whole), and the chain. Read it before you
 confirm. <a href="/docs/security/">Security</a> says what this does and does not protect against.</p>
 <p>A password wallet says Password in the Keys row: &quot;Locked with your password on this Mac.&quot; On a
-Mac that has an enclave, the row also shows Protect with Touch ID, which moves the same wallet
-behind the enclave. Nothing moves and the addresses stay the same.</p>
+Mac that has a Secure Enclave, the row also shows Protect with Touch ID, which moves the same
+wallet behind the Secure Enclave. Nothing moves and the addresses stay the same.</p>
+<p>A wallet made before the signed app could keep its key where only Phosphor reaches it: any app on
+this Mac can ask to open it, with its own Touch ID prompt. On a signed release the Keys row then
+shows Phosphor-only access: once your backup is proven (Back it up first takes you there), Make it
+Phosphor-only does what it says, with one Touch ID that checks Phosphor opens your wallet the new
+way before anything changes; a cancel changes nothing. The same wallet, the same addresses. The row
+then says Phosphor-only since that day. From then on the wallet&#39;s key is in one place on this Mac
+that only Phosphor reaches, so your backup is the way back if anything happens to this Mac; that is
+why the step asks for it first. Copies of your wallet file saved before then (a Time Machine backup,
+a sync folder) still open the old way, so approve a Touch ID prompt only when you started it. A
+private key backup is the EVM key alone: an older wallet whose file also holds a NEAR key, a Solana
+key or a trading key keeps those only in the Phosphor-only file, and the backup cannot bring them
+back if that one key is lost (the app never shows or spends from those NEAR and Solana addresses,
+and a trading key is approved again). <a href="/docs/known-limits/">Known limits</a> says more.</p>
+<p>Phosphor-only is one rule for the whole Mac, not for one wallet. The first time a signed release
+makes a Touch ID wallet Phosphor-only, or makes or restores one, from any copy of Phosphor and in
+any folder, every older Touch ID wallet on this Mac that is not Phosphor-only stops opening in
+Phosphor, even one in another folder. Its lock card then offers Restore, and its backup brings it back. So before
+you make or restore a second wallet on this Mac, make the one you have Phosphor-only, or at least
+prove its backup. A demo run never does this: it makes a password wallet and leaves Phosphor&#39;s keys
+alone.</p>
+<h2 id="move-your-vault-to-touch-id">Move your vault to Touch ID<a class="anchor" href="#move-your-vault-to-touch-id" aria-label="Link to this section">#</a></h2>
+<p>Your vault is the account every deposit lands in. On a Touch ID wallet, the Vault tab can move it to
+this Mac&#39;s Touch ID key and a paper key you write by hand. After the move nothing else opens it:
+every move out of the vault asks for a Touch ID that names it, and your assistant spends from a
+small allowance.</p>
+<p>Your paper key is the only key that opens your vault away from this Mac. Your recovery phrase also
+controls your allowance (its size plus 10 percent, more while a move is under way), the gas account
+(about 0.5 NEAR) and your Hyperliquid account, so keep both like cash. On a wallet with no recovery
+phrase, that second backup is your private key. Once the vault has moved, the Vault tab names the
+allowance&#39;s cap in dollars: $110 at the default size of $100.</p>
+<p>Under Your vault, the Vault key row takes you through four steps, in order:</p>
+<ol>
+<li><strong>Back up your recovery phrase</strong> (or private key). It still opens the allowance, the gas account
+and Hyperliquid after the move.</li>
+<li><strong>Add NEAR to the gas account.</strong> It pays NEAR&#39;s small fee for every move of your vault. Add 0.1 to
+1 NEAR from the Gas account row: a payout you approve on its card in the conversation, with one
+Touch ID that names the gas account. If your vault holds no NEAR yet, Add NEAR shows the gas
+account whole, with Copy: send 0.1 to 1 NEAR to it on NEAR from any NEAR wallet, or ask your
+assistant to swap a little USDC to NEAR, then add it here.</li>
+<li><strong>Write your paper key.</strong> Show my paper key puts 24 words on screen once, with your vault&#39;s
+address to write under them. Write both by hand, and check each word as you write it: there is
+no Print and no Copy, because a printer, a screenshot or a clipboard keeps one more key to your
+vault. Then type three of the words, at places the app picks, from the paper, with pasting off.
+A slip is named by its number, never by the word. You type all 24 only when the app no longer
+holds them: after a lock, the tab left or a restart before the move.</li>
+<li><strong>Move your vault.</strong> Two Touch IDs: the first reads &quot;Move your vault to this Mac&#39;s Touch ID key and
+your paper key&quot;, the second &quot;confirm this Mac&#39;s Touch ID key for your vault&quot;. Cancel any other
+sentence. The row shows each step as it runs, and your assistant&#39;s moves wait until it is done.</li>
+</ol>
+<p>Afterwards the row lists who opens your vault, as NEAR reads it: this Mac&#39;s Touch ID key, your paper
+key, and not your recovery phrase. It also shows the NEAR door: a way for your recovery phrase to
+act for your vault through NEAR, which the move shut. NEAR Intents&#39; admins can open it again for any
+account, and the row would then say so. Each line comes from a read of NEAR begun after the move;
+until one answers, the line says Checking...</p>
+<p>The move puts nothing in the allowance: it starts empty, and the moment the move lands says so, with
+Top up beside it. Until a top-up, every move your assistant asks for waits for a Touch ID.</p>
+<p>The Allowance row reads like &quot;$63 of $100&quot;: what your assistant spends with no Touch ID. Anything
+over the size plus 10 percent goes back to your vault on its own, USDC first. Top up asks for USDC
+from your vault on a card in the conversation, then one Touch ID that names the amount; under a
+quarter of its size the row says it is running low. A move bigger than the allowance asks two Touch
+IDs on Approve, and its card says so before you click: the first approves the move, the second moves
+the difference from your vault to your allowance. See <a href="/docs/money/#top-ups-and-the-sweep">Money</a>.</p>
+<p>Once the vault has moved, Allow trading on Hyperliquid, in the Trading key row, approves a new
+trading key with one Touch ID: &quot;Let 0x... trade on your Hyperliquid account for 90 days&quot;. The row says
+when it ends. Allow a new one before then: without a trading key, Freeze cannot close your positions.</p>
+<p>On a new Mac, restore the wallet first, with I already have a wallet and your recovery phrase or
+private key. The Vault tab then says your vault waits for your paper key. Restore your vault, beside
+the wallet&#39;s own restore, has you write a new paper key, then type the old paper&#39;s 24 words, and one
+Touch ID, &quot;confirm this Mac&#39;s Touch ID key for your vault&quot;, brings the vault here. A Mac that must
+first read your wallet&#39;s own key asks one more before it: &quot;Restore your vault to this Mac&#39;s Touch ID
+key from your paper key&quot;. The restore retires the old paper. See
+<a href="/docs/troubleshooting/#moving-the-vault-to-touch-id">Troubleshooting</a>.</p>
 <h2 id="the-five-minute-lock">The five minute lock<a class="anchor" href="#the-five-minute-lock" aria-label="Link to this section">#</a></h2>
 <p>The wallet locks after five minutes with nobody at the window, when the Mac wakes from a sleep of
 more than a minute, when the screen locks or the Mac switches to another user, and when you close

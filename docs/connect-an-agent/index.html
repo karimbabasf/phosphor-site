@@ -218,14 +218,14 @@
   <nav aria-label="Docs">
     <ul><li><a href="/docs/getting-started/">Getting started</a></li><li><a href="/docs/connect-an-agent/" aria-current="page">Connect an agent</a></li><li><a href="/docs/money/">Money</a></li><li><a href="/docs/trading/">Trading</a></li><li><a href="/docs/policy/">Policy</a></li><li><a href="/docs/security/">Security</a></li><li><a href="/docs/tools/">Tools</a></li><li><a href="/docs/troubleshooting/">Troubleshooting</a></li><li><a href="/docs/known-limits/">Known limits</a></li><li><a href="/docs/changelog/">Changelog</a></li></ul>
     <div class="side-head">For developers</div>
-    <ul><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/architecture.md" target="_blank" rel="noopener">Architecture</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security-model.md" target="_blank" rel="noopener">Security model</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/reference.md" target="_blank" rel="noopener">Reference</a></li></ul>
+    <ul><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/architecture.md" target="_blank" rel="noopener">Architecture</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security-model.md" target="_blank" rel="noopener">Security model</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/reference.md" target="_blank" rel="noopener">Reference</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/verify.md" target="_blank" rel="noopener">Check it yourself</a></li></ul>
   </nav>
 </aside>
   <article class="doc">
     <header class="doc-head">
       <h1>Connect an agent</h1>
       <p class="lede">Phosphor has no intelligence of its own. An agent drives it over MCP, the Model Context Protocol that tools like Claude Code, Codex, Hermes and Grok speak. This page shows how the app connects the agent you already use, what that agent sees, and what it can never do whatever it is told.</p>
-      <div class="doc-meta"><span class="mono">v0.10.14</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/connect-an-agent.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.10.16</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/connect-an-agent.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
     <nav class="onpage" aria-label="On this page"><ul><li><a href="#pick-your-assistant">Pick your assistant</a></li><li><a href="#what-a-pick-does">What a pick does</a></li><li><a href="#starting-it">Starting it</a></li><li><a href="#changing-it-later">Changing it later</a></li><li><a href="#what-the-agent-sees">What the agent sees</a></li><li><a href="#the-window-asks-once">The window asks once</a></li><li><a href="#what-the-agent-can-never-do">What the agent can never do</a></li><li><a href="#more-than-one-agent">More than one agent</a></li></ul></nav>
     <div class="prose">
@@ -374,8 +374,11 @@ never your keys or your phrase.&quot;</p>
 <h2 id="the-window-asks-once">The window asks once<a class="anchor" href="#the-window-asks-once" aria-label="Link to this section">#</a></h2>
 <p>An agent you start in your terminal or in another app is one Phosphor did not start, and it
 attaches with a secret any program running as you could read. So when it first attaches, the
-conversation shows a card under its list of agents: &quot;Allow this agent?&quot;, with the name the agent
-gave itself, the time it arrived, and how many more agents wait behind it. The card takes its
+conversation shows a card under its list of agents that says which assistant wants to use
+Phosphor (&quot;Claude Code wants to use Phosphor&quot;), when it connected, and how many more agents wait
+behind it. A name the card knows (Claude Code, Claude Desktop, Codex) is said plainly with that
+agent&#39;s logo; any other is shown as the name the agent gave itself. Phosphor can&#39;t check either
+name, and the card says so. The card takes its
 place in the conversation, so it covers neither your balances nor the freeze key, and a screen
 reader hears that an agent asks. Until you allow it, it can read your wallet and every move it
 asks for waits for your OK, whatever the size, and that move&#39;s card says why. Allow lets its next

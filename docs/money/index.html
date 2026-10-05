@@ -218,14 +218,14 @@
   <nav aria-label="Docs">
     <ul><li><a href="/docs/getting-started/">Getting started</a></li><li><a href="/docs/connect-an-agent/">Connect an agent</a></li><li><a href="/docs/money/" aria-current="page">Money</a></li><li><a href="/docs/trading/">Trading</a></li><li><a href="/docs/policy/">Policy</a></li><li><a href="/docs/security/">Security</a></li><li><a href="/docs/tools/">Tools</a></li><li><a href="/docs/troubleshooting/">Troubleshooting</a></li><li><a href="/docs/known-limits/">Known limits</a></li><li><a href="/docs/changelog/">Changelog</a></li></ul>
     <div class="side-head">For developers</div>
-    <ul><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/architecture.md" target="_blank" rel="noopener">Architecture</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security-model.md" target="_blank" rel="noopener">Security model</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/reference.md" target="_blank" rel="noopener">Reference</a></li></ul>
+    <ul><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/architecture.md" target="_blank" rel="noopener">Architecture</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security-model.md" target="_blank" rel="noopener">Security model</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/reference.md" target="_blank" rel="noopener">Reference</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/verify.md" target="_blank" rel="noopener">Check it yourself</a></li></ul>
   </nav>
 </aside>
   <article class="doc">
     <header class="doc-head">
       <h1>Money</h1>
       <p class="lede">Phosphor keeps money in two places, moves it between them, and pays it out to other people. This page walks through every move: where the money lives, deposit, swap, send, funding the trading account and bringing collateral back, what &quot;settling&quot; means, and the fees that make the app refuse a move.</p>
-      <div class="doc-meta"><span class="mono">v0.10.14</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/money.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.10.16</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/money.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
     <nav class="onpage" aria-label="On this page"><ul><li><a href="#where-money-lives">Where money lives</a></li><li><a href="#deposit">Deposit</a></li><li><a href="#invite-codes">Invite codes</a></li><li><a href="#swap">Swap</a></li><li><a href="#send">Send</a></li><li><a href="#fund-the-trading-account">Fund the trading account</a></li><li><a href="#withdraw-from-hyperliquid">Withdraw from Hyperliquid</a></li><li><a href="#after-the-click">After the click</a></li><li><a href="#fees-and-refusals">Fees and refusals</a></li></ul></nav>
     <div class="prose">
@@ -242,7 +242,60 @@ swap happens here, and a send leaves from here.</li>
 trading account to back positions. It comes from the intents balance and goes back to it.</li>
 </ul>
 <p>Nothing else holds money. The app signs no transaction on any chain: every move is an intent or
-a venue action signed by the one key in your wallet, and the bridge does the chain work.</p>
+a venue action signed by the one key in your wallet, and the bridge does the chain work. Once your
+vault moves to Touch ID (below), other keys sign, and the gas account holds and spends a little
+NEAR.</p>
+<h3 id="once-your-vault-moves-to-touch-id">Once your vault moves to Touch ID<a class="anchor" href="#once-your-vault-moves-to-touch-id" aria-label="Link to this section">#</a></h3>
+<p>Moving your vault to this Mac&#39;s Touch ID key splits your NEAR Intents balance in two. Until you
+move it, nothing on this page changes: one account holds everything and every move spends from it.</p>
+<ul>
+<li>Your vault is your wallet&#39;s own address, the same one as before. Deposits, invite claims, the
+trading account and every Hyperliquid withdrawal land here. Money leaves it only through a step
+you confirm with Touch ID.</li>
+<li>Your allowance is a second account inside NEAR Intents, with a key the app derives from your
+wallet key at every unlock and never writes down. Every swap, send, payout and Hyperliquid
+deposit spends from it, under the same clicks as before, and a refund goes back to it.</li>
+</ul>
+<p>&quot;All&quot; of a coin means all the allowance holds. Until this process has opened your wallet once,
+the app cannot name the allowance, so nothing is proposed before your first unlock.</p>
+<p>Your assistant sees the two apart: its wallet read shows <code>spendable</code>, the allowance, and
+<code>savings</code>, the vault. A swap bigger than the allowance needs the shortfall moved from the vault
+first, a top-up you confirm with Touch ID, and the swap quote says how much before anything is
+proposed.</p>
+<h3 id="top-ups-and-the-sweep">Top-ups and the sweep<a class="anchor" href="#top-ups-and-the-sweep" aria-label="Link to this section">#</a></h3>
+<p>The allowance has a size, $100 until you pick another in the Vault tab. Two moves keep it near
+that size, both inside NEAR Intents, both sent by your gas account (a small NEAR account the app
+derives from your wallet key, about 0.0005 NEAR a move):</p>
+<ul>
+<li><strong>A top-up</strong> moves USDC from your vault to your allowance. You ask for it in the Vault tab, or
+the window offers one when the allowance falls under a quarter of its size. It always waits
+for your click, whatever the amount, and then asks one Touch ID whose sentence names the amount:
+&quot;move 20.00 USDC from your vault to your allowance&quot;. The vault&#39;s Touch ID key signs it; your
+assistant has no way to ask for one. A top-up never takes the allowance past its size plus 10 %
+(more would only come straight back), and it does not count against the day&#39;s limits: the
+money stays yours, in your other account.</li>
+<li><strong>A move bigger than the allowance</strong> waits for your click, whatever its size, and its card says
+how much comes from the vault. Approving it asks the move&#39;s own Touch ID, then one Touch ID for
+a top-up of exactly the difference, of the coin the move spends. Cancel either one and nothing
+is signed for the move. The vault never adds more than the card said: if the allowance was
+spent while the card waited and the move now needs more, nothing is signed and the card comes
+back with the new amount for another click. A move nobody clicked never touches the vault: if
+the allowance turns out short when it runs, it stops, and nothing is signed.</li>
+<li><strong>The sweep</strong> sends money home. When the allowance is worth more than its size plus 10 %,
+everything over the size goes back to the vault with no click and no Touch ID: USDC first, then
+the other coins from the largest dollar value down, and the allowance keeps at least its size.
+It looks after every settled move that touched the allowance, every ten minutes while your
+wallet is open, when you unlock, and when you change the size. A coin the app has no price for
+never moves this way, and with no price at all nothing does. While moves are approved,
+waiting on a Touch ID or running, the coins they will spend stay: the sweep keeps the larger of
+the size and their spend, and sends home only what is over that plus 10 %, so a big move you
+approved keeps its money and a move an agent&#39;s rules hold back keeps no more than its own. A
+move whose spend the app cannot read holds the sweep back, and Freeze stops it. Each sweep
+writes one line in the log, <code>allowance_swept</code>, naming every coin and amount.</li>
+</ul>
+<p>A size of $0 sends everything priced home at the next sweep. What a Mac running someone else&#39;s
+code could spend with no Touch ID is the allowance (its size plus 10 %, $110 at the default, more
+while a move is under way) and the gas account; the vault needs your finger.</p>
 <h2 id="deposit">Deposit<a class="anchor" href="#deposit" aria-label="Link to this section">#</a></h2>
 <p>Money comes in through the deposit card, never through a tool. Press Add money on the Basic or
 Pro tab and the steps run in place, beside the chat. The Addresses row in the Vault tab opens the
@@ -571,7 +624,7 @@ before. When you hold the coin from more than one chain inside NEAR Intents (USD
 Base and on Arbitrum, say), the send takes the largest, and the card names it after the amount:
 1 USDC from Base. Its Details say why it asks and what the chain says about the address.</p>
 <h3 id="the-touch-id-sentence">The Touch ID sentence<a class="anchor" href="#the-touch-id-sentence" aria-label="Link to this section">#</a></h3>
-<p>On an enclave wallet the click puts up a Touch ID dialog whose sentence the app composes from the
+<p>On a Touch ID wallet the click puts up a Touch ID dialog whose sentence the app composes from the
 proposal&#39;s own fields, for example &quot;Approve: Pay 0.01 ETH to 0xb583f419...84BB5DB0 on Ethereum
 ($24.40)&quot;. The receiver is shortened to eight characters at each end, counted after the prefix
 every address of its kind shares (<code>0x</code>, <code>bc1q</code>, <code>bitcoincash:q</code>, <code>addr1q</code>, <code>UQ</code>, <code>r</code>, <code>G</code>, <code>T</code>),
@@ -588,7 +641,8 @@ agent attaches to a receiver is kept as data and never drawn as a name.</p>
 <h2 id="fund-the-trading-account">Fund the trading account<a class="anchor" href="#fund-the-trading-account" aria-label="Link to this section">#</a></h2>
 <p><code>propose_hl_deposit</code> moves USDC from your intents balance into your Hyperliquid account so a plan
 has collateral. One signed intent, nothing sent on any chain, and the account credited is your
-own. The card is titled Fund trading. Under the click threshold it runs on its own, with the same
+own. Once your vault has moved, the allowance pays and the vault&#39;s trading account is credited; a
+deposit that fails refunds to the allowance. The card is titled Fund trading. Under the click threshold it runs on its own, with the same
 exceptions as a swap: an assistant that read outside text, or one started outside Phosphor and
 not allowed yet, waits for your click.</p>
 <p>The fee is almost flat, about $0.32 plus 0.25 percent, so it is about 3.4 percent on $10 and

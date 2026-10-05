@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Trading</title>
-<meta name="description" content="The Trade tab is the Hyperliquid perpetuals surface: the chart, your positions, your orders and your plans. A perpetual is a futures contract with no expiry date, so you can hold a long or a short for as long as your collateral lasts. This page explains what a proposed trade is, when it needs your click, what an armed plan may do on its own, and what stops when the wallet locks.">
+<meta name="description" content="The Trade tab is the Hyperliquid perpetuals surface: the chart, your positions, your orders and your plans. A perpetual is a futures contract with no expiry date, so you can hold a long or a short for as long as your collateral lasts. This page explains what a proposed trade is, when it needs your click, what an armed plan may do on its own, what stops when the wallet locks, and what Touch ID asks for once your vault has moved to it.">
 <link rel="canonical" href="https://phosphor.money/docs/trading/">
 <meta name="theme-color" content="#0E0F13">
 <link rel="icon" href="/favicon.ico?v=9" sizes="32x32">
@@ -14,7 +14,7 @@
 <meta property="og:site_name" content="Phosphor">
 <meta property="og:url" content="https://phosphor.money/docs/trading/">
 <meta property="og:title" content="Trading">
-<meta property="og:description" content="The Trade tab is the Hyperliquid perpetuals surface: the chart, your positions, your orders and your plans. A perpetual is a futures contract with no expiry date, so you can hold a long or a short for as long as your collateral lasts. This page explains what a proposed trade is, when it needs your click, what an armed plan may do on its own, and what stops when the wallet locks.">
+<meta property="og:description" content="The Trade tab is the Hyperliquid perpetuals surface: the chart, your positions, your orders and your plans. A perpetual is a futures contract with no expiry date, so you can hold a long or a short for as long as your collateral lasts. This page explains what a proposed trade is, when it needs your click, what an armed plan may do on its own, what stops when the wallet locks, and what Touch ID asks for once your vault has moved to it.">
 <meta property="og:image" content="https://phosphor.money/og.png?v=2">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/Sora-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
@@ -218,16 +218,16 @@
   <nav aria-label="Docs">
     <ul><li><a href="/docs/getting-started/">Getting started</a></li><li><a href="/docs/connect-an-agent/">Connect an agent</a></li><li><a href="/docs/money/">Money</a></li><li><a href="/docs/trading/" aria-current="page">Trading</a></li><li><a href="/docs/policy/">Policy</a></li><li><a href="/docs/security/">Security</a></li><li><a href="/docs/tools/">Tools</a></li><li><a href="/docs/troubleshooting/">Troubleshooting</a></li><li><a href="/docs/known-limits/">Known limits</a></li><li><a href="/docs/changelog/">Changelog</a></li></ul>
     <div class="side-head">For developers</div>
-    <ul><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/architecture.md" target="_blank" rel="noopener">Architecture</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security-model.md" target="_blank" rel="noopener">Security model</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/reference.md" target="_blank" rel="noopener">Reference</a></li></ul>
+    <ul><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/architecture.md" target="_blank" rel="noopener">Architecture</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security-model.md" target="_blank" rel="noopener">Security model</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/reference.md" target="_blank" rel="noopener">Reference</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/verify.md" target="_blank" rel="noopener">Check it yourself</a></li></ul>
   </nav>
 </aside>
   <article class="doc">
     <header class="doc-head">
       <h1>Trading</h1>
-      <p class="lede">The Trade tab is the <a href="https://hyperliquid.xyz" target="_blank" rel="noopener">Hyperliquid</a> perpetuals surface: the chart, your positions, your orders and your plans. A perpetual is a futures contract with no expiry date, so you can hold a long or a short for as long as your collateral lasts. This page explains what a proposed trade is, when it needs your click, what an armed plan may do on its own, and what stops when the wallet locks.</p>
-      <div class="doc-meta"><span class="mono">v0.10.14</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/trading.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <p class="lede">The Trade tab is the <a href="https://hyperliquid.xyz" target="_blank" rel="noopener">Hyperliquid</a> perpetuals surface: the chart, your positions, your orders and your plans. A perpetual is a futures contract with no expiry date, so you can hold a long or a short for as long as your collateral lasts. This page explains what a proposed trade is, when it needs your click, what an armed plan may do on its own, what stops when the wallet locks, and what Touch ID asks for once your vault has moved to it.</p>
+      <div class="doc-meta"><span class="mono">v0.10.16</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/trading.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
-    <nav class="onpage" aria-label="On this page"><ul><li><a href="#trade-mode">Trade mode</a></li><li><a href="#a-proposed-trade">A proposed trade</a></li><li><a href="#the-click">The click</a></li><li><a href="#armed-rules">Armed rules</a></li><li><a href="#after-the-wallet-locks">After the wallet locks</a></li><li><a href="#reading-the-account">Reading the account</a></li></ul></nav>
+    <nav class="onpage" aria-label="On this page"><ul><li><a href="#trade-mode">Trade mode</a></li><li><a href="#a-proposed-trade">A proposed trade</a></li><li><a href="#the-click">The click</a></li><li><a href="#armed-rules">Armed rules</a></li><li><a href="#after-the-wallet-locks">After the wallet locks</a></li><li><a href="#the-owner-key-after-the-move-to-touch-id">The owner key after the move to Touch ID</a></li><li><a href="#the-trading-key-after-the-move-to-touch-id">The trading key after the move to Touch ID</a></li><li><a href="#reading-the-account">Reading the account</a></li></ul></nav>
     <div class="prose">
 <h2 id="trade-mode">Trade mode<a class="anchor" href="#trade-mode" aria-label="Link to this section">#</a></h2>
 <p>Switch to the Trade tab in the top bar, or tell your assistant &quot;switch to trading&quot;. Everything
@@ -304,6 +304,9 @@ send, no funding, no withdrawal, and no new plan can arm. (Copies a signature le
 stay in memory until it is reused; see <a href="/docs/known-limits/">Known limits</a>.) A plan that was already armed keeps its session
 key until that session ends, so a bot that outlives a lock holds trading authority, not custody.
 It can place the entry it was armed for and its exits; it cannot move money out.</p>
+<p>Once your vault has moved to Touch ID, a withdrawal is the one exception: it never used the key the
+lock wipes, and it asks for a Touch ID of its own whether the app is locked or not (see
+<a href="#the-owner-key-after-the-move-to-touch-id">below</a>).</p>
 <p>A plan whose session has ended while the wallet is locked waits as Needs unlock and re-arms when
 you unlock. Only Unlock re-arms it: showing an address, revealing the phrase or approving a move
 with Touch ID does not, not even while the app is starting. If the prices behind the watcher stop coming in, the plan says Waiting for prices and
@@ -318,6 +321,70 @@ wallet locked and no plan running, or no trading key for the account) nothing on
 be closed, the freeze still stops everything else, and the window says the positions are still
 open.
 See <a href="/docs/getting-started/#freeze-everything">Getting started</a>.</p>
+<h2 id="the-owner-key-after-the-move-to-touch-id">The owner key after the move to Touch ID<a class="anchor" href="#the-owner-key-after-the-move-to-touch-id" aria-label="Link to this section">#</a></h2>
+<p>Moving your vault to this Mac&#39;s Touch ID key takes the wallet&#39;s original key, the owner key, out of
+memory for good. On Hyperliquid that key still owns the trading account, so each thing only it can
+sign asks for a Touch ID of its own:</p>
+<ul>
+<li>sending USDC out of the account, which is what a withdrawal does;</li>
+<li>moving USDC between the account&#39;s spot and perp sides (a standard account only; a unified account
+has one balance);</li>
+<li>approving a new trading key for the account (Allow trading, <a href="#the-trading-key-after-the-move-to-touch-id">below</a>).</li>
+</ul>
+<p>The dialog names the action, the amount and where the money goes, for example &quot;Send 25.00 USDC from
+your Hyperliquid account to 0xaf4fda38...3184d954&quot;. The app writes that sentence from the exact
+action it is about to sign, and it never asks for an action it cannot name in full. The touch opens
+the owner key for that one signature, and the key is wiped as soon as the signature is made. Nothing
+stays open: the next action asks again.</p>
+<p>A withdrawal asks once. Your click on the card approves it, and the Touch ID comes when the send is
+signed, after 1Click has made the address the money goes to: that is the address in the dialog. A
+standard account that first has to move collateral from perp to spot asks twice, once per step, and
+the card says so. If Hyperliquid does not answer a send, the app posts the same signed send again,
+so one send never asks twice. Cancel the Touch ID and nothing is signed; the card says you said no.</p>
+<p>Funding the account works like any other move from your allowance: it follows your rules, and the
+owner key plays no part. On a standard account, moving what lands from spot to perp asks for a Touch
+ID of its own.</p>
+<p>One touch gives one owner action. Read the dialog before you touch it: an app that has been taken
+over could ask for a touch that looks right and use the key for something else, and one touch is
+then enough to move everything on Hyperliquid. Your vault is out of its reach, because after the move
+this key no longer signs for the vault. Keep only your trading margin on Hyperliquid.</p>
+<h2 id="the-trading-key-after-the-move-to-touch-id">The trading key after the move to Touch ID<a class="anchor" href="#the-trading-key-after-the-move-to-touch-id" aria-label="Link to this section">#</a></h2>
+<p>Plans trade with a trading key: a Hyperliquid API wallet that can place and cancel orders and cannot
+withdraw, transfer or approve another key. Before the move, the trading key is the one
+<code>scripts/hl-agent.ts</code> wrote into your wallet file, and that does not change for a wallet that has not
+moved. After the move, your wallet file takes no new key, so Phosphor makes the trading key from the
+owner key instead, every time the wallet opens, beside your allowance and gas keys. It is never
+written anywhere, and the lock wipes it. A key made this way reaches nothing new: the owner key
+already owns the trading account.</p>
+<p>Allow trading on Hyperliquid approves that key with one Touch ID. The dialog names the key and how
+long it may trade, for example &quot;Let 0xca9aad7b...c52f1e04 trade on your Hyperliquid account for 90
+days&quot;, and the app writes that sentence from the exact approval it signs. The owner key opens for that
+one signature and is wiped once it is made. Your plans trade with the new key from that moment, with
+no second touch. Until you approve one, the key your wallet file already held keeps trading.</p>
+<ul>
+<li><strong>90 days.</strong> Hyperliquid retires the key on its own after that. Allow trading again before then to
+renew it: the same one Touch ID, for a new key.</li>
+<li><strong>One key at a time.</strong> The new key takes the name Phosphor&#39;s trading keys have on Hyperliquid, so
+the key it replaces stops working the same moment. A plan that holds the old key has to finish or
+be cancelled first, and the window says so.</li>
+<li><strong>Never the same key twice.</strong> Each approval is a new key, numbered in <code>state/vault.json</code>. Hyperliquid
+forgets the history of a retired key, and approving it again would let its old orders be replayed,
+so the number only goes up. An approval that never reached Hyperliquid (a cancel, a refusal) is
+tried again with the same key, since that key never signed anything.</li>
+<li><strong>Open first.</strong> The next key is made when the wallet opens, so a locked wallet is asked to open
+before it can allow trading. If you approved a key and want another in the same session, lock and
+open the wallet once more.</li>
+<li>If Hyperliquid does not answer, Phosphor reads its list of keys for your account before saying
+anything, and never signs the approval twice. If the list cannot say either, allow trading again.</li>
+</ul>
+<p>The trading key is HKDF-SHA256 of the owner key&#39;s 32 bytes, salt <code>phosphor</code>, info
+<code>phosphor/hl-agent/v&lt;n&gt;</code> for key number n, read as a secp256k1 key (redrawn under <code>/1</code>, <code>/2</code> in the
+rare case it is not one). Anyone rebuilding it by hand can check against this: the public test key
+<code>4c0883a6...f362318</code> gives key 1 <code>9bd79f61...b541cdcc</code>, address
+<code>0xCa9AAd7B7e6D078718298039b40ef289C52F1E04</code>, and key 2 <code>b0193927...b30aa966</code>, address
+<code>0x4b1495fD164fE42D80718ece02b34019fbc3aF0d</code> (the full vectors are in
+<code>tests/fixtures/hl-agent-keys.ts</code>). Whoever holds the owner key, or its backup, can make this key too,
+which reaches nothing the owner key does not.</p>
 <h2 id="reading-the-account">Reading the account<a class="anchor" href="#reading-the-account" aria-label="Link to this section">#</a></h2>
 <p>Ask your assistant for the whole situation and it reads <code>trade_read</code>: account health, every open
 position with its distance to liquidation, working orders including stops and targets, recent

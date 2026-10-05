@@ -218,14 +218,14 @@
   <nav aria-label="Docs">
     <ul><li><a href="/docs/getting-started/">Getting started</a></li><li><a href="/docs/connect-an-agent/">Connect an agent</a></li><li><a href="/docs/money/">Money</a></li><li><a href="/docs/trading/">Trading</a></li><li><a href="/docs/policy/">Policy</a></li><li><a href="/docs/security/" aria-current="page">Security</a></li><li><a href="/docs/tools/">Tools</a></li><li><a href="/docs/troubleshooting/">Troubleshooting</a></li><li><a href="/docs/known-limits/">Known limits</a></li><li><a href="/docs/changelog/">Changelog</a></li></ul>
     <div class="side-head">For developers</div>
-    <ul><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/architecture.md" target="_blank" rel="noopener">Architecture</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security-model.md" target="_blank" rel="noopener">Security model</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/reference.md" target="_blank" rel="noopener">Reference</a></li></ul>
+    <ul><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/architecture.md" target="_blank" rel="noopener">Architecture</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security-model.md" target="_blank" rel="noopener">Security model</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/reference.md" target="_blank" rel="noopener">Reference</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/verify.md" target="_blank" rel="noopener">Check it yourself</a></li></ul>
   </nav>
 </aside>
   <article class="doc">
     <header class="doc-head">
       <h1>Security</h1>
       <p class="lede">Phosphor treats the agent as useful and untrusted at the same time: it may read everything and draft anything, and it can never decide. This page says, for a user rather than an auditor, how that is enforced, what the Secure Enclave and the lock buy you, and where the limits honestly sit. The full model, with the code paths and the tests behind each claim, is in the <a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security-model.md" target="_blank" rel="noopener">Security model</a>; its <a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security-model.md#threat-model" target="_blank" rel="noopener">threat model</a> is the short version, with the test that proves each defence and what stays open.</p>
-      <div class="doc-meta"><span class="mono">v0.10.14</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.10.16</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
     <nav class="onpage" aria-label="On this page"><ul><li><a href="#what-the-agent-can-read-draft-and-never-decide">What the agent can read, draft and never decide</a></li><li><a href="#a-web-page-is-not-an-instruction">A web page is not an instruction</a></li><li><a href="#the-window-token">The window token</a></li><li><a href="#the-secure-enclave-and-touch-id">The Secure Enclave and Touch ID</a></li><li><a href="#the-process-that-holds-the-key">The process that holds the key</a></li><li><a href="#the-files-it-runs">The files it runs</a></li><li><a href="#check-a-release-yourself">Check a release yourself</a></li><li><a href="#the-lock">The lock</a></li><li><a href="#the-honest-limits">The honest limits</a></li><li><a href="#reporting-a-problem">Reporting a problem</a></li></ul></nav>
     <div class="prose">
@@ -240,7 +240,7 @@ refuse and kill routes do not appear in its source, and a test reads the file to
 execute, and a test holds the live tool list to that. See <a href="/docs/tools/">Tools</a>.</li>
 <li>Every write is a proposal judged by the policy engine, see <a href="/docs/policy/">Policy</a>. A send, a
 withdrawal and a rule change always wait for your click, whatever their size.</li>
-<li>The one field that names a receiver, on a send, is behind your click and, on an enclave wallet,
+<li>The one field that names a receiver, on a send, is behind your click and, on a Touch ID wallet,
 a Touch ID dialog that names the receiver itself. The agent is told to read the address back to
 you first, but the app cannot check where an address came from: read it on the card.</li>
 <li>A pending card cannot be dismissed from the chat. If the agent disconnects, the card is still
@@ -307,14 +307,15 @@ alone. Another account on this Mac, or a sandboxed app, has none of these and le
 version.</p>
 <h2 id="the-secure-enclave-and-touch-id">The Secure Enclave and Touch ID<a class="anchor" href="#the-secure-enclave-and-touch-id" aria-label="Link to this section">#</a></h2>
 <p>On a Mac with a Secure Enclave, the wallet file is sealed with a data key, and that data key is
-wrapped to a key the enclave made and cannot export. The wallet opens with Touch ID or your Mac
+wrapped to a key the Secure Enclave made and cannot export. The wallet opens with Touch ID or your Mac
 login password, and each click on a proposal ends in a Touch ID dialog whose sentence the app
 composes from the proposal&#39;s numbers: the amount, the receiver shortened to eight characters at
 each end (a NEAR name whole), the chain. No agent-written text reaches that dialog. Read it before you confirm.</p>
 <p>A Touch ID or a password opens only what it was asked for. &quot;Show your deposit address&quot; verifies
 the address, and &quot;Reveal your recovery phrase&quot;, or the password typed to see the words, shows the
-words; none of them opens the wallet, so a locked wallet stays locked, no trading plan re-arms and
-nothing waiting for an unlock runs. The Vault tab drops the words when their row closes or the
+words; on a wallet that has no phrase, &quot;Reveal your private key&quot; shows its key the same way. None
+of them opens the wallet, so a locked wallet stays locked, no trading plan re-arms and nothing
+waiting for an unlock runs. The Vault tab drops the words or the key when their row closes or the
 wallet locks, and the window&#39;s read cache never keeps them. The Touch ID that approves a move on a
 locked wallet opens it for that move alone: nothing else can start while it signs, and the key
 goes as soon as it has.
@@ -323,17 +324,31 @@ wallet is open, never on a touch for one move.</p>
 <p>Two limits belong here. While the vault is open, the unwrapped wallet key sits in the backend&#39;s
 memory as bytes, so the app can sign the moves you approved and the small ones the policy allows.
 The lock overwrites those bytes, but copies of the key that a signature or an unlock left as text
-stay in the app&#39;s memory until it is reused. And every build so far, the signed releases
-included, binds the enclave key to this Mac rather than to Phosphor. On a signed release the vault
-service answers only the signed Phosphor app; on a copy you build yourself, which is signed ad
-hoc, it checks the app&#39;s identifier alone, which another app can claim. Either way another app
-running as you could ask to use the key with a Touch ID prompt of its own, and the Keys row in the
-Vault tab says so. Binding the key to Phosphor itself takes a keychain entitlement that no build
-carries yet.</p>
+stay in the app&#39;s memory until it is reused. And a Touch ID wallet made before Phosphor-only
+existed, or by a copy of Phosphor you build yourself, keeps its key where any app running as you
+on this Mac can ask to use it, with a Touch ID prompt of its own. On a signed release, Phosphor&#39;s
+Secure Enclave service answers only the signed Phosphor app; on a copy you build yourself it
+checks only the app&#39;s name, which another app can claim. A signed release keeps the key of every
+wallet it makes where only Phosphor reaches it, and before it asks for your finger it refuses a
+wallet file that is not the one it saved.</p>
+<p>On a signed release, Make it Phosphor-only in the Vault tab&#39;s Keys row gives an older wallet the
+same protection with one Touch ID, once its backup is proven. From then on the wallet&#39;s key is in
+one place on this Mac, so your backup is the way back if anything happens to this Mac. The step
+cannot reach copies of the old wallet file saved before that day (a Time Machine backup, a sync
+folder, a copy you made): Phosphor refuses them, but another program running as you can still open
+one and ask for your Touch ID, until the wallet moves to new keys. Delete the copies you know of.
+Phosphor-only is also one rule for the whole Mac: <a href="/docs/known-limits/">Known limits</a> says what that
+means before you make a second wallet.</p>
+<p>The Vault tab can also move your vault to this Mac&#39;s Touch ID key and a paper key you write by
+hand. After that the wallet key no longer opens the vault and stays out of the open app&#39;s memory,
+every move out of the vault asks for a Touch ID that names it, a top-up always waits for your
+click, and your assistant spends from a small allowance. That closes the first limit above for the
+vault, not for the allowance, the gas account or Hyperliquid, whose keys are in memory while the
+wallet is open. See <a href="/docs/getting-started/#move-your-vault-to-touch-id">Getting started</a>.</p>
 <p>A software wallet is locked with your password and a slow key derivation. Anything that learns
 the password, or reads the disk and guesses it, has the keys. A click on a software wallet is a
 click alone, with no biometric: Approve runs the move with no Touch ID after it. That is the
-custody you chose, not a bypass of it. When your Mac has an enclave, Protect with Touch ID in the
+custody you chose, not a bypass of it. When your Mac has a Secure Enclave, Protect with Touch ID in the
 Keys row moves the same wallet behind it; use it when you can.</p>
 <h2 id="the-process-that-holds-the-key">The process that holds the key<a class="anchor" href="#the-process-that-holds-the-key" aria-label="Link to this section">#</a></h2>
 <p>While the vault is open, the key sits in one process: the backend the app starts. The app starts
@@ -390,8 +405,8 @@ find . -type f ! -name .DS_Store | sed &#39;s|^\./||&#39; | LC_ALL=C sort | tr &
 </code></pre>
 </li>
 <li><p>The digest the release&#39;s source builds, on a Mac with Node 24 and Xcode&#39;s command line tools.
-Use the tag of the version you have, such as v0.10.14:</p>
-<pre><code>git clone --depth 1 --branch v0.10.14 https://github.com/karimbabasf/phosphor.git
+Use the tag of the version you have, such as v0.10.16:</p>
+<pre><code>git clone --depth 1 --branch v0.10.16 https://github.com/karimbabasf/phosphor.git
 cd phosphor &amp;&amp; npm run bundle
 </code></pre>
 <p>It prints <code>payload: digest</code> and the value.</p>
@@ -401,11 +416,16 @@ cd phosphor &amp;&amp; npm run bundle
 into the digest, never dates or owners, so the same tag gives the same digest on any Mac. Finder&#39;s
 <code>.DS_Store</code> files are left out because Finder writes one into any folder it shows.</p>
 <p>In that clone, the check the release itself passed before and after signing compares the
-payload&#39;s own files in your copy with the tag, one by one, and reads the entitlements of every
-binary in it. It does not compare the compiled programs (the shell, the bundled Node, the Secure
-Enclave service) or the installed packages:</p>
+payload&#39;s own files in your copy with the tag, one by one, reads the entitlements of every binary
+in it, and checks the vault service: the provisioning profile inside it is the tag&#39;s, run by
+hand it starts (it stops at once, because only the app may start it), and it carries the five chip
+ops and the grammar&#39;s newest rule. It does not compare the
+compiled programs (the shell, the bundled Node, the Secure Enclave service) or the installed
+packages:</p>
 <pre><code>node scripts/release-check.ts --app /Applications/Phosphor.app --checkout . --stage signed
 </code></pre>
+<p>With <code>--stage signed</code> it also asks NEAR which intents.near is deployed (see below), so it can fail
+for that alone, with your copy as it should be.</p>
 <p>The defences in this document are checked by an attack suite the repository ships: <code>npm run attack</code>
 runs the app this checkout builds (<code>npm run app:build</code> makes the ad-hoc bundle it boots), plays the
 hostile local process against each defence on a throwaway data dir and home, prints a table, and
@@ -415,6 +435,17 @@ need a Developer ID build. No check changes the bundle it is handed, so a notari
 why. The screen-lock check posts the lock signal to the one shell it started; <code>-- --real-screen-lock</code>
 posts macOS&#39;s own instead, which every app on the Mac receives. The apps it starts keep their
 window and WebKit state in the throwaway home, not in the installed app&#39;s <code>~/Library</code>.</p>
+<p>The NEAR Intents verifier is not part of a release, and its owners can upgrade it. In the same
+clone, <code>node scripts/verifier-check.ts</code> reads which verifier is deployed (its version and the hash
+of its code) and prints <code>spiked: yes</code> only for the build the Touch ID vault was tested against,
+0.4.4. Add <code>--simulate</code> to also run the vault&#39;s first proof and its move to a Touch ID key through
+<code>simulate_intents</code>, signed by keys made for that run, and check that the verifier reports exactly
+the events the app expects. Neither sends anything. A release asks the same question: once the app
+is signed, <code>scripts/release-check.ts</code> reads the deployed verifier from two keyless NEAR RPCs run by
+different companies, FastNEAR and dRPC, and stops the release on any other build, when either gives
+no answer, or when the two name different builds, until someone reruns the spike on it and pins the
+new pair in <code>scripts/verifier-gate.ts</code> and <code>src/relay/verifier.ts</code>. One RPC&#39;s answer carries no
+proof, so one provider alone cannot pass a release.</p>
 <h2 id="the-lock">The lock<a class="anchor" href="#the-lock" aria-label="Link to this section">#</a></h2>
 <p>The wallet locks after five minutes with nobody at the window by default (the Vault tab
 offers 5 minutes, 15 minutes or 1 hour), when the Mac wakes from a sleep of more than a minute,

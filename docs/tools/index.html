@@ -218,14 +218,14 @@
   <nav aria-label="Docs">
     <ul><li><a href="/docs/getting-started/">Getting started</a></li><li><a href="/docs/connect-an-agent/">Connect an agent</a></li><li><a href="/docs/money/">Money</a></li><li><a href="/docs/trading/">Trading</a></li><li><a href="/docs/policy/">Policy</a></li><li><a href="/docs/security/">Security</a></li><li><a href="/docs/tools/" aria-current="page">Tools</a></li><li><a href="/docs/troubleshooting/">Troubleshooting</a></li><li><a href="/docs/known-limits/">Known limits</a></li><li><a href="/docs/changelog/">Changelog</a></li></ul>
     <div class="side-head">For developers</div>
-    <ul><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/architecture.md" target="_blank" rel="noopener">Architecture</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security-model.md" target="_blank" rel="noopener">Security model</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/reference.md" target="_blank" rel="noopener">Reference</a></li></ul>
+    <ul><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/architecture.md" target="_blank" rel="noopener">Architecture</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/security-model.md" target="_blank" rel="noopener">Security model</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/reference.md" target="_blank" rel="noopener">Reference</a></li><li><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/verify.md" target="_blank" rel="noopener">Check it yourself</a></li></ul>
   </nav>
 </aside>
   <article class="doc">
     <header class="doc-head">
       <h1>Tools</h1>
       <p class="lede">Phosphor registers 50 tools for the agent that drives it, and every one is listed here in five groups: read, propose, chart and trade surface, agents, and other. Reads change nothing. Propose tools return a proposal id and a simulation, and cannot approve or refuse anything: a move your rules let run without a click runs at once, and every other move waits for your click or is refused. Every call the app accepts, read or write, is written to the audit log, except <code>skill</code> and <code>whats_new</code>, which the agent&#39;s own connection answers from a file on this Mac. A worker an agent spawns is an analyst: the tools marked lead only are not registered for it at all, so there is nothing to talk it into. The agent in the chat does not get ten of them: <code>start</code>, <code>composition</code>, <code>log_tail</code>, <code>set_theme</code>, <code>profile_learned</code> and the five agent tools; its instructions already carry what <code>start</code> says.</p>
-      <div class="doc-meta"><span class="mono">v0.10.14</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/tools.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.10.16</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/tools.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
     <nav class="onpage" aria-label="On this page"><ul><li><a href="#read">Read</a></li><li><a href="#propose">Propose</a></li><li><a href="#chart-and-trade-surface">Chart and trade surface</a></li><li><a href="#agents">Agents</a></li><li><a href="#other">Other</a></li><li><a href="#web-search-and-page-reading">Web search and page reading</a></li><li><a href="#what-is-not-here">What is not here</a></li></ul></nav>
     <div class="prose">
@@ -243,7 +243,7 @@
 </tr>
 <tr>
 <td><code>wallet</code></td>
-<td>Everything held: one row per balance inside NEAR Intents and one for the Hyperliquid account, with quantity, price, value and share</td>
+<td>Everything held: one row per balance inside NEAR Intents and one for the Hyperliquid account, with quantity, price, value and share. Once your vault has moved to Touch ID it also shows <code>spendable</code>, the allowance a move spends from, and <code>savings</code>, the vault, which moves only through a top-up you confirm with Touch ID, see <a href="/docs/money/#once-your-vault-moves-to-touch-id">Money</a></td>
 </tr>
 <tr>
 <td><code>deposit</code></td>
@@ -279,7 +279,7 @@
 </tr>
 <tr>
 <td><code>swap_quote</code></td>
-<td>What a swap would get right now: the amount in, the amount out expected, the least you would get, the fee and the time it takes, or a sentence saying why there is no quote. Files nothing</td>
+<td>What a swap would get right now: the amount in, the amount out expected, the least you would get, the fee and the time it takes, or a sentence saying why there is no quote. Once your vault has moved, a swap bigger than the allowance comes back with <code>topUp</code>, the shortfall that moves from the vault first, behind your Touch ID. Files nothing</td>
 </tr>
 <tr>
 <td><code>swap_check</code></td>
@@ -319,7 +319,7 @@
 </tr>
 <tr>
 <td><code>intents_activity</code></td>
-<td>What an account has moved inside NEAR Intents: deposits, withdrawals, swap legs and sends</td>
+<td>What an account has moved inside NEAR Intents: deposits, withdrawals, swap legs and sends. With no account named it reads the one your moves spend from: the allowance once your vault has moved</td>
 </tr>
 <tr>
 <td><code>web_read</code></td>
