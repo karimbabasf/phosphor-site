@@ -516,6 +516,12 @@ backup kept off this Mac is the way back.</li>
 whether that is USDC on NEAR or USDC bridged from Ethereum; both are in the chip&#39;s token table,
 and a payload names each ticker once, so one sentence never says USDC twice. The value is the
 same either way. What closes it: nothing planned.</li>
+<li><strong>A coin outside the chip&#39;s token table is said in base units.</strong> The chip trusts a ticker and
+decimals only from its own table, built into the vault service. Any other coin still leaves the
+vault, so nothing is ever stuck there, but its sentence says the raw base units and the coin&#39;s id
+(&quot;move 641,867,112,059 units of nep245:v2_1.omni.hot.tg:1117_&quot;), because a ticker or decimals
+from the backend could be a lie. Read the leading digits against the move card. The receiver is
+still only your pinned allowance. What closes it: nothing planned.</li>
 <li><strong>One marker refuses every device-bound file on the Mac.</strong> Markers are one pool for the whole
 Mac, and while any exists the service refuses every device-bound key file. So the first wallet a
 signed release binds, makes or restores, from any copy and in any data folder, stops every

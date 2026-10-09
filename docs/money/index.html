@@ -228,14 +228,15 @@
     <header class="doc-head">
       <h1>Money</h1>
       <p class="lede">Phosphor keeps money in two places, moves it between them, and pays it out to other people. This page walks through every move: where the money lives, deposit, swap, send, funding the trading account and bringing collateral back, what &quot;settling&quot; means, and the fees that make the app refuse a move.</p>
-      <div class="doc-meta"><span class="mono">v0.10.19</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/money.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.11.4</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/money.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
     <nav class="onpage" aria-label="On this page"><ul><li><a href="#where-money-lives">Where money lives</a></li><li><a href="#deposit">Deposit</a></li><li><a href="#invite-codes">Invite codes</a></li><li><a href="#swap">Swap</a></li><li><a href="#send">Send</a></li><li><a href="#fund-the-trading-account">Fund the trading account</a></li><li><a href="#withdraw-from-hyperliquid">Withdraw from Hyperliquid</a></li><li><a href="#after-the-click">After the click</a></li><li><a href="#fees-and-refusals">Fees and refusals</a></li></ul></nav>
     <div class="prose">
 <h2 id="where-money-lives">Where money lives<a class="anchor" href="#where-money-lives" aria-label="Link to this section">#</a></h2>
 <p>Money lives in two pockets. The Basic tab adds them up: a ring with your total inside it and one
-tile per coin. The Pro tab lists your NEAR Intents balance coin by coin, with the trading account
-on its own line that opens the Trade tab, where everything about Hyperliquid lives.</p>
+tile per coin. The Pro tab&#39;s total adds them up too, and under it lists your NEAR Intents balance
+coin by coin, with the trading account on its own line that opens the Trade tab, where everything
+about Hyperliquid lives.</p>
 <ul>
 <li>Your <a href="https://near-intents.org" target="_blank" rel="noopener">NEAR Intents</a> balance. NEAR Intents is a settlement layer where
 a signed message (an intent) tells a market maker (a solver) what you want, and the solver
@@ -542,7 +543,10 @@ above it, the card shows what you pay and what you get at least, and waits for y
 swap held for its price or for an earlier swap of the same coin says so on its card at every
 size, each reason on its own line. See
 <a href="/docs/policy/#the-click-threshold">Policy</a>.</p>
-<p>Every coin the swap service lists has a price in your balance. A swap that spends a coin priced
+<p>Every coin the swap service lists has a price in your balance. The balance on screen moves with
+each coin&#39;s market about once a second: a coin Hyperliquid trades is shown at its live mid price,
+as long as that is within 10% of the coin&#39;s own price. Rules, limits and swaps never use that
+live price; they use the coin&#39;s own price, read every 15 seconds to a minute. A swap that spends a coin priced
 only by that list is judged at the larger of the listed price and what the quote says arrives,
 so a wrong listed price cannot make a move look small. Three cases always wait for your click,
 whatever the size: a swap whose listed price nothing in the quote can check, a swap that spends a
@@ -652,7 +656,12 @@ not allowed yet, waits for your click.</p>
 about 0.3 percent on $1,000. The app refuses any deposit whose fee is above 5 percent, which is
 why a deposit under 7 USDC is refused, and it refuses a quote that would land less than 5 USDC.
 While fees on Arbitrum spike, a deposit waits instead of risking the money. The rail finishes by
-reading the account, not by trusting the bridge&#39;s word.</p>
+reading the account, not by trusting the bridge&#39;s word: the card says the money landed the moment
+Hyperliquid&#39;s own ledger shows this deposit&#39;s credit, with the amount credited, without waiting for
+the swap service to report it, which can trail the credit by half a minute. The credit counts only
+once NEAR shows this deposit&#39;s own transfer spent, only when it falls between the card&#39;s floor and
+what the deposit spent, and never while a second deposit to the same account is on its way. The
+swap service&#39;s word still decides a refund, and still settles a deposit the ledger never shows.</p>
 <h2 id="withdraw-from-hyperliquid">Withdraw from Hyperliquid<a class="anchor" href="#withdraw-from-hyperliquid" aria-label="Link to this section">#</a></h2>
 <p><code>propose_hl_withdraw</code> brings collateral back into your intents balance. It is the only way money
 leaves Hyperliquid, it always waits for your click, and it is refused while any position is open

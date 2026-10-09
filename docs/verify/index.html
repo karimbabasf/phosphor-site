@@ -228,7 +228,7 @@
     <header class="doc-head">
       <h1>Check it yourself</h1>
       <p class="lede">Phosphor&#39;s wallet makes seven security claims. For each one this page names the code that enforces it, the test that fails if it stops holding, and the command that runs that test, followed by the lines it prints when the claim holds. Then it shows how to check your download and your vault on NEAR with tools that are not Phosphor&#39;s, and what you cannot check yet.</p>
-      <div class="doc-meta"><span class="mono">v0.10.19</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/verify.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
+      <div class="doc-meta"><span class="mono">v0.11.4</span><a href="https://github.com/karimbabasf/phosphor/blob/main/docs/verify.md" target="_blank" rel="noopener">Edit on GitHub</a></div>
     </header>
     <nav class="onpage" aria-label="On this page"><ul><li><a href="#before-you-start">Before you start</a></li><li><a href="#the-claims">The claims</a></li><li><a href="#check-your-download">Check your download</a></li><li><a href="#check-your-vault-on-near">Check your vault on NEAR</a></li><li><a href="#what-you-cannot-check-yet">What you cannot check yet</a></li></ul></nav>
     <div class="prose">
@@ -269,7 +269,7 @@ run of the move, signed by keys made for it; <code>spiked: yes</code> says it is
 ✔ the migration bundle simulates to exactly C7&#39;s five events on P_a&#39;s hash, and runs to the four views
 ✔ a key someone adds to the vault while the move is being signed is caught after it: the vault moved, and the window is told it holds a key the move did not add
 $ node scripts/verifier-check.ts --simulate
-intents.near 0.4.4 EHTzkK...Wvqb spiked: yes
+intents.near 0.4.5 BtA1BE...othk spiked: yes
 PASS simulate move to the chip (own key adds chip and paper, removes itself, predecessor auth off; paper []; chip []): executed=3 events=public_key_added,public_key_added,public_key_removed,set_auth_by_predecessor_id(enabled=false),intents_executed exact: yes
 </code></pre>
 <h3 id="2-every-chip-key-signature-takes-one-touch-id-and-the-vault-service-writes-its-sentence">2. Every chip key signature takes one Touch ID, and the vault service writes its sentence<a class="anchor" href="#2-every-chip-key-signature-takes-one-touch-id-and-the-vault-service-writes-its-sentence" aria-label="Link to this section">#</a></h3>
