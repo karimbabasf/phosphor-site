@@ -4,7 +4,12 @@
   "redirects": [
     {
       "source": "/download",
-      "destination": "/download/mac",
+      "destination": "/paused",
+      "permanent": false
+    },
+    {
+      "source": "/download/mac",
+      "destination": "/paused",
       "permanent": false
     }
   ],
