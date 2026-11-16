@@ -6,12 +6,11 @@
       "source": "/download",
       "destination": "/download/mac",
       "permanent": false
-    }
-  ],
-  "rewrites": [
+    },
     {
       "source": "/download/mac",
-      "destination": "https://qr3z67hq2jd7gz5j.public.blob.vercel-storage.com/Phosphor-macOS-arm64.dmg"
+      "destination": "https://github.com/karimbabasf/phosphor/releases/latest/download/Phosphor-macOS-arm64.dmg",
+      "permanent": false
     }
   ],
   "headers": [
@@ -31,12 +30,6 @@
       "source": "/(fonts|vendor|js)/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
-      ]
-    },
-    {
-      "source": "/download/mac",
-      "headers": [
-        { "key": "x-vercel-enable-rewrite-caching", "value": "0" }
       ]
     }
   ]
